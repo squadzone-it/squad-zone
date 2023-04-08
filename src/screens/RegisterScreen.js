@@ -171,7 +171,9 @@ export default function RegisterScreen({ navigation }) {
 				Sign Up
 			</Button>
 			<View style={styles.row}>
-				<Text style={{ fontFamily: "SF-Pro" }}>Already have an account? </Text>
+				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
+					Already have an account?{" "}
+				</Text>
 				<TouchableOpacity onPress={() => navigation.replace("LoginScreen")}>
 					<Text style={styles.link}>Login</Text>
 				</TouchableOpacity>

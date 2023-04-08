@@ -61,6 +61,10 @@ export default function LoginScreen({ navigation }) {
 
 	const handleAppleLogin = () => {
 		// Perform login with Apple Id
+		navigation.reset({
+			index: 0,
+			routes: [{ name: "Dashboard" }],
+		});
 	};
 
 	return (
@@ -102,7 +106,15 @@ export default function LoginScreen({ navigation }) {
 				</Button>
 				<View style={{ flexDirection: "row", alignItems: "center" }}>
 					<View style={styles.HorizontalLineR} />
-					<Text style={{ marginHorizontal: 8, fontFamily: "SF-Pro" }}>OR</Text>
+					<Text
+						style={{
+							marginHorizontal: 8,
+							fontFamily: "SF-Pro",
+							color: "white",
+						}}
+					>
+						OR
+					</Text>
 					<View style={styles.HorizontalLineL} />
 				</View>
 				<View style={{ flexDirection: "row", alignSelf: "center" }}>
@@ -111,7 +123,10 @@ export default function LoginScreen({ navigation }) {
 							onPress={handleGoogleLogin}
 							style={styles.otherLoginButton}
 						>
-							<Ionic name="logo-google" style={{ fontSize: 50 }} />
+							<Ionic
+								name="logo-google"
+								style={{ fontSize: 50, color: "white" }}
+							/>
 						</TouchableOpacity>
 					</View>
 					<View>
@@ -119,7 +134,10 @@ export default function LoginScreen({ navigation }) {
 							onPress={handleAppleLogin}
 							style={styles.otherLoginButton}
 						>
-							<Ionic name="logo-apple" style={{ fontSize: 50 }} />
+							<Ionic
+								name="logo-apple"
+								style={{ fontSize: 50, color: "white" }}
+							/>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -127,7 +145,9 @@ export default function LoginScreen({ navigation }) {
 					<View style={styles.HorizontalLine} />
 				</View>
 				<View style={styles.row}>
-					<Text style={{ fontFamily: "SF-Pro" }}>Don’t have an account? </Text>
+					<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
+						Don’t have an account?{" "}
+					</Text>
 					<TouchableOpacity
 						onPress={() => navigation.replace("RegisterScreen")}
 					>

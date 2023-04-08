@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TextInput as Input } from "react-native-paper";
 import { theme } from "../core/theme";
+import { TextInput as NativeTextInput } from "react-native";
 
 export default function TextInput({ errorText, description, ...props }) {
 	return (
@@ -15,10 +16,23 @@ export default function TextInput({ errorText, description, ...props }) {
 				outlineStyle={{ borderRadius: 10 }}
 				theme={{
 					fonts: {
-						bodyLarge: { ...theme.fonts.bodyLarge, fontFamily: "SF-Pro" },
+						bodyLarge: {
+							...theme.fonts.bodyLarge,
+							fontFamily: "SF-Pro",
+							color: "white",
+						},
 					},
 				}}
+				render={(
+					props // Agrega este bloque de renderizado
+				) => (
+					<NativeTextInput
+						{...props}
+						style={[props.style, styles.nativeInput, { color: "white" }]}
+					/>
+				)}
 			/>
+
 			{description && !errorText ? (
 				<Text style={styles.description}>{description}</Text>
 			) : null}
@@ -46,5 +60,10 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		color: theme.colors.error,
 		paddingTop: 8,
+	},
+	nativeInput: {
+		paddingHorizontal: 12,
+		paddingVertical: 10,
+		fontFamily: "SF-Pro",
 	},
 });
