@@ -17,10 +17,20 @@ import BackButton from "../components/BackButton";
 import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
+import {
+	getAuth,
+	signInWithEmailAndPassword,
+	GoogleAuthProvider,
+} from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../firebase-config";
 
 export default function LoginScreen({ navigation }) {
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
+
+	const app = initializeApp(firebaseConfig);
+	const auth = getAuth(app);
 
 	const onLoginPressed = () => {
 		const emailError = emailValidator(email.value);
@@ -30,10 +40,21 @@ export default function LoginScreen({ navigation }) {
 			setPassword({ ...password, error: passwordError });
 			return;
 		}
-		navigation.reset({
-			index: 0,
-			routes: [{ name: "Dashboard" }],
-		});
+		signInWithEmailAndPassword(auth, email.value, password.value)
+			.then((userCredential) => {
+				console.log("Signed in!");
+				const user = userCredential.user;
+				console.log(user);
+				console.log(auth.currentUser.uid);
+				//navigation.navigate("Home");
+				navigation.reset({
+					index: 0,
+					routes: [{ name: "Dashboard" }],
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	const handleGoogleLogin = () => {};
