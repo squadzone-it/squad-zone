@@ -12,6 +12,7 @@ import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import { nameValidator } from "../helpers/nameValidator";
 
+
 import {
 	getAuth,
 	createUserWithEmailAndPassword,
@@ -42,6 +43,29 @@ export default function RegisterScreen({ navigation }) {
 	const app = initializeApp(firebaseConfig);
 	const auth = getAuth(app);
 	const db = getFirestore(app);
+
+	//API que guarda usuarios al registrarse en GCP
+	const saveUserDataToMySQL = async (id, nombre, apellidos, email, nombre_usuario) => {
+		try {
+		  const response = await fetch('https://saveuserdata-zvcc2bcxkq-nw.a.run.app', {
+			method: 'POST',
+			headers: {
+			  'Content-Type': 'application/json',
+			},
+			
+			body: JSON.stringify({id, nombre, apellidos, email, nombre_usuario}),
+		  });
+	  
+		  if (!response.ok) {
+			throw new Error('Failed to save user data to MySQL'+JSON.stringify({id, nombre, apellidos, email, nombre_usuario}));
+		  }
+	  
+		  console.log('User data saved to MySQL successfully');
+		} catch (error) {
+		  console.error('Error saving user data to MySQL:', error);
+		}
+	  };
+	  
 
 	const onSignUpPressed = async () => {
 		const nameError = nameValidator(name.value);
@@ -91,6 +115,8 @@ export default function RegisterScreen({ navigation }) {
 						email: email.value,
 					});
 					console.log("User written with ID: ", auth.currentUser.uid);
+					 // Call the API to save user data to MySQL
+					 await saveUserDataToMySQL(auth.currentUser.uid, name.value,"Valverde", email.value, username.value);
 				} catch (e) {
 					console.error("Error adding document: ", e);
 				}
