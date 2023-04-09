@@ -81,6 +81,9 @@ export default function RegisterScreen({ navigation }) {
 			.then(async (userCredential) => {
 				console.log("Account created!");
 				const user = userCredential.user;
+				updateProfile(auth.currentUser, {
+					displayName: username.value,
+				});
 				try {
 					const docRef = await setDoc(doc(db, "users", auth.currentUser.uid), {
 						name: name.value,
