@@ -104,7 +104,12 @@ export default function LoginScreen({ navigation }) {
 				<Button mode="contained" onPress={onLoginPressed}>
 					LOG IN
 				</Button>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+					}}
+				>
 					<View style={styles.HorizontalLineR} />
 					<Text
 						style={{
@@ -199,6 +204,7 @@ const styles = StyleSheet.create({
 		borderTopWidth: 1,
 		borderTopStyle: "solid",
 		marginHorizontal: 0,
+		marginVertical: 5,
 	},
 	SafeAreaView: {
 		flex: 1,

@@ -3,7 +3,9 @@ import {
 	ImageBackground,
 	StyleSheet,
 	KeyboardAvoidingView,
+	View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { theme } from "../core/theme";
 
 export default function Background({ children }) {
@@ -11,11 +13,15 @@ export default function Background({ children }) {
 		<ImageBackground
 			/*source={require("../assets/background_dot.png")}
 			resizeMode="repeat"*/
+
 			style={styles.background}
 		>
-			<KeyboardAvoidingView style={styles.container} behavior="padding">
-				{children}
-			</KeyboardAvoidingView>
+			<KeyboardAwareScrollView
+				behavior="padding"
+				contentContainerStyle={styles.scrollViewContent}
+			>
+				<View style={styles.container}>{children}</View>
+			</KeyboardAwareScrollView>
 		</ImageBackground>
 	);
 }
@@ -32,6 +38,11 @@ const styles = StyleSheet.create({
 		width: "100%",
 		maxWidth: 340,
 		alignSelf: "center",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	scrollViewContent: {
+		flexGrow: 1,
 		alignItems: "center",
 		justifyContent: "center",
 	},

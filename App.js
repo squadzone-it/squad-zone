@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { Provider } from "react-native-paper";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { theme } from "./src/core/theme";
 import { useFonts } from "expo-font";
@@ -12,6 +12,8 @@ import {
 	ResetPasswordScreen,
 	Dashboard,
 } from "./src/screens";
+import Background from "./src/components/Background";
+import Logo from "./src/components/Logo";
 
 const App = () => {
 	const [fontsLoaded] = useFonts({
@@ -25,19 +27,20 @@ const App = () => {
 
 	if (!fontsLoaded) {
 		return (
-			<View style={{ flexDirection: "row", alignItems: "center" }}>
-				<Text>Loading fonts...</Text>
-			</View>
+			<Background>
+				<Logo />
+			</Background>
 		);
 	}
 
 	return (
 		<Provider theme={theme}>
-			<NavigationContainer>
+			<NavigationContainer theme={DarkTheme}>
 				<Stack.Navigator
 					initialRouteName="StartScreen"
 					screenOptions={{
 						headerShown: false,
+						presentation: "modal",
 					}}
 				>
 					<Stack.Screen name="StartScreen" component={StartScreen} />

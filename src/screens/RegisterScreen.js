@@ -12,7 +12,6 @@ import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import { nameValidator } from "../helpers/nameValidator";
 
-
 import {
 	getAuth,
 	createUserWithEmailAndPassword,
@@ -32,6 +31,7 @@ import { firebaseConfig } from "../../firebase-config";
 
 export default function RegisterScreen({ navigation }) {
 	const [name, setName] = useState({ value: "", error: "" });
+	const [lastName, setLastName] = useState({ value: "", error: "" });
 	const [username, setUsername] = useState({ value: "", error: "" });
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
@@ -45,30 +45,48 @@ export default function RegisterScreen({ navigation }) {
 	const db = getFirestore(app);
 
 	//API que guarda usuarios al registrarse en GCP
-	const saveUserDataToMySQL = async (id, nombre, apellidos, email, nombre_usuario) => {
+	const saveUserDataToMySQL = async (
+		id,
+		nombre,
+		apellidos,
+		email,
+		nombre_usuario
+	) => {
 		try {
-		  const response = await fetch('https://saveuserdata-zvcc2bcxkq-nw.a.run.app', {
-			method: 'POST',
-			headers: {
-			  'Content-Type': 'application/json',
-			},
-			
-			body: JSON.stringify({id, nombre, apellidos, email, nombre_usuario}),
-		  });
-	  
-		  if (!response.ok) {
-			throw new Error('Failed to save user data to MySQL'+JSON.stringify({id, nombre, apellidos, email, nombre_usuario}));
-		  }
-	  
-		  console.log('User data saved to MySQL successfully');
+			const response = await fetch(
+				"https://saveuserdata-zvcc2bcxkq-nw.a.run.app",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+
+					body: JSON.stringify({
+						id,
+						nombre,
+						apellidos,
+						email,
+						nombre_usuario,
+					}),
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error(
+					"Failed to save user data to MySQL" +
+						JSON.stringify({ id, nombre, apellidos, email, nombre_usuario })
+				);
+			}
+
+			console.log("User data saved to MySQL successfully");
 		} catch (error) {
-		  console.error('Error saving user data to MySQL:', error);
+			console.error("Error saving user data to MySQL:", error);
 		}
-	  };
-	  
+	};
 
 	const onSignUpPressed = async () => {
 		const nameError = nameValidator(name.value);
+		const lastNameError = nameValidator(lastName.value);
 		const usernameError = nameValidator(username.value);
 		const emailError = emailValidator(email.value);
 		const passwordError = passwordValidator(password.value);
@@ -79,10 +97,12 @@ export default function RegisterScreen({ navigation }) {
 			emailError ||
 			passwordError ||
 			nameError ||
+			lastNameError ||
 			usernameError ||
 			confirmPasswordError
 		) {
 			setName({ ...name, error: nameError });
+			setLastName({ ...lastName, error: lastNameError });
 			//setUsername({ ...username, error: usernameError });
 			setEmail({ ...email, error: emailError });
 			setPassword({ ...password, error: passwordError });
@@ -115,12 +135,18 @@ export default function RegisterScreen({ navigation }) {
 						email: email.value,
 					});
 					console.log("User written with ID: ", auth.currentUser.uid);
-					 // Call the API to save user data to MySQL
-					 await saveUserDataToMySQL(auth.currentUser.uid, name.value,"Valverde", email.value, username.value);
+					// Call the API to save user data to MySQL
+					await saveUserDataToMySQL(
+						auth.currentUser.uid,
+						name.value,
+						lastName.value,
+						email.value,
+						username.value
+					);
 				} catch (e) {
 					console.error("Error adding document: ", e);
 				}
-				console.log(user);
+				//console.log(user);
 
 				navigation.reset({
 					index: 0,
@@ -144,7 +170,7 @@ export default function RegisterScreen({ navigation }) {
 	return (
 		<Background>
 			<BackButton goBack={navigation.goBack} />
-			<Logo />
+
 			<Header>Create Account</Header>
 			<TextInput
 				label="Name"
@@ -153,6 +179,14 @@ export default function RegisterScreen({ navigation }) {
 				onChangeText={(text) => setName({ value: text, error: "" })}
 				error={!!name.error}
 				errorText={name.error}
+			/>
+			<TextInput
+				label="Last Name"
+				returnKeyType="next"
+				value={lastName.value}
+				onChangeText={(text) => setLastName({ value: text, error: "" })}
+				error={!!lastName.error}
+				errorText={lastName.error}
 			/>
 			<TextInput
 				label="Username"
@@ -192,13 +226,19 @@ export default function RegisterScreen({ navigation }) {
 				errorText={confirmPassword.error}
 				secureTextEntry
 			/>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View style={styles.HorizontalLine} />
+			</View>
 			<Button
 				mode="contained"
 				onPress={onSignUpPressed}
-				style={{ marginTop: 24 }}
+				style={{ marginTop: 10 }}
 			>
 				Sign Up
 			</Button>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View style={styles.HorizontalLine} />
+			</View>
 			<View style={styles.row}>
 				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
 					Already have an account?{" "}
@@ -220,5 +260,13 @@ const styles = StyleSheet.create({
 		//fontWeight: "bold",
 		color: theme.colors.primary,
 		fontFamily: "SF-Pro",
+	},
+	HorizontalLine: {
+		flex: 1,
+		borderTopColor: theme.colors.secondary,
+		borderTopWidth: 1,
+		borderTopStyle: "solid",
+		marginHorizontal: 0,
+		marginVertical: 5,
 	},
 });

@@ -11,7 +11,7 @@ export default function StartScreen({ navigation }) {
 			<Logo />
 			<Header>SQUAD ZONE</Header>
 			<Paragraph>
-				The easiest way to start with your amazing application.
+				Ave María cuando serás mía, si me quisieras todo te daría!
 			</Paragraph>
 			<Button
 				mode="contained"
