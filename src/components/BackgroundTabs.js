@@ -8,7 +8,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { theme } from "../core/theme";
 
-export default function Background({ children }) {
+export default function BackgroundTabs({ children }) {
 	return (
 		<ImageBackground
 			/*source={require("../assets/background_dot.png")}
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		padding: 20,
+		//padding: 20,
 		paddingVertical: 20,
 		width: "100%",
 		maxWidth: 350,
 		alignSelf: "center",
-		alignItems: "center",
+		alignItems: "flex-start",
 		justifyContent: "center",
 	},
 	scrollViewContent: {

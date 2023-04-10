@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Image, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { getStatusBarHeight } from "react-native-status-bar-height";
 

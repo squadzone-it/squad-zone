@@ -1,4 +1,5 @@
 import React from "react";
+import Ionic from "react-native-vector-icons/Ionicons";
 import Background from "../components/Background";
 import Logo from "../components/Logo";
 import Header from "../components/Header";
@@ -9,10 +10,11 @@ export default function StartScreen({ navigation }) {
 	return (
 		<Background>
 			<Logo />
-			<Header>SQUAD ZONE</Header>
-			<Paragraph>
-				Ave María cuando serás mía, si me quisieras todo te daría!
-			</Paragraph>
+			<Header>
+				SQUAD Z<Ionic name="football-outline" style={{ fontSize: 28 }} />
+				NE
+			</Header>
+			<Paragraph></Paragraph>
 			<Button
 				mode="contained"
 				onPress={() => navigation.navigate("LoginScreen")}

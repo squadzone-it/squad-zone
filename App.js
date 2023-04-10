@@ -2,14 +2,19 @@ import React from "react";
 import { Provider } from "react-native-paper";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { theme } from "./src/core/theme";
 import { useFonts } from "expo-font";
+import Ionic from "react-native-vector-icons/Ionicons";
 import {
 	StartScreen,
 	LoginScreen,
 	RegisterScreen,
 	ResetPasswordScreen,
-	Dashboard,
+	HomeScreen,
+	SearchScreen,
+	NewsScreen,
+	ProfileScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -24,6 +29,7 @@ const App = () => {
 	});
 
 	const Stack = createStackNavigator();
+	const Tab = createBottomTabNavigator();
 
 	if (!fontsLoaded) {
 		return (
@@ -32,6 +38,48 @@ const App = () => {
 			</Background>
 		);
 	}
+
+	const TabNavigator = () => {
+		return (
+			<Tab.Navigator
+				screenOptions={({ route }) => ({
+					tabBarShowLabel: false,
+					headerShown: false,
+					tabBarStyle: {
+						height: 50,
+					},
+
+					tabBarIcon: ({ focused, size, color }) => {
+						let iconName;
+						if (route.name === "Home") {
+							iconName = focused ? "home-sharp" : "ios-home-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "News") {
+							iconName = focused ? "megaphone" : "ios-megaphone-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "Search") {
+							iconName = focused ? "shield" : "ios-shield-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "Profile") {
+							iconName = focused ? "person" : "ios-person-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						}
+
+						return <Ionic name={iconName} size={size} color={color} />;
+					},
+				})}
+			>
+				<Tab.Screen name="Home" component={HomeScreen} />
+				<Tab.Screen name="Search" component={SearchScreen} />
+				<Tab.Screen name="News" component={NewsScreen} />
+				<Tab.Screen name="Profile" component={ProfileScreen} />
+			</Tab.Navigator>
+		);
+	};
 
 	return (
 		<Provider theme={theme}>
@@ -46,7 +94,7 @@ const App = () => {
 					<Stack.Screen name="StartScreen" component={StartScreen} />
 					<Stack.Screen name="LoginScreen" component={LoginScreen} />
 					<Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-					<Stack.Screen name="Dashboard" component={Dashboard} />
+					<Stack.Screen name="Dashboard" component={TabNavigator} />
 					<Stack.Screen
 						name="ResetPasswordScreen"
 						component={ResetPasswordScreen}
