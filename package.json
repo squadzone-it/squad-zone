@@ -28,7 +28,10 @@
     "react-native": "0.71.6",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-paper": "^5.6.0",
-    "react-native-status-bar-height": "^2.6.0"
+    "react-native-status-bar-height": "^2.6.0",
+    "react-dom": "18.2.0",
+    "react-native-web": "~0.18.10",
+    "@expo/webpack-config": "^18.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
