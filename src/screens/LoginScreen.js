@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-	TouchableOpacity,
-	StyleSheet,
-	View,
-	SafeAreaView,
-	//StatusBar,
-} from "react-native";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { Ionicons as Ionic } from "@expo/vector-icons";
 import Background from "../components/Background";
@@ -68,99 +62,92 @@ export default function LoginScreen({ navigation }) {
 	};
 
 	return (
-		<SafeAreaView style={styles.SafeAreaView}>
-			<Background>
-				<BackButton goBack={navigation.goBack} />
-				<Logo />
-				<Header>Welcome back.</Header>
-				<TextInput
-					label="Email"
-					returnKeyType="next"
-					value={email.value}
-					onChangeText={(text) => setEmail({ value: text, error: "" })}
-					error={!!email.error}
-					errorText={email.error}
-					autoCapitalize="none"
-					autoCompleteType="email"
-					textContentType="emailAddress"
-					keyboardType="email-address"
-				/>
-				<TextInput
-					label="Password"
-					returnKeyType="done"
-					value={password.value}
-					onChangeText={(text) => setPassword({ value: text, error: "" })}
-					error={!!password.error}
-					errorText={password.error}
-					secureTextEntry
-				/>
-				<View style={styles.forgotPassword}>
-					<TouchableOpacity
-						onPress={() => navigation.navigate("ResetPasswordScreen")}
-					>
-						<Text style={styles.forgot}>Forgot your password?</Text>
-					</TouchableOpacity>
-				</View>
-				<Button mode="contained" onPress={onLoginPressed}>
-					LOG IN
-				</Button>
-				<View
+		<Background>
+			<BackButton goBack={navigation.goBack} />
+			<Logo />
+			<Header>Welcome back.</Header>
+			<TextInput
+				label="Email"
+				returnKeyType="next"
+				value={email.value}
+				onChangeText={(text) => setEmail({ value: text, error: "" })}
+				error={!!email.error}
+				errorText={email.error}
+				autoCapitalize="none"
+				autoCompleteType="email"
+				textContentType="emailAddress"
+				keyboardType="email-address"
+			/>
+			<TextInput
+				label="Password"
+				returnKeyType="done"
+				value={password.value}
+				onChangeText={(text) => setPassword({ value: text, error: "" })}
+				error={!!password.error}
+				errorText={password.error}
+				secureTextEntry
+			/>
+			<View style={styles.forgotPassword}>
+				<TouchableOpacity
+					onPress={() => navigation.navigate("ResetPasswordScreen")}
+				>
+					<Text style={styles.forgot}>Forgot your password?</Text>
+				</TouchableOpacity>
+			</View>
+			<Button mode="contained" onPress={onLoginPressed}>
+				LOG IN
+			</Button>
+			<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+				}}
+			>
+				<View style={styles.HorizontalLineR} />
+				<Text
 					style={{
-						flexDirection: "row",
-						alignItems: "center",
+						marginHorizontal: 8,
+						fontFamily: "SF-Pro",
+						color: "white",
 					}}
 				>
-					<View style={styles.HorizontalLineR} />
-					<Text
-						style={{
-							marginHorizontal: 8,
-							fontFamily: "SF-Pro",
-							color: "white",
-						}}
-					>
-						OR
-					</Text>
-					<View style={styles.HorizontalLineL} />
-				</View>
-				<View style={{ flexDirection: "row", alignSelf: "center" }}>
-					<View>
-						<TouchableOpacity
-							onPress={handleGoogleLogin}
-							style={styles.otherLoginButton}
-						>
-							<Ionic
-								name="logo-google"
-								style={{ fontSize: 50, color: "white" }}
-							/>
-						</TouchableOpacity>
-					</View>
-					<View>
-						<TouchableOpacity
-							onPress={handleAppleLogin}
-							style={styles.otherLoginButton}
-						>
-							<Ionic
-								name="logo-apple"
-								style={{ fontSize: 50, color: "white" }}
-							/>
-						</TouchableOpacity>
-					</View>
-				</View>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<View style={styles.HorizontalLine} />
-				</View>
-				<View style={styles.row}>
-					<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
-						Don’t have an account?{" "}
-					</Text>
+					OR
+				</Text>
+				<View style={styles.HorizontalLineL} />
+			</View>
+			<View style={{ flexDirection: "row", alignSelf: "center" }}>
+				<View>
 					<TouchableOpacity
-						onPress={() => navigation.replace("RegisterScreen")}
+						onPress={handleGoogleLogin}
+						style={styles.otherLoginButton}
 					>
-						<Text style={styles.link}>Sign up</Text>
+						<Ionic
+							name="logo-google"
+							style={{ fontSize: 50, color: "white" }}
+						/>
 					</TouchableOpacity>
 				</View>
-			</Background>
-		</SafeAreaView>
+				<View>
+					<TouchableOpacity
+						onPress={handleAppleLogin}
+						style={styles.otherLoginButton}
+					>
+						<Ionic name="logo-apple" style={{ fontSize: 50, color: "white" }} />
+					</TouchableOpacity>
+				</View>
+			</View>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<View style={styles.HorizontalLine} />
+			</View>
+			<View style={styles.row}>
+				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
+					Don’t have an account?{" "}
+				</Text>
+				<TouchableOpacity onPress={() => navigation.replace("RegisterScreen")}>
+					<Text style={styles.link}>Sign up</Text>
+				</TouchableOpacity>
+			</View>
+		</Background>
 	);
 }
 
@@ -206,12 +193,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 0,
 		marginVertical: 5,
 	},
-	SafeAreaView: {
-		flex: 1,
-		justifyContent: "space-around",
-		backgroundColor: "#CDCDCD",
-		//marginTop: StatusBar.currentHeight,
-	},
+
 	otherLoginButton: {
 		borderRadius: 10,
 		borderColor: "#5EA780",

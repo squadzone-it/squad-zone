@@ -1,5 +1,4 @@
 import React from "react";
-import { Text, View } from "react-native";
 import { Provider } from "react-native-paper";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -21,6 +20,7 @@ const App = () => {
 		"CODE-Light": require("./src/assets/fonts/CODE-Light.otf"),
 		"SF-Pro": require("./src/assets/fonts/SF-Pro.ttf"),
 		"SF-Pro-Italic": require("./src/assets/fonts/SF-Pro-Italic.ttf"),
+		"SF-Pro-Bold": require("./src/assets/fonts/SF-Pro-Bold.ttf"),
 	});
 
 	const Stack = createStackNavigator();
