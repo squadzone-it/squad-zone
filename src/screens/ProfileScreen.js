@@ -16,26 +16,48 @@ import Logo from "../components/Logo";
 
 import { useNavigation } from "@react-navigation/native";
 
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../firebase-config";
+
 const settingsButton = () => {};
+const follow = () => {};
 
-const handlePress = async () => {
-	const data = await getUserData();
-};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+let uid;
+auth.onAuthStateChanged(function (user) {
+	uid = user.uid;
+});
 
-const Header = () => {
+const Header = ({}) => {
+	const navigation = useNavigation();
+
+	const onLogoutPressed = () => {
+		navigation.navigate("StartScreen");
+	};
 	return (
 		<View style={styles.header}>
-			<TouchableOpacity style={styles.headerButtonLeft}>
-				<Ionic name="add" style={{ fontSize: 32, color: theme.colors.text }} />
+			<TouchableOpacity
+				style={styles.headerButtonLeft}
+				onPress={settingsButton}
+			>
+				<Ionic
+					name="options"
+					style={{ fontSize: 32, color: theme.colors.text }}
+				/>
 			</TouchableOpacity>
 			<Text style={styles.headerText}>
 				SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
 				NE
 			</Text>
-			<TouchableOpacity onPress={handlePress} style={styles.headerButtonRight}>
+			<TouchableOpacity
+				onPress={onLogoutPressed}
+				style={styles.headerButtonRight}
+			>
 				<Ionic
-					name="options"
-					style={{ fontSize: 25, color: theme.colors.text }}
+					name="log-out-outline"
+					style={{ fontSize: 25, color: theme.colors.error }}
 				/>
 			</TouchableOpacity>
 		</View>
@@ -48,27 +70,29 @@ const ProfileInfo = ({ data }) => {
 			style={{
 				flexDirection: "row",
 				alignItems: "center",
-				//width: "100%",
+				width: "100%",
 				paddingHorizontal: 15,
-				paddingTop: 15,
+				paddingVertical: 15,
 				backgroundColor: theme.colors.surface,
 			}}
 		>
 			<Image
 				source={require("../assets/logo.png")}
 				style={{
-					width: 70,
-					height: 70,
-					borderRadius: 50,
+					flex: 1,
+					maxHeight: 70,
+					maxWidth: 70,
+					borderRadius: 500,
 					marginRight: "auto",
 					borderWidth: 1,
+					padding: 5,
 					borderColor: theme.colors.primary,
 				}}
 			/>
-			<View>
+			<View style={{ flex: 4 }}>
 				<Text
 					style={{
-						fontSize: 13,
+						fontSize: 16,
 						fontWeight: "500",
 						marginLeft: 20,
 						fontFamily: "SF-Pro-Bold",
@@ -76,6 +100,11 @@ const ProfileInfo = ({ data }) => {
 					}}
 				>
 					@{data.nombre_usuario}
+					{"   "}
+					<Ionic
+						name="checkmark-circle-sharp"
+						style={{ fontSize: 16, color: "cyan" }}
+					/>
 				</Text>
 				<Text
 					style={{
@@ -94,23 +123,51 @@ const ProfileInfo = ({ data }) => {
 };
 
 const Body = ({ data }) => {
-	const navigation = useNavigation();
-
-	const onLogoutPressed = () => {
-		navigation.navigate("StartScreen");
-	};
 	return (
-		<View style={{ backgroundColor: theme.colors.surface, height: "100%" }}>
+		<View
+			style={{
+				backgroundColor: theme.colors.surface,
+				height: "100%",
+				width: "100%",
+			}}
+		>
 			<StatusBar
 				backgroundColor={theme.colors.surface}
 				barStyle="light-content"
 				animated={true}
 			/>
 			<ProfileInfo data={data} />
-			<Button mode="contained" onPress={onLogoutPressed}>
-				LOGOUT
-			</Button>
-			<Paragraph></Paragraph>
+			<View style={{ flex: 1, paddingHorizontal: 20 }}>
+				<Button mode="contained" onPress={follow}>
+					FOLLOW
+				</Button>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						width: "100%",
+						paddingHorizontal: 0,
+						paddingVertical: 15,
+					}}
+				>
+					<Ionic name="mail" style={{ fontSize: 30 }} />
+					<Paragraph> {data.email}</Paragraph>
+				</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						width: "100%",
+						paddingHorizontal: 0,
+						paddingVertical: 15,
+					}}
+				>
+					<Ionic name="attach" style={{ fontSize: 30 }} />
+					<Paragraph> {data.id}</Paragraph>
+				</View>
+			</View>
 		</View>
 	);
 };
@@ -119,17 +176,20 @@ const ProfileScreen = () => {
 	const [data, setData] = useState(null);
 
 	useEffect(() => {
-		async function fetchData() {
-			const result = await getUserData();
-			setData(result);
+		if (uid) {
+			// only fetch data when uid is not null
+			async function fetchData() {
+				const result = await getUserData(uid);
+				setData(result);
+			}
+			fetchData();
 		}
-		fetchData();
-	}, []);
+	}, [uid]);
 
 	return (
 		<BackgroundTabs>
 			<Header />
-			{data ? <Body data={data} /> : <Logo />}
+			{data ? <Body data={data} /> : <Paragraph> Loading... </Paragraph>}
 		</BackgroundTabs>
 	);
 };
@@ -144,7 +204,7 @@ async function getUserData() {
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
-					id: "rDhKT0cFAlOgZvXdEX9CFriwnpp2",
+					id: uid,
 				}),
 			}
 		);
