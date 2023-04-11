@@ -20,15 +20,17 @@ import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase-config";
 
-const settingsButton = () => {};
-const follow = () => {};
-
+let uid = null;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-let uid;
 auth.onAuthStateChanged(function (user) {
-	uid = user.uid;
+	if (user) {
+		uid = user.uid;
+	}
 });
+
+const settingsButton = () => {};
+const follow = () => {};
 
 const Header = ({}) => {
 	const navigation = useNavigation();
@@ -177,7 +179,6 @@ const ProfileScreen = () => {
 
 	useEffect(() => {
 		if (uid) {
-			// only fetch data when uid is not null
 			async function fetchData() {
 				const result = await getUserData(uid);
 				setData(result);

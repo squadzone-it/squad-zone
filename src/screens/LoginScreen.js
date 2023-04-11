@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }) {
 			.then((userCredential) => {
 				console.log("Signed in!");
 				const user = userCredential.user;
-				console.log(user);
+				//console.log(user);
 				ProfileScreen.uid = auth.currentUser.uid;
 				console.log(auth.currentUser.uid);
 				//navigation.navigate("Home");
