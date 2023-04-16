@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { theme } from "./src/core/theme";
 import { useFonts } from "expo-font";
 import Ionic from "react-native-vector-icons/Ionicons";
+import * as NavigationBar from "expo-navigation-bar";
 import {
 	StartScreen,
 	LoginScreen,
@@ -15,6 +16,7 @@ import {
 	SearchScreen,
 	NewsScreen,
 	ProfileScreen,
+	EditProfile,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -30,6 +32,8 @@ const App = () => {
 
 	const Stack = createStackNavigator();
 	const Tab = createBottomTabNavigator();
+
+	NavigationBar.setBackgroundColorAsync(theme.colors.surface);
 
 	if (!fontsLoaded) {
 		return (
@@ -71,6 +75,8 @@ const App = () => {
 
 						return <Ionic name={iconName} size={size} color={color} />;
 					},
+					tabBarActiveBackgroundColor: "#000000",
+					tabBarInactiveBackgroundColor: theme.colors.surface,
 				})}
 			>
 				<Tab.Screen name="Home" component={HomeScreen} />
@@ -99,6 +105,7 @@ const App = () => {
 						name="ResetPasswordScreen"
 						component={ResetPasswordScreen}
 					/>
+					<Stack.Screen name="EditProfile" component={EditProfile} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>

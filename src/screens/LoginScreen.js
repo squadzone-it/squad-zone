@@ -67,9 +67,9 @@ export default function LoginScreen({ navigation }) {
 		<Background>
 			<BackButton goBack={navigation.goBack} />
 			<Logo />
-			<Header>Welcome back.</Header>
+			<Header>QUE DICE LOKO</Header>
 			<TextInput
-				label="Email"
+				label="Correo electrónico"
 				returnKeyType="next"
 				value={email.value}
 				onChangeText={(text) => setEmail({ value: text, error: "" })}
@@ -81,7 +81,7 @@ export default function LoginScreen({ navigation }) {
 				keyboardType="email-address"
 			/>
 			<TextInput
-				label="Password"
+				label="Contraseña"
 				returnKeyType="done"
 				value={password.value}
 				onChangeText={(text) => setPassword({ value: text, error: "" })}
@@ -93,11 +93,11 @@ export default function LoginScreen({ navigation }) {
 				<TouchableOpacity
 					onPress={() => navigation.navigate("ResetPasswordScreen")}
 				>
-					<Text style={styles.forgot}>Forgot your password?</Text>
+					<Text style={styles.forgot}>¿Olvidaste tu contraseña?</Text>
 				</TouchableOpacity>
 			</View>
 			<Button mode="contained" onPress={onLoginPressed}>
-				LOG IN
+				INICIAR SESION
 			</Button>
 			<View
 				style={{
@@ -113,7 +113,7 @@ export default function LoginScreen({ navigation }) {
 						color: "white",
 					}}
 				>
-					OR
+					Ó
 				</Text>
 				<View style={styles.HorizontalLineL} />
 			</View>
@@ -143,10 +143,10 @@ export default function LoginScreen({ navigation }) {
 			</View>
 			<View style={styles.row}>
 				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
-					Don’t have an account?{" "}
+					¿Aún no tienes cuenta?{" "}
 				</Text>
 				<TouchableOpacity onPress={() => navigation.replace("RegisterScreen")}>
-					<Text style={styles.link}>Sign up</Text>
+					<Text style={styles.link}>Registrate</Text>
 				</TouchableOpacity>
 			</View>
 		</Background>

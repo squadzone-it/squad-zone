@@ -34,13 +34,9 @@ const Header = () => {
 
 const Body = () => {
 	return (
-		<View style={{ backgroundColor: theme.colors.surface, height: "100%" }}>
-			<StatusBar
-				backgroundColor={theme.colors.surface}
-				barStyle="light-content"
-				animated={true}
-			/>
-		</View>
+		<View
+			style={{ backgroundColor: theme.colors.surface, height: "100%" }}
+		></View>
 	);
 };
 
@@ -61,10 +57,9 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		//justifyContent: "space-evenly",
 		//paddingHorizontal: 15,
-		paddingTop: 15,
 		backgroundColor: theme.colors.surface,
 		width: "100%",
-		position: "relative",
+		position: "absolute",
 		top: 0,
 	},
 	headerText: {

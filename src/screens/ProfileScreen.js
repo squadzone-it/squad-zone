@@ -5,6 +5,7 @@ import {
 	Image,
 	TouchableOpacity,
 	StyleSheet,
+	Modal,
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
@@ -12,7 +13,6 @@ import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import Paragraph from "../components/Paragraph";
-import Logo from "../components/Logo";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -35,33 +35,63 @@ const follow = () => {};
 const Header = ({}) => {
 	const navigation = useNavigation();
 
+	const [showModal, setShowModal] = useState(false);
+
+	const onOptionsPressed = () => {
+		setShowModal(true);
+	};
+
+	const onClosePressed = () => {
+		setShowModal(false);
+	};
+
+	const onEditProfilePressed = () => {
+		setShowModal(false);
+		navigation.navigate("EditProfile");
+	};
+
 	const onLogoutPressed = () => {
+		setShowModal(false);
 		navigation.navigate("StartScreen");
 	};
+
 	return (
 		<View style={styles.header}>
 			<TouchableOpacity
 				style={styles.headerButtonLeft}
 				onPress={settingsButton}
 			>
-				<Ionic
-					name="options"
-					style={{ fontSize: 32, color: theme.colors.text }}
-				/>
+				<Ionic name="add" style={{ fontSize: 32, color: theme.colors.text }} />
 			</TouchableOpacity>
 			<Text style={styles.headerText}>
 				SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
 				NE
 			</Text>
 			<TouchableOpacity
-				onPress={onLogoutPressed}
+				onPress={onOptionsPressed}
 				style={styles.headerButtonRight}
 			>
 				<Ionic
-					name="log-out-outline"
-					style={{ fontSize: 25, color: theme.colors.error }}
+					name="menu-sharp"
+					style={{ fontSize: 25, color: theme.colors.text }}
 				/>
 			</TouchableOpacity>
+
+			<Modal visible={showModal} animationType="slide" transparent={true}>
+				<TouchableOpacity
+					style={styles.modalBackground}
+					onPress={onClosePressed}
+				>
+					<View style={styles.modalContent}>
+						<TouchableOpacity onPress={onEditProfilePressed}>
+							<Text style={styles.modalOption}>Editar perfil</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={onLogoutPressed}>
+							<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
+						</TouchableOpacity>
+					</View>
+				</TouchableOpacity>
+			</Modal>
 		</View>
 	);
 };
@@ -141,7 +171,7 @@ const Body = ({ data }) => {
 			<ProfileInfo data={data} />
 			<View style={{ flex: 1, paddingHorizontal: 20 }}>
 				<Button mode="contained" onPress={follow}>
-					FOLLOW
+					SEGUIR
 				</Button>
 				<View
 					style={{
@@ -190,7 +220,9 @@ const ProfileScreen = () => {
 	return (
 		<BackgroundTabs>
 			<Header />
-			{data ? <Body data={data} /> : <Paragraph> Loading... </Paragraph>}
+			<View style={{ alignSelf: "center" }}>
+				{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
+			</View>
 		</BackgroundTabs>
 	);
 };
@@ -234,10 +266,9 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		//justifyContent: "space-evenly",
 		//paddingHorizontal: 15,
-		paddingTop: 15,
 		backgroundColor: theme.colors.surface,
 		width: "100%",
-		position: "relative",
+		position: "absolute",
 		top: 0,
 	},
 	headerText: {
@@ -253,5 +284,36 @@ const styles = StyleSheet.create({
 	headerButtonLeft: {
 		padding: 10,
 		marginRight: "auto",
+	},
+	modalBackground: {
+		flex: 1,
+		justifyContent: "flex-end",
+		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
+	},
+	modalContent: {
+		backgroundColor: "#1c1c1c",
+		borderRadius: 10,
+		padding: 10,
+		minWidth: "80%",
+		alignItems: "center",
+	},
+	modalOption: {
+		marginVertical: 5,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
+		fontSize: 18,
+		color: theme.colors.text,
+	},
+	modalOptionR: {
+		marginVertical: 5,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
+		fontSize: 18,
+		color: theme.colors.error,
 	},
 });

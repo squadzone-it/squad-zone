@@ -2,8 +2,9 @@ import React from "react";
 import {
 	ImageBackground,
 	StyleSheet,
-	KeyboardAvoidingView,
 	View,
+	StatusBar,
+	ScrollView,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { theme } from "../core/theme";
@@ -16,9 +17,15 @@ export default function BackgroundTabs({ children }) {
 
 			style={styles.background}
 		>
+			<StatusBar
+				backgroundColor={theme.colors.surface}
+				barStyle="light-content"
+				animated={true}
+			/>
 			<KeyboardAwareScrollView
 				behavior="padding"
 				contentContainerStyle={styles.scrollViewContent}
+				keyboardShouldPersistTaps="never"
 			>
 				<View style={styles.container}>{children}</View>
 			</KeyboardAwareScrollView>

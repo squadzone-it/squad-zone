@@ -171,9 +171,9 @@ export default function RegisterScreen({ navigation }) {
 		<Background>
 			<BackButton goBack={navigation.goBack} />
 
-			<Header>Create Account</Header>
+			<Header>CREAR CUENTA</Header>
 			<TextInput
-				label="Name"
+				label="Nombre"
 				returnKeyType="next"
 				value={name.value}
 				onChangeText={(text) => setName({ value: text, error: "" })}
@@ -181,7 +181,7 @@ export default function RegisterScreen({ navigation }) {
 				errorText={name.error}
 			/>
 			<TextInput
-				label="Last Name"
+				label="Apellidos"
 				returnKeyType="next"
 				value={lastName.value}
 				onChangeText={(text) => setLastName({ value: text, error: "" })}
@@ -189,7 +189,7 @@ export default function RegisterScreen({ navigation }) {
 				errorText={lastName.error}
 			/>
 			<TextInput
-				label="Username"
+				label="Nombre de usuario"
 				returnKeyType="next"
 				value={username.value}
 				onChangeText={(text) =>
@@ -199,7 +199,7 @@ export default function RegisterScreen({ navigation }) {
 				errorText={username.error}
 			/>
 			<TextInput
-				label="Email"
+				label="Correo Electrónico"
 				returnKeyType="next"
 				value={email.value}
 				onChangeText={(text) => setEmail({ value: text, error: "" })}
@@ -211,7 +211,7 @@ export default function RegisterScreen({ navigation }) {
 				keyboardType="email-address"
 			/>
 			<TextInput
-				label="Password"
+				label="Contraseña"
 				returnKeyType="done"
 				value={password.value}
 				onChangeText={(text) => setPassword({ value: text, error: "" })}
@@ -220,7 +220,7 @@ export default function RegisterScreen({ navigation }) {
 				secureTextEntry
 			/>
 			<TextInput
-				label="Confirm password"
+				label="Confirmar contraseña"
 				returnKeyType="done"
 				value={confirmPassword.value}
 				onChangeText={(text) => setConfirmPassword({ value: text, error: "" })}
@@ -236,17 +236,17 @@ export default function RegisterScreen({ navigation }) {
 				onPress={onSignUpPressed}
 				style={{ marginTop: 10 }}
 			>
-				Sign Up
+				REGISTRARSE
 			</Button>
 			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<View style={styles.HorizontalLine} />
 			</View>
 			<View style={styles.row}>
 				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
-					Already have an account?{" "}
+					¿Ya tienes una cuenta?{" "}
 				</Text>
 				<TouchableOpacity onPress={() => navigation.replace("LoginScreen")}>
-					<Text style={styles.link}>Login</Text>
+					<Text style={styles.link}>Inicia sesion</Text>
 				</TouchableOpacity>
 			</View>
 		</Background>

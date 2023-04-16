@@ -13,7 +13,7 @@ export default function TextInput({ errorText, description, ...props }) {
 			<Input
 				style={styles.input}
 				selectionColor={theme.colors.primary}
-				underlineColor="transparent"
+				underlineColor={theme.colors.secondary}
 				mode="outlined"
 				{...props}
 				outlineStyle={{ borderRadius: 10 }}

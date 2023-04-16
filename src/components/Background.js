@@ -1,10 +1,5 @@
 import React from "react";
-import {
-	ImageBackground,
-	StyleSheet,
-	KeyboardAvoidingView,
-	View,
-} from "react-native";
+import { ImageBackground, StyleSheet, View, StatusBar } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { theme } from "../core/theme";
 
@@ -16,6 +11,11 @@ export default function Background({ children }) {
 
 			style={styles.background}
 		>
+			<StatusBar
+				backgroundColor={theme.colors.surface}
+				barStyle="light-content"
+				animated={true}
+			/>
 			<KeyboardAwareScrollView
 				behavior="padding"
 				contentContainerStyle={styles.scrollViewContent}
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 		padding: 20,
 		paddingVertical: 20,
 		width: "100%",
-		maxWidth: 350,
+		maxWidth: 360,
 		alignSelf: "center",
 		alignItems: "center",
 		justifyContent: "center",

@@ -19,13 +19,13 @@ export default function StartScreen({ navigation }) {
 				mode="contained"
 				onPress={() => navigation.navigate("LoginScreen")}
 			>
-				LOG IN
+				INICIAR SESION
 			</Button>
 			<Button
 				mode="outlined"
 				onPress={() => navigation.navigate("RegisterScreen")}
 			>
-				SIGN UP
+				REGISTRARSE
 			</Button>
 		</Background>
 	);

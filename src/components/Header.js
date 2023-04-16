@@ -14,5 +14,6 @@ const styles = StyleSheet.create({
 		//fontWeight: "500",
 		paddingVertical: 12,
 		fontFamily: "CODE-Bold",
+		textAlign: "center",
 	},
 });
