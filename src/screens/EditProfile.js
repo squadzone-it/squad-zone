@@ -29,15 +29,27 @@ auth.onAuthStateChanged(function (user) {
 	}
 });
 
-const Header = ({}) => {
+const Header = () => {
 	const navigation = useNavigation();
 
 	const crossPress = () => {
 		navigation.navigate("Profile");
 	};
 
-	const tickPress = () => {
-		navigation.navigate("Profile");
+	const tickPress = async () => {
+		const apiService = new ApiService(); // Crea una instancia de ApiService
+		try {
+			const userData = {
+				apellidos: "Pérez García",
+				email: "juan.perez@example.com",
+				nombre: "Juanananan",
+				nombre_usuario: "juanperez",
+			};
+			await apiService.updateUserData(uid, userData);
+			navigation.navigate("Profile");
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	return (
 		<View style={styles.header}>
@@ -82,8 +94,11 @@ const EditPicture = () => {
 };
 
 const BasicFields = ({ data }) => {
-	const [name, setName] = useState({ value: "", error: "" });
-	const [lastName, setLastName] = useState({ value: "", error: "" });
+	const [name, setName] = useState({ value: data.nombre || "", error: "" });
+	const [lastName, setLastName] = useState({
+		value: data.apellidos || "",
+		error: "",
+	});
 	const [status, setStatus] = useState({ value: "", error: "" });
 	const [gender, setGender] = useState("");
 	return (
