@@ -11,8 +11,23 @@ import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 import TextInput from "../components/TextInput";
+import Paragraph from "../components/Paragraph";
+import ApiService from "../components/ApiService";
 
 import { useNavigation } from "@react-navigation/native";
+
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../firebase-config";
+
+let uid = null;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+auth.onAuthStateChanged(function (user) {
+	if (user) {
+		uid = user.uid;
+	}
+});
 
 const Header = ({}) => {
 	const navigation = useNavigation();
@@ -66,7 +81,7 @@ const EditPicture = () => {
 	);
 };
 
-const BasicFields = () => {
+const BasicFields = ({ data }) => {
 	const [name, setName] = useState({ value: "", error: "" });
 	const [lastName, setLastName] = useState({ value: "", error: "" });
 	const [status, setStatus] = useState({ value: "", error: "" });
@@ -136,7 +151,7 @@ const BasicFields = () => {
 	);
 };
 
-const Body = () => {
+const Body = ({ data }) => {
 	return (
 		<View
 			style={{
@@ -153,22 +168,68 @@ const Body = () => {
 				}}
 			>
 				<EditPicture />
-				<BasicFields />
+				<BasicFields data={data} />
 			</View>
 		</View>
 	);
 };
 
-const ProfileScreen = () => {
+/*async function updateUserData() {
+	const requestBody = {
+		id: id,
+		userData: userData,
+	};
+
+	console.log("JSON enviado:", JSON.stringify(requestBody, null, 2));
+
+	try {
+		const response = await fetch(
+			"https://updateuserdata-zvcc2bcxkq-nw.a.run.app/updateUserData",
+			{
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(requestBody, null, 2),
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error(`Error en la solicitud: ${response.status}`);
+		}
+
+		const data = await response;
+		console.log("Datos actualizados:", data);
+		//navigation.navigate('PerfilScreen', { id });
+	} catch (error) {
+		setError(error.message);
+		console.log("Error al actualizar los datos:", error);
+	}
+}*/
+
+const EditProfileScreen = () => {
+	const [data, setData] = useState(null);
+	const apiService = new ApiService(); // Crea una instancia de ApiService
+
+	useEffect(() => {
+		if (uid) {
+			async function fetchData() {
+				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
+				setData(result);
+			}
+			fetchData();
+		}
+	}, [uid]);
+
 	return (
 		<BackgroundTabs>
 			<Header />
-			<Body />
+			{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
 		</BackgroundTabs>
 	);
 };
 
-export default ProfileScreen;
+export default EditProfileScreen;
 
 const styles = StyleSheet.create({
 	header: {

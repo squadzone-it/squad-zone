@@ -13,6 +13,7 @@ import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 import Button from "../components/Button";
 import Paragraph from "../components/Paragraph";
+import ApiService from "../components/ApiService";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -206,11 +207,12 @@ const Body = ({ data }) => {
 
 const ProfileScreen = () => {
 	const [data, setData] = useState(null);
+	const apiService = new ApiService(); // Crea una instancia de ApiService
 
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
-				const result = await getUserData(uid);
+				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
 				setData(result);
 			}
 			fetchData();
@@ -220,43 +222,11 @@ const ProfileScreen = () => {
 	return (
 		<BackgroundTabs>
 			<Header />
-			<View style={{ alignSelf: "center" }}>
-				{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
-			</View>
+
+			{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
 		</BackgroundTabs>
 	);
 };
-
-async function getUserData() {
-	try {
-		const response = await fetch(
-			"https://readdatauser-zvcc2bcxkq-nw.a.run.app",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					id: uid,
-				}),
-			}
-		);
-
-		if (response.ok) {
-			const data = await response.json();
-			console.log("Datos del usuario obtenidos correctamente:", data);
-			return data;
-			//setUser(data);
-		} else {
-			console.error(
-				"Error al obtener los datos del usuario:",
-				response.statusText
-			);
-		}
-	} catch (error) {
-		console.error("Error al obtener los datos del usuario:", error);
-	}
-}
 
 export default ProfileScreen;
 
@@ -264,11 +234,10 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
 		alignItems: "center",
-		//justifyContent: "space-evenly",
-		//paddingHorizontal: 15,
+		paddingTop: 15,
 		backgroundColor: theme.colors.surface,
 		width: "100%",
-		position: "absolute",
+		position: "relative",
 		top: 0,
 	},
 	headerText: {
