@@ -159,7 +159,36 @@ const Body = () => {
 	);
 };
 
-const ProfileScreen = () => {
+const ProfileScreen = async () => {
+
+	const requestBody = {
+		id: id,
+		userData: userData,
+	  };
+	
+	  console.log('JSON enviado:', JSON.stringify(requestBody, null, 2)); 
+  
+	  try {
+		const response = await fetch('https://updateuserdata-zvcc2bcxkq-nw.a.run.app/updateUserData', {
+		  method: 'PUT',
+		  headers: {
+			'Content-Type': 'application/json',
+		  },
+		  body: JSON.stringify(requestBody,null,2),
+		});
+  
+		if (!response.ok) {
+		  throw new Error(`Error en la solicitud: ${response.status}`);
+		}
+  
+		const data = await response;
+		console.log('Datos actualizados:', data);
+		//navigation.navigate('PerfilScreen', { id });
+	  } catch (error) {
+		setError(error.message);
+		console.log('Error al actualizar los datos:', error);
+	  }
+
 	return (
 		<BackgroundTabs>
 			<Header />
