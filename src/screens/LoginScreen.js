@@ -12,6 +12,7 @@ import ProfileScreen from "./ProfileScreen";
 import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
+
 import {
 	getAuth,
 	signInWithEmailAndPassword,
@@ -40,7 +41,6 @@ export default function LoginScreen({ navigation }) {
 				console.log("Signed in!");
 				const user = userCredential.user;
 				//console.log(user);
-				ProfileScreen.uid = auth.currentUser.uid;
 				console.log(auth.currentUser.uid);
 				//navigation.navigate("Home");
 				navigation.reset({

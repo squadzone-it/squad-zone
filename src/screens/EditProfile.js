@@ -11,18 +11,45 @@ import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 import TextInput from "../components/TextInput";
+import Paragraph from "../components/Paragraph";
+import ApiService from "../components/ApiService";
 
 import { useNavigation } from "@react-navigation/native";
 
-const Header = ({}) => {
+import { getAuth } from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../../firebase-config";
+
+let uid = null;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+auth.onAuthStateChanged(function (user) {
+	if (user) {
+		uid = user.uid;
+	}
+});
+
+const Header = () => {
 	const navigation = useNavigation();
 
 	const crossPress = () => {
 		navigation.navigate("Profile");
 	};
 
-	const tickPress = () => {
-		navigation.navigate("Profile");
+	const tickPress = async () => {
+		const apiService = new ApiService(); // Crea una instancia de ApiService
+		try {
+			const userData = {
+				apellidos: "Pérez García",
+				email: "juan.perez@example.com",
+				nombre: "Juanananan",
+				nombre_usuario: "juanperez",
+			};
+			await apiService.updateUserData(uid, userData);
+			navigation.navigate("Profile");
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	return (
 		<View style={styles.header}>
@@ -66,9 +93,12 @@ const EditPicture = () => {
 	);
 };
 
-const BasicFields = () => {
-	const [name, setName] = useState({ value: "", error: "" });
-	const [lastName, setLastName] = useState({ value: "", error: "" });
+const BasicFields = ({ data }) => {
+	const [name, setName] = useState({ value: data.nombre || "", error: "" });
+	const [lastName, setLastName] = useState({
+		value: data.apellidos || "",
+		error: "",
+	});
 	const [status, setStatus] = useState({ value: "", error: "" });
 	const [gender, setGender] = useState("");
 	return (
@@ -136,7 +166,7 @@ const BasicFields = () => {
 	);
 };
 
-const Body = () => {
+const Body = ({ data }) => {
 	return (
 		<View
 			style={{
@@ -153,51 +183,68 @@ const Body = () => {
 				}}
 			>
 				<EditPicture />
-				<BasicFields />
+				<BasicFields data={data} />
 			</View>
 		</View>
 	);
 };
 
-const ProfileScreen = async () => {
-
+/*async function updateUserData() {
 	const requestBody = {
 		id: id,
 		userData: userData,
-	  };
-	
-	  console.log('JSON enviado:', JSON.stringify(requestBody, null, 2)); 
-  
-	  try {
-		const response = await fetch('https://updateuserdata-zvcc2bcxkq-nw.a.run.app/updateUserData', {
-		  method: 'PUT',
-		  headers: {
-			'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(requestBody,null,2),
-		});
-  
+	};
+
+	console.log("JSON enviado:", JSON.stringify(requestBody, null, 2));
+
+	try {
+		const response = await fetch(
+			"https://updateuserdata-zvcc2bcxkq-nw.a.run.app/updateUserData",
+			{
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(requestBody, null, 2),
+			}
+		);
+
 		if (!response.ok) {
-		  throw new Error(`Error en la solicitud: ${response.status}`);
+			throw new Error(`Error en la solicitud: ${response.status}`);
 		}
-  
+
 		const data = await response;
-		console.log('Datos actualizados:', data);
+		console.log("Datos actualizados:", data);
 		//navigation.navigate('PerfilScreen', { id });
-	  } catch (error) {
+	} catch (error) {
 		setError(error.message);
-		console.log('Error al actualizar los datos:', error);
-	  }
+		console.log("Error al actualizar los datos:", error);
+	}
+}*/
+
+const EditProfileScreen = () => {
+	const [data, setData] = useState(null);
+	const apiService = new ApiService(); // Crea una instancia de ApiService
+
+	useEffect(() => {
+		if (uid) {
+			async function fetchData() {
+				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
+				setData(result);
+			}
+			fetchData();
+		}
+	}, [uid]);
 
 	return (
 		<BackgroundTabs>
 			<Header />
-			<Body />
+			{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
 		</BackgroundTabs>
 	);
 };
 
-export default ProfileScreen;
+export default EditProfileScreen;
 
 const styles = StyleSheet.create({
 	header: {
