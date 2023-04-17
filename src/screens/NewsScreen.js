@@ -1,10 +1,4 @@
-import {
-	View,
-	Text,
-	StatusBar,
-	TouchableOpacity,
-	StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";

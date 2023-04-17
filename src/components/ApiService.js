@@ -54,10 +54,11 @@ class ApiService {
 			}
 
 			const data = await response;
-			console.log("Datos actualizados:", data);
+			console.log("Datos actualizados");
+			//console.log("Datos actualizados:", data);
 			//navigation.navigate('PerfilScreen', { id });
 		} catch (error) {
-			setError(error.message);
+			//setError(error.message);
 			console.log("Error al actualizar los datos:", error);
 		}
 	}
