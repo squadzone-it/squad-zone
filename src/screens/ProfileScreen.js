@@ -209,11 +209,20 @@ const ProfileScreen = () => {
 	const [data, setData] = useState(null);
 	const apiService = new ApiService(); // Crea una instancia de ApiService
 
+	const tempData = {
+		apellidos: " ",
+		email: " ",
+		id: " ",
+		nombre: " ",
+		nombre_usuario: " ",
+	};
+
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
 				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
 				setData(result);
+				console.log(result);
 			}
 			fetchData();
 		}
@@ -223,7 +232,7 @@ const ProfileScreen = () => {
 		<BackgroundTabs>
 			<Header />
 
-			{data ? <Body data={data} /> : <Paragraph> Cargando... </Paragraph>}
+			{data ? <Body data={data} /> : <Body data={tempData} />}
 		</BackgroundTabs>
 	);
 };
@@ -273,7 +282,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 18,
+		fontSize: 20,
 		color: theme.colors.text,
 	},
 	modalOptionR: {
@@ -282,7 +291,7 @@ const styles = StyleSheet.create({
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 18,
+		fontSize: 20,
 		color: theme.colors.error,
 	},
 });
