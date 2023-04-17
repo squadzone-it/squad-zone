@@ -1,34 +1,9 @@
-import React, { useState } from "react";
-import {
-	ImageBackground,
-	StyleSheet,
-	View,
-	StatusBar,
-	RefreshControl,
-} from "react-native";
+import React from "react";
+import { ImageBackground, StyleSheet, View, StatusBar } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../core/theme";
 
-export default function BackgroundTabs({ children }) {
-	const navigation = useNavigation();
-	const [refreshing, setRefreshing] = useState(false);
-
-	const route = useRoute().name;
-	console.log(route);
-
-	const onRefresh = () => {
-		setRefreshing(true);
-
-		navigation.reset({
-			index: 0,
-			routes: [{ name: route }],
-		});
-		setTimeout(() => {
-			setRefreshing(false);
-		}, 1000);
-	};
+export default function Background({ children }) {
 	return (
 		<ImageBackground
 			/*source={require("../assets/background_dot.png")}
@@ -44,10 +19,6 @@ export default function BackgroundTabs({ children }) {
 			<KeyboardAwareScrollView
 				behavior="padding"
 				contentContainerStyle={styles.scrollViewContent}
-				keyboardShouldPersistTaps="never"
-				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-				}
 			>
 				<View style={styles.container}>{children}</View>
 			</KeyboardAwareScrollView>
