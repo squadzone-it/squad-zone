@@ -55,11 +55,10 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
 		alignItems: "center",
-		//justifyContent: "space-evenly",
-		//paddingHorizontal: 15,
+		paddingTop: 15,
 		backgroundColor: theme.colors.surface,
 		width: "100%",
-		position: "absolute",
+		position: "relative",
 		top: 0,
 	},
 	headerText: {

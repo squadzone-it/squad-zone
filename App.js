@@ -75,7 +75,7 @@ const App = () => {
 
 						return <Ionic name={iconName} size={size} color={color} />;
 					},
-					tabBarActiveBackgroundColor: "#000000",
+					tabBarActiveBackgroundColor: theme.colors.surface,
 					tabBarInactiveBackgroundColor: theme.colors.surface,
 				})}
 			>

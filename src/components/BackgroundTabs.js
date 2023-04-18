@@ -16,7 +16,7 @@ export default function BackgroundTabs({ children }) {
 	const [refreshing, setRefreshing] = useState(false);
 
 	const route = useRoute().name;
-	console.log(route);
+	//console.log(route);
 
 	const onRefresh = () => {
 		setRefreshing(true);
