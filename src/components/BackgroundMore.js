@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 		//padding: 20,
 		paddingVertical: 20,
 		width: "100%",
-		maxWidth: 350,
+		//maxWidth: 350,
 		alignSelf: "center",
 		alignItems: "flex-start",
 		justifyContent: "center",

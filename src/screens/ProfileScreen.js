@@ -79,19 +79,25 @@ const ProfileScreen = () => {
 
 	const DatosPersonales = () => (
 		<View style={{ margin: 15 }}>
-			<Text style={{ fontFamily: "SF-Pro" }}>Datos Personales</Text>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Datos Personales
+			</Text>
 		</View>
 	);
 
 	const Equipo = () => (
 		<View style={{ margin: 15 }}>
-			<Text style={{ fontFamily: "SF-Pro" }}>Equipo</Text>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Equipo
+			</Text>
 		</View>
 	);
 
 	const Partidos = () => (
 		<View style={{ margin: 15 }}>
-			<Text style={{ fontFamily: "SF-Pro" }}>Partidos</Text>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Partidos
+			</Text>
 		</View>
 	);
 

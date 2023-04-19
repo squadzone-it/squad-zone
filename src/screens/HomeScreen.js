@@ -79,11 +79,11 @@ const styles = StyleSheet.create({
 		color: theme.colors.text,
 	},
 	headerButtonRight: {
-		padding: 10,
+		padding: 15,
 		marginLeft: "auto",
 	},
 	headerButtonLeft: {
-		padding: 10,
+		padding: 15,
 		marginRight: "auto",
 	},
 });
