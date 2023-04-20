@@ -6,6 +6,9 @@ import React, { useState, useEffect } from "react";
 import TextInput from "../components/TextInput";
 import ApiService from "../components/ApiService";
 
+import { requestGalleryPermission } from "../components/requestPermissions";
+import * as ImagePicker from "expo-image-picker";
+
 import { useNavigation } from "@react-navigation/native";
 
 import { getAuth } from "firebase/auth";
@@ -65,6 +68,30 @@ const EditProfileScreen = () => {
 		}
 	}, [data]);
 
+	const selectPhoto = async () => {
+		const hasPermission = await requestGalleryPermission();
+
+		if (!hasPermission) {
+			return;
+		}
+
+		const result = await ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			quality: 1,
+			base64: true,
+		});
+
+		if (!result.canceled) {
+			const { base64 } = result.assets[0];
+			const base64Image = `data:image/jpeg;base64,${base64}`;
+			try {
+				await apiService.updateProfilePhoto(uid, base64Image);
+			} catch (error) {
+				console.error("Error updating profile picture:", error);
+			}
+		}
+	};
+
 	return (
 		<BackgroundMore>
 			{/* Header */}
@@ -101,17 +128,17 @@ const EditProfileScreen = () => {
 					{/* EditPicture */}
 					<View style={{ alignItems: "center" }}>
 						<Image
-							source={require("../assets/logo.png")}
+							source={{ uri: data ? data.foto_url : " " }}
 							style={{
 								height: 80,
 								width: 80,
 								borderRadius: 500,
-								borderWidth: 1,
+								borderWidth: 3,
 								padding: 5,
 								borderColor: theme.colors.primary,
 							}}
 						/>
-						<TouchableOpacity>
+						<TouchableOpacity onPress={selectPhoto}>
 							<Text style={{ marginTop: 10, color: theme.colors.primary }}>
 								Cambiar foto de perfil
 							</Text>

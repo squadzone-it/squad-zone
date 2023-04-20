@@ -64,6 +64,7 @@ const ProfileScreen = () => {
 		id: " ",
 		nombre: " ",
 		nombre_usuario: " ",
+		foto_url: " ",
 	};
 
 	useEffect(() => {
@@ -173,7 +174,7 @@ const ProfileScreen = () => {
 				>
 					<Image
 						source={{
-							uri: "https://storage.googleapis.com/intermediacionlaboral-bucket/chica.png",
+							uri: data ? data.foto_url : tempData.foto_url,
 						}}
 						style={{
 							height: 70,
