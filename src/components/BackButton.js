@@ -13,7 +13,7 @@ export default function BackButton({ goBack }) {
 const styles = StyleSheet.create({
 	container: {
 		position: "absolute",
-		top: 10,
-		left: 10,
+		top: 15,
+		left: 15,
 	},
 });

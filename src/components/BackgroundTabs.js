@@ -16,7 +16,7 @@ export default function BackgroundTabs({ children }) {
 	const [refreshing, setRefreshing] = useState(false);
 
 	const route = useRoute().name;
-	console.log(route);
+	//console.log(route);
 
 	const onRefresh = () => {
 		setRefreshing(true);
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 		//padding: 20,
 		paddingVertical: 20,
 		width: "100%",
-		maxWidth: 350,
+		//maxWidth: 350,
 		alignSelf: "center",
 		alignItems: "flex-start",
 		justifyContent: "center",

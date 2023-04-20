@@ -11,11 +11,10 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
-import Button from "../components/Button";
-import Paragraph from "../components/Paragraph";
 import ApiService from "../components/ApiService";
 
 import { useNavigation } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -30,13 +29,13 @@ auth.onAuthStateChanged(function (user) {
 	}
 });
 
-const settingsButton = () => {};
-const follow = () => {};
-
-const Header = ({}) => {
+const ProfileScreen = () => {
 	const navigation = useNavigation();
 
 	const [showModal, setShowModal] = useState(false);
+
+	const settingsButton = () => {};
+	const follow = () => {};
 
 	const onOptionsPressed = () => {
 		setShowModal(true);
@@ -56,156 +55,6 @@ const Header = ({}) => {
 		navigation.navigate("StartScreen");
 	};
 
-	return (
-		<View style={styles.header}>
-			<TouchableOpacity
-				style={styles.headerButtonLeft}
-				onPress={settingsButton}
-			>
-				<Ionic name="add" style={{ fontSize: 32, color: theme.colors.text }} />
-			</TouchableOpacity>
-			<Text style={styles.headerText}>
-				SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
-				NE
-			</Text>
-			<TouchableOpacity
-				onPress={onOptionsPressed}
-				style={styles.headerButtonRight}
-			>
-				<Ionic
-					name="menu-sharp"
-					style={{ fontSize: 25, color: theme.colors.text }}
-				/>
-			</TouchableOpacity>
-
-			<Modal visible={showModal} animationType="slide" transparent={true}>
-				<TouchableOpacity
-					style={styles.modalBackground}
-					onPress={onClosePressed}
-				>
-					<View style={styles.modalContent}>
-						<TouchableOpacity onPress={onEditProfilePressed}>
-							<Text style={styles.modalOption}>Editar perfil</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={onLogoutPressed}>
-							<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
-						</TouchableOpacity>
-					</View>
-				</TouchableOpacity>
-			</Modal>
-		</View>
-	);
-};
-
-const ProfileInfo = ({ data }) => {
-	return (
-		<View
-			style={{
-				flexDirection: "row",
-				alignItems: "center",
-				width: "100%",
-				paddingHorizontal: 15,
-				paddingVertical: 15,
-				backgroundColor: theme.colors.surface,
-			}}
-		>
-			<Image
-				source={require("../assets/logo.png")}
-				style={{
-					flex: 1,
-					maxHeight: 70,
-					maxWidth: 70,
-					borderRadius: 500,
-					marginRight: "auto",
-					borderWidth: 1,
-					padding: 5,
-					borderColor: theme.colors.primary,
-				}}
-			/>
-			<View style={{ flex: 4 }}>
-				<Text
-					style={{
-						fontSize: 16,
-						fontWeight: "500",
-						marginLeft: 20,
-						fontFamily: "SF-Pro-Bold",
-						color: theme.colors.text,
-					}}
-				>
-					@{data.nombre_usuario}
-					{"   "}
-					<Ionic
-						name="checkmark-circle-sharp"
-						style={{ fontSize: 16, color: "cyan" }}
-					/>
-				</Text>
-				<Text
-					style={{
-						fontSize: 13,
-						fontWeight: "500",
-						marginLeft: 20,
-						fontFamily: "SF-Pro",
-						color: theme.colors.text,
-					}}
-				>
-					{data.nombre} {data.apellidos}
-				</Text>
-			</View>
-		</View>
-	);
-};
-
-const Body = ({ data }) => {
-	return (
-		<View
-			style={{
-				backgroundColor: theme.colors.surface,
-				height: "100%",
-				width: "100%",
-			}}
-		>
-			<StatusBar
-				backgroundColor={theme.colors.surface}
-				barStyle="light-content"
-				animated={true}
-			/>
-			<ProfileInfo data={data} />
-			<View style={{ flex: 1, paddingHorizontal: 20 }}>
-				<Button mode="contained" onPress={follow}>
-					SEGUIR
-				</Button>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-between",
-						width: "100%",
-						paddingHorizontal: 0,
-						paddingVertical: 15,
-					}}
-				>
-					<Ionic name="mail" style={{ fontSize: 30 }} />
-					<Paragraph> {data.email}</Paragraph>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						justifyContent: "space-between",
-						width: "100%",
-						paddingHorizontal: 0,
-						paddingVertical: 15,
-					}}
-				>
-					<Ionic name="attach" style={{ fontSize: 30 }} />
-					<Paragraph> {data.id}</Paragraph>
-				</View>
-			</View>
-		</View>
-	);
-};
-
-const ProfileScreen = () => {
 	const [data, setData] = useState(null);
 	const apiService = new ApiService(); // Crea una instancia de ApiService
 
@@ -215,6 +64,7 @@ const ProfileScreen = () => {
 		id: " ",
 		nombre: " ",
 		nombre_usuario: " ",
+		foto_url: " ",
 	};
 
 	useEffect(() => {
@@ -222,21 +72,221 @@ const ProfileScreen = () => {
 			async function fetchData() {
 				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
 				setData(result);
-				console.log(result);
+				//console.log(result);
 			}
 			fetchData();
 		}
 	}, [uid]);
 
+	const DatosPersonales = () => (
+		<View style={{ margin: 15 }}>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Datos Personales
+			</Text>
+		</View>
+	);
+
+	const Equipo = () => (
+		<View style={{ margin: 15 }}>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Equipo
+			</Text>
+		</View>
+	);
+
+	const Partidos = () => (
+		<View style={{ margin: 15 }}>
+			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
+				Partidos
+			</Text>
+		</View>
+	);
+
+	const Tab = createMaterialTopTabNavigator();
+
 	return (
 		<BackgroundTabs>
-			<Header />
+			{/* Header */}
+			<View style={styles.header}>
+				<TouchableOpacity
+					style={styles.headerButtonLeft}
+					onPress={settingsButton}
+				>
+					<Ionic
+						name="add"
+						style={{ fontSize: 32, color: theme.colors.text }}
+					/>
+				</TouchableOpacity>
+				<Text style={styles.headerText}>
+					SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
+					NE
+				</Text>
+				<TouchableOpacity
+					onPress={onOptionsPressed}
+					style={styles.headerButtonRight}
+				>
+					<Ionic
+						name="menu-sharp"
+						style={{ fontSize: 25, color: theme.colors.text }}
+					/>
+				</TouchableOpacity>
 
-			{data ? <Body data={data} /> : <Body data={tempData} />}
+				<Modal visible={showModal} animationType="slide" transparent={true}>
+					<TouchableOpacity
+						style={styles.modalBackground}
+						onPress={onClosePressed}
+					>
+						<View style={styles.modalContent}>
+							<TouchableOpacity onPress={onEditProfilePressed}>
+								<Text style={styles.modalOption}>Editar perfil</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={onLogoutPressed}>
+								<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
+							</TouchableOpacity>
+						</View>
+					</TouchableOpacity>
+				</Modal>
+			</View>
+
+			{/* Body */}
+			<View
+				style={{
+					backgroundColor: theme.colors.surface,
+					height: "100%",
+					width: "100%",
+				}}
+			>
+				<StatusBar
+					backgroundColor={theme.colors.surface}
+					barStyle="light-content"
+					animated={true}
+				/>
+				{/* ProfileInfo */}
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						width: "100%",
+						paddingLeft: 10,
+						paddingVertical: 5,
+						backgroundColor: theme.colors.surface,
+					}}
+				>
+					<Image
+						source={{
+							uri: data ? data.foto_url : tempData.foto_url,
+						}}
+						style={{
+							height: 70,
+							width: 70,
+							borderRadius: 500,
+							marginRight: "auto",
+							borderWidth: 3,
+							padding: 5,
+							borderColor: theme.colors.primary,
+						}}
+						resizeMode="cover"
+					/>
+					<View style={{ flex: 3 }}>
+						<Text
+							style={{
+								fontSize: 16,
+								fontWeight: "500",
+								marginLeft: 10,
+								fontFamily: "SF-Pro-Bold",
+								color: theme.colors.text,
+							}}
+						>
+							@{data ? data.nombre_usuario : tempData.nombre_usuario}
+							{"  "}
+							<Ionic
+								name="checkmark-circle-sharp"
+								style={{ fontSize: 16, color: "cyan" }}
+							/>
+						</Text>
+						<Text
+							style={{
+								fontSize: 13,
+								fontWeight: "500",
+								marginLeft: 10,
+								fontFamily: "SF-Pro",
+								color: theme.colors.text,
+							}}
+						>
+							{data
+								? `${data.nombre} ${data.apellidos}`
+								: `${tempData.nombre} ${tempData.apellidos}`}
+						</Text>
+					</View>
+					<View style={{ flex: 1 }}>
+						<Ionic name="medal" style={{ fontSize: 50, color: "gold" }} />
+					</View>
+				</View>
+
+				{/* Pestañas */}
+				<Tab.Navigator
+					screenOptions={{
+						tabBarActiveTintColor: theme.colors.text,
+						tabBarInactiveTintColor: theme.colors.secondary,
+						tabBarPressColor: "transparent",
+						tabBarShowLabel: false,
+						tabBarIndicatorStyle: {
+							backgroundColor: theme.colors.primary,
+						},
+						tabBarStyle: {
+							backgroundColor: theme.colors.surface,
+							borderBottomWidth: 1,
+							borderBottomColor: theme.colors.primary,
+							paddingTop: 0,
+							height: 50,
+							borderColor: theme.colors.primary,
+						},
+					}}
+				>
+					<Tab.Screen
+						name="Datos Personales"
+						component={DatosPersonales}
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ focused, color, size }) =>
+								focused ? (
+									<Ionic name="person" color={color} size={25} />
+								) : (
+									<Ionic name="person-outline" color={color} size={23} />
+								),
+						}}
+					/>
+					<Tab.Screen
+						name="Equipo"
+						component={Equipo}
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ focused, color, size }) =>
+								focused ? (
+									<Ionic name="football" color={color} size={25} />
+								) : (
+									<Ionic name="football-outline" color={color} size={23} />
+								),
+						}}
+					/>
+					<Tab.Screen
+						name="Partidos"
+						component={Partidos}
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ focused, color, size }) =>
+								focused ? (
+									<Ionic name="calendar" color={color} size={25} />
+								) : (
+									<Ionic name="calendar-outline" color={color} size={23} />
+								),
+						}}
+					/>
+				</Tab.Navigator>
+			</View>
 		</BackgroundTabs>
 	);
 };
-
 export default ProfileScreen;
 
 const styles = StyleSheet.create({
