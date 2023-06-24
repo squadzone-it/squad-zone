@@ -28,6 +28,7 @@ import {
 	getDocs,
 } from "firebase/firestore";
 import { firebaseConfig } from "../../firebase-config";
+import { getFunctions, httpsCallable } from "firebase/functions"; // Importa httpsCallable
 
 export default function RegisterScreen({ navigation }) {
 	const [name, setName] = useState({ value: "", error: "" });
@@ -43,44 +44,41 @@ export default function RegisterScreen({ navigation }) {
 	const app = initializeApp(firebaseConfig);
 	const auth = getAuth(app);
 	const db = getFirestore(app);
+	const functions = getFunctions(app);
 
-	//API que guarda usuarios al registrarse en GCP
-	const saveUserDataToMySQL = async (
-		id,
-		nombre,
-		apellidos,
-		email,
-		nombre_usuario
-	) => {
+	const saveUserData = async (id, nombre, apellidos, email, nombre_usuario) => {
 		try {
-			const response = await fetch(
-				"https://saveuserdata-zvcc2bcxkq-nw.a.run.app",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-
-					body: JSON.stringify({
-						id,
-						nombre,
-						apellidos,
-						email,
-						nombre_usuario,
-					}),
-				}
-			);
+			const functionUrl =
+				"https://europe-west2-squadzoneapp.cloudfunctions.net/saveUserData"; // Reemplaza esto con la URL de tu función de Cloud
+			const response = await fetch(functionUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					userId: id,
+					name: nombre,
+					lastName: apellidos,
+					email: email,
+					username: nombre_usuario,
+				}),
+			});
 
 			if (!response.ok) {
-				throw new Error(
-					"Failed to save user data to MySQL" +
-						JSON.stringify({ id, nombre, apellidos, email, nombre_usuario })
-				);
+				throw new Error(`HTTP error ${response.status}`);
 			}
 
-			console.log("User data saved to MySQL successfully");
+			const responseData = await response.json();
+			if (responseData.result === "success") {
+				console.log("User data saved to Firestore successfully");
+			} else {
+				console.error(
+					"Error saving user data to Firestore:",
+					responseData.error
+				);
+			}
 		} catch (error) {
-			console.error("Error saving user data to MySQL:", error);
+			console.error("Error saving user data to Firestore:", error);
 		}
 	};
 
@@ -129,14 +127,8 @@ export default function RegisterScreen({ navigation }) {
 					displayName: username.value,
 				});
 				try {
-					const docRef = await setDoc(doc(db, "users", auth.currentUser.uid), {
-						name: name.value,
-						username: username.value,
-						email: email.value,
-					});
-					console.log("User written with ID: ", auth.currentUser.uid);
-					// Call the API to save user data to MySQL
-					await saveUserDataToMySQL(
+					// Call the API to save user data to Firestore
+					await saveUserData(
 						auth.currentUser.uid,
 						name.value,
 						lastName.value,

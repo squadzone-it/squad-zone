@@ -19,6 +19,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase-config";
+import { getFunctions, httpsCallable } from "firebase/functions"; // Importa httpsCallable
 
 let uid = null;
 const app = initializeApp(firebaseConfig);
@@ -28,6 +29,7 @@ auth.onAuthStateChanged(function (user) {
 		uid = user.uid;
 	}
 });
+const functions = getFunctions(app);
 
 const ProfileScreen = () => {
 	const navigation = useNavigation();
@@ -58,21 +60,58 @@ const ProfileScreen = () => {
 	const [data, setData] = useState(null);
 	const apiService = new ApiService(); // Crea una instancia de ApiService
 
+	const getUserData = async (userId) => {
+		try {
+			const functionUrl =
+				"https://europe-west2-squadzoneapp.cloudfunctions.net/getUserData";
+			const response = await fetch(functionUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					userId: userId,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error ${response.status}`);
+			}
+
+			const responseData = await response.json();
+
+			if (responseData.result === "success") {
+				console.log("User data retrieved successfully:", responseData.data);
+				return responseData.data;
+			} else {
+				throw new Error(
+					`Error retrieving user data from Firestore: ${responseData.error}`
+				);
+			}
+		} catch (error) {
+			console.error("Error retrieving user data from Firestore:", error);
+			throw error;
+		}
+	};
+
 	const tempData = {
-		apellidos: " ",
+		lastName: " ",
 		email: " ",
 		id: " ",
-		nombre: " ",
-		nombre_usuario: " ",
-		foto_url: " ",
+		name: " ",
+		username: " ",
+		photoUrl: " ",
 	};
 
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
-				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
-				setData(result);
-				//console.log(result);
+				try {
+					const result = await getUserData(uid);
+					setData(result);
+				} catch (error) {
+					console.error("Error retrieving user data from Firestore:", error);
+				}
 			}
 			fetchData();
 		}
@@ -174,7 +213,7 @@ const ProfileScreen = () => {
 				>
 					<Image
 						source={{
-							uri: data ? data.foto_url : tempData.foto_url,
+							uri: data ? data.photoUrl : tempData.photoUrl,
 						}}
 						style={{
 							height: 70,
@@ -197,7 +236,7 @@ const ProfileScreen = () => {
 								color: theme.colors.text,
 							}}
 						>
-							@{data ? data.nombre_usuario : tempData.nombre_usuario}
+							@{data ? data.username : tempData.username}
 							{"  "}
 							<Ionic
 								name="checkmark-circle-sharp"
@@ -214,8 +253,8 @@ const ProfileScreen = () => {
 							}}
 						>
 							{data
-								? `${data.nombre} ${data.apellidos}`
-								: `${tempData.nombre} ${tempData.apellidos}`}
+								? `${data.name} ${data.lastName}`
+								: `${tempData.name} ${tempData.lastName}`}
 						</Text>
 					</View>
 					<View style={{ flex: 1 }}>
