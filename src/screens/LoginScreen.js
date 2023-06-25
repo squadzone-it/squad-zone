@@ -110,7 +110,7 @@ export default function LoginScreen({ navigation }) {
 					style={{
 						marginHorizontal: 8,
 						fontFamily: "SF-Pro",
-						color: "white",
+						color: theme.colors.text,
 					}}
 				>
 					Ó
@@ -125,7 +125,7 @@ export default function LoginScreen({ navigation }) {
 					>
 						<Ionic
 							name="logo-google"
-							style={{ fontSize: 50, color: "white" }}
+							style={{ fontSize: 50, color: theme.colors.text }}
 						/>
 					</TouchableOpacity>
 				</View>
@@ -134,7 +134,10 @@ export default function LoginScreen({ navigation }) {
 						onPress={handleAppleLogin}
 						style={styles.otherLoginButton}
 					>
-						<Ionic name="logo-apple" style={{ fontSize: 50, color: "white" }} />
+						<Ionic
+							name="logo-apple"
+							style={{ fontSize: 50, color: theme.colors.text }}
+						/>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -142,7 +145,7 @@ export default function LoginScreen({ navigation }) {
 				<View style={styles.HorizontalLine} />
 			</View>
 			<View style={styles.row}>
-				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
+				<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 					¿Aún no tienes cuenta?{" "}
 				</Text>
 				<TouchableOpacity onPress={() => navigation.replace("RegisterScreen")}>
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
 
 	otherLoginButton: {
 		borderRadius: 10,
-		borderColor: "#5EA780",
+		borderColor: theme.colors.primary,
 		borderWidth: 1,
 		margin: 10,
 		fontSize: 24,
