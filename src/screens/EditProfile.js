@@ -7,6 +7,7 @@ import TextInput from "../components/TextInput";
 
 import { requestGalleryPermission } from "../components/requestPermissions";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -191,12 +192,35 @@ const EditProfileScreen = () => {
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
 			quality: 1,
-			base64: true,
 		});
 
 		if (!result.canceled) {
-			const { base64 } = result.assets[0];
+			const selectedAsset = result.assets[0];
+
+			const longerSide =
+				selectedAsset.width > selectedAsset.height ? "width" : "height";
+
+			const resizeOption =
+				longerSide === "width" ? { width: 400 } : { height: 400 };
+
+			const manipResult = await ImageManipulator.manipulateAsync(
+				selectedAsset.uri,
+				[
+					{
+						resize: resizeOption,
+					},
+				],
+				{
+					compress: 1,
+					format: ImageManipulator.SaveFormat.JPEG,
+					base64: true,
+				}
+			);
+
+			const { base64 } = manipResult;
+
 			const base64Image = `data:image/jpeg;base64,${base64}`;
+
 			try {
 				await uploadPhoto(uid, base64Image);
 
