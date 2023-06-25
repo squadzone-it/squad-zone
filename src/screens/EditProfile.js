@@ -4,7 +4,6 @@ import BackgroundMore from "../components/BackgroundMore";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 import TextInput from "../components/TextInput";
-import ApiService from "../components/ApiService";
 
 import { requestGalleryPermission } from "../components/requestPermissions";
 import * as ImagePicker from "expo-image-picker";
@@ -26,7 +25,6 @@ auth.onAuthStateChanged(function (user) {
 
 const EditProfileScreen = () => {
 	const [data, setData] = useState(null);
-	const apiService = new ApiService(); // Crea una instancia de ApiService
 	const updateUserData = async (userId, userData) => {
 		try {
 			const functionUrl =
@@ -104,6 +102,40 @@ const EditProfileScreen = () => {
 		photoUrl: " ",
 	};
 
+	const uploadPhoto = async (id, photo) => {
+		try {
+			const functionUrl =
+				"https://europe-west2-squadzoneapp.cloudfunctions.net/uploadPhotos";
+			const response = await fetch(functionUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					id,
+					photo,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error ${response.status}`);
+			}
+
+			const responseData = await response.json();
+
+			if (responseData.result === "success") {
+				console.log("Profile photo updated successfully");
+			} else {
+				throw new Error(
+					`Error uploading profile photo to Firestore: ${responseData.error}`
+				);
+			}
+		} catch (error) {
+			console.error("Error uploading profile photo to Firestore:", error);
+			throw error;
+		}
+	};
+
 	const navigation = useNavigation();
 
 	const crossPress = () => {
@@ -166,9 +198,13 @@ const EditProfileScreen = () => {
 			const { base64 } = result.assets[0];
 			const base64Image = `data:image/jpeg;base64,${base64}`;
 			try {
-				await apiService.updateProfilePhoto(uid, base64Image);
+				await uploadPhoto(uid, base64Image);
+
+				if (data) {
+					setData({ ...data, photoUrl: base64Image });
+				}
 			} catch (error) {
-				console.error("Error updating profile picture:", error);
+				console.error("Error uploading profile picture:", error);
 			}
 		}
 	};
@@ -209,7 +245,7 @@ const EditProfileScreen = () => {
 					{/* EditPicture */}
 					<View style={{ alignItems: "center" }}>
 						<Image
-							source={{ uri: data ? data.foto_url : " " }}
+							source={{ uri: data ? data.photoUrl : " " }}
 							style={{
 								height: 80,
 								width: 80,
