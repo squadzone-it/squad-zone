@@ -22,7 +22,7 @@ export default function TextInput({ errorText, description, ...props }) {
 						bodyLarge: {
 							...theme.fonts.bodyLarge,
 							fontFamily: "SF-Pro",
-							color: "white",
+							color: theme.colors.text,
 						},
 					},
 				}}
@@ -31,7 +31,11 @@ export default function TextInput({ errorText, description, ...props }) {
 				) => (
 					<NativeTextInput
 						{...props}
-						style={[props.style, styles.nativeInput, { color: "white" }]}
+						style={[
+							props.style,
+							styles.nativeInput,
+							{ color: theme.colors.text },
+						]}
 					/>
 				)}
 			/>

@@ -11,7 +11,7 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
-import ApiService from "../components/ApiService";
+//import ApiService from "../components/ApiService";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -58,7 +58,7 @@ const ProfileScreen = () => {
 	};
 
 	const [data, setData] = useState(null);
-	const apiService = new ApiService(); // Crea una instancia de ApiService
+	//const apiService = new ApiService(); // Crea una instancia de ApiService
 
 	const getUserData = async (userId) => {
 		try {
@@ -240,7 +240,7 @@ const ProfileScreen = () => {
 							{"  "}
 							<Ionic
 								name="checkmark-circle-sharp"
-								style={{ fontSize: 16, color: "cyan" }}
+								style={{ fontSize: 16, color: "#42caff" }}
 							/>
 						</Text>
 						<Text
@@ -258,7 +258,7 @@ const ProfileScreen = () => {
 						</Text>
 					</View>
 					<View style={{ flex: 1 }}>
-						<Ionic name="medal" style={{ fontSize: 50, color: "gold" }} />
+						<Ionic name="medal" style={{ fontSize: 50, color: "#d9b00f" }} />
 					</View>
 				</View>
 
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0,0,0,0.5)",
 	},
 	modalContent: {
-		backgroundColor: "#1c1c1c",
+		backgroundColor: theme.colors.secondaryBackground,
 		borderRadius: 10,
 		padding: 10,
 		minWidth: "80%",

@@ -87,3 +87,72 @@ exports.updateUserData = functions
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
+
+const { Storage } = require("@google-cloud/storage");
+
+const storage = new Storage({
+	projectId: "squadzoneapp",
+	keyFilename: "./squadzoneapp-firebase-adminsdk-fo8g5-bb77a364f6.json",
+});
+const bucketName = "squadzoneapp.appspot.com";
+
+exports.uploadPhotos = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
+
+		const { id, photo } = req.body;
+
+		if (!id) {
+			return res.status(400).send("Falta el id para actualizar el usuario");
+		}
+
+		if (!photo) {
+			return res.status(400).send("No se proporcionó ninguna foto");
+		}
+
+		const base64Regex = /^data:image\/\w+;base64,/;
+		if (!base64Regex.test(photo)) {
+			return res.status(400).send("El formato de la imagen no es base64");
+		}
+
+		const base64Data = photo.replace(base64Regex, "");
+		const bufferData = Buffer.from(base64Data, "base64");
+
+		const dateTimeString = new Date().toISOString().replace(/[-:.]/g, "");
+		const gcsFileName = `${id}_${dateTimeString}.png`;
+
+		const bucket = storage.bucket(bucketName);
+		const file = bucket.file(gcsFileName);
+
+		try {
+			await file.save(bufferData, {
+				contentType: "image/png",
+				metadata: {
+					cacheControl: "public, max-age=31536000",
+				},
+			});
+
+			// Generar URL firmado
+			const config = {
+				action: "read",
+				expires: "03-01-2500", // Puedes establecer tu propia fecha de expiración
+			};
+			const url = await file.getSignedUrl(config);
+
+			try {
+				await db.collection("users").doc(id).update({ photoUrl: url[0] });
+				console.log("User photo updated successfully:", id);
+				res.status(200).send({ result: "success", photoUrl: url[0] });
+			} catch (error) {
+				console.error("Error updating user photo in Firestore:", error);
+				res.status(500).send({ result: "error", error: error.message });
+			}
+		} catch (error) {
+			console.error("Error uploading photo to storage:", error);
+			return res.status(500).send(`Error uploading photo: ${error.message}`);
+		}
+	});

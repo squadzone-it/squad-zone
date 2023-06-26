@@ -234,7 +234,7 @@ export default function RegisterScreen({ navigation }) {
 				<View style={styles.HorizontalLine} />
 			</View>
 			<View style={styles.row}>
-				<Text style={{ fontFamily: "SF-Pro", color: "white" }}>
+				<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 					¿Ya tienes una cuenta?{" "}
 				</Text>
 				<TouchableOpacity onPress={() => navigation.replace("LoginScreen")}>

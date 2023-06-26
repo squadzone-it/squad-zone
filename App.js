@@ -1,6 +1,10 @@
 import React from "react";
 import { Provider } from "react-native-paper";
-import { NavigationContainer, DarkTheme } from "@react-navigation/native";
+import {
+	NavigationContainer,
+	DarkTheme,
+	LightTheme,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { theme } from "./src/core/theme";
