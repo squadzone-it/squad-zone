@@ -27,6 +27,83 @@ auth.onAuthStateChanged(function (user) {
 const EditProfileScreen = () => {
 	const [data, setData] = useState(null);
 	const apiService = new ApiService(); // Crea una instancia de ApiService
+	const updateUserData = async (userId, userData) => {
+		try {
+			const functionUrl =
+				"https://europe-west2-squadzoneapp.cloudfunctions.net/updateUserData";
+			const response = await fetch(functionUrl, {
+				method: "PUT", // Usa PUT en lugar de POST
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					userId,
+					userData,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error ${response.status}`);
+			}
+
+			const responseData = await response.json();
+
+			if (responseData.result === "success") {
+				console.log("User data updated successfully");
+			} else {
+				throw new Error(
+					`Error updating user data in Firestore: ${responseData.error}`
+				);
+			}
+		} catch (error) {
+			console.error("Error updating user data in Firestore:", error);
+			throw error;
+		}
+	};
+
+	const getUserData = async (userId) => {
+		try {
+			const functionUrl =
+				"https://europe-west2-squadzoneapp.cloudfunctions.net/getUserData";
+			const response = await fetch(functionUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					userId: userId,
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error ${response.status}`);
+			}
+
+			const responseData = await response.json();
+
+			if (responseData.result === "success") {
+				console.log("User data retrieved successfully:", responseData.data);
+				return responseData.data;
+			} else {
+				throw new Error(
+					`Error retrieving user data from Firestore: ${responseData.error}`
+				);
+			}
+		} catch (error) {
+			console.error("Error retrieving user data from Firestore:", error);
+			throw error;
+		}
+	};
+
+	const tempData = {
+		lastName: " ",
+		email: " ",
+		id: " ",
+		name: " ",
+		username: " ",
+		photoUrl: " ",
+	};
+
 	const navigation = useNavigation();
 
 	const crossPress = () => {
@@ -36,8 +113,12 @@ const EditProfileScreen = () => {
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
-				const result = await apiService.getUserData(uid); // Usa la instancia de ApiService
-				setData(result);
+				try {
+					const result = await getUserData(uid);
+					setData(result);
+				} catch (error) {
+					console.error("Error retrieving user data from Firestore:", error);
+				}
 			}
 			fetchData();
 		}
@@ -46,10 +127,10 @@ const EditProfileScreen = () => {
 	const tickPress = async () => {
 		try {
 			const userData = {
-				nombre: name.value,
-				apellidos: lastName.value,
+				name: name.value,
+				lastName: lastName.value,
 			};
-			await apiService.updateUserData(uid, userData);
+			await updateUserData(uid, userData);
 			navigation.navigate("Profile");
 		} catch (error) {
 			console.log(error);
@@ -63,8 +144,8 @@ const EditProfileScreen = () => {
 
 	useEffect(() => {
 		if (data) {
-			setName({ value: data.nombre, error: "" });
-			setLastName({ value: data.apellidos, error: "" });
+			setName({ value: data.name, error: "" });
+			setLastName({ value: data.lastName, error: "" });
 		}
 	}, [data]);
 

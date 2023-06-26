@@ -61,3 +61,29 @@ exports.getUserData = functions
 				.send("Error: No se pudo obtener la información del usuario");
 		}
 	});
+
+exports.updateUserData = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "PUT") {
+			res.set("Allow", "PUT");
+			res.status(405).send("Method not allowed. Please use PUT.");
+			return;
+		}
+
+		const { userId, userData } = req.body;
+
+		if (!userId || !userData) {
+			res.status(400).send("Error: El userId y userData son requeridos");
+			return;
+		}
+
+		try {
+			await db.collection("users").doc(userId).update(userData);
+			console.log("User data updated successfully:", userId);
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error updating user data:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
