@@ -8,3 +8,4 @@ export { default as SearchScreen } from "./SearchScreen";
 export { default as NewsScreen } from "./NewsScreen";
 export { default as ProfileScreen } from "./ProfileScreen";
 export { default as EditProfile } from "./EditProfile";
+export { default as OtherUserProfileScreen } from "./OtherUserProfileScreen";

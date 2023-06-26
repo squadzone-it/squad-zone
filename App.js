@@ -21,6 +21,7 @@ import {
 	NewsScreen,
 	ProfileScreen,
 	EditProfile,
+	OtherUserProfileScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -110,6 +111,10 @@ const App = () => {
 						component={ResetPasswordScreen}
 					/>
 					<Stack.Screen name="EditProfile" component={EditProfile} />
+					<Stack.Screen
+						name="OtherUserProfileScreen"
+						component={OtherUserProfileScreen}
+					/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>

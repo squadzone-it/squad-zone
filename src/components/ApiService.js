@@ -1,93 +1,164 @@
-class ApiService {
-	async getUserData(uid) {
-		try {
-			const response = await fetch(
-				"https://readdatauser-zvcc2bcxkq-nw.a.run.app/",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({
-						id: uid,
-					}),
-				}
-			);
+const baseFunctionUrl = "https://europe-west2-squadzoneapp.cloudfunctions.net/";
 
-			if (response.ok) {
-				const data = await response.json();
-				console.log("Datos del usuario obtenidos correctamente:", data);
-				return data;
-			} else {
-				console.error(
-					"Error al obtener los datos del usuario:",
-					response.statusText
-				);
-			}
-		} catch (error) {
-			console.error("Error al obtener los datos del usuario:", error);
+export const saveUserData = async (
+	id,
+	nombre,
+	apellidos,
+	email,
+	nombre_usuario
+) => {
+	try {
+		const functionUrl =
+			"https://europe-west2-squadzoneapp.cloudfunctions.net/saveUserData";
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				userId: id,
+				name: nombre,
+				lastName: apellidos,
+				email: email,
+				username: nombre_usuario,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
 		}
-	}
 
-	async updateUserData(uid, userData) {
-		const requestBody = {
-			id: uid,
-			userData: userData,
-		};
-
-		console.log("JSON enviado:", JSON.stringify(requestBody, null, 2));
-
-		try {
-			const response = await fetch(
-				"https://updateuserdata-zvcc2bcxkq-nw.a.run.app/updateUserData",
-				{
-					method: "PUT",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(requestBody, null, 2),
-				}
-			);
-
-			if (!response.ok) {
-				throw new Error(`Error en la solicitud: ${response.status}`);
-			}
-
-			const data = await response;
-			console.log("Datos actualizados");
-			//console.log("Datos actualizados:", data);
-			//navigation.navigate('PerfilScreen', { id });
-		} catch (error) {
-			//setError(error.message);
-			console.log("Error al actualizar los datos:", error);
+		const responseData = await response.json();
+		if (responseData.result === "success") {
+			console.log("User data saved to Firestore successfully");
+		} else {
+			console.error("Error saving user data to Firestore:", responseData.error);
 		}
+	} catch (error) {
+		console.error("Error saving user data to Firestore:", error);
 	}
+};
 
-	async updateProfilePhoto(uid, base64Image) {
+export const updateUserData = async (userId, userData) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}updateUserData`;
+		const response = await fetch(functionUrl, {
+			method: "PUT", // Usa PUT en lugar de POST
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				userId,
+				userData,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("User data updated successfully");
+		} else {
+			throw new Error(
+				`Error updating user data in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error updating user data in Firestore:", error);
+		throw error;
+	}
+};
+
+export const getUserData = async (userId) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}getUserData`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				userId: userId,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("User data retrieved successfully:", responseData.data);
+			return responseData.data;
+		} else {
+			throw new Error(
+				`Error retrieving user data from Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error retrieving user data from Firestore:", error);
+		throw error;
+	}
+};
+
+export const uploadPhoto = async (id, photo) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}uploadPhotos`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				id,
+				photo,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Profile photo updated successfully");
+		} else {
+			throw new Error(
+				`Error uploading profile photo to Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error uploading profile photo to Firestore:", error);
+		throw error;
+	}
+};
+
+export const searchUsers = async (username) => {
+	try {
 		const response = await fetch(
-			"https://uploadphotos-zvcc2bcxkq-nw.a.run.app/uploadPhotos",
+			"https://europe-west2-squadzoneapp.cloudfunctions.net/searchUsers",
 			{
-				method: "PUT",
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-					id: uid,
-					photo: base64Image,
-				}),
+				body: JSON.stringify({ username: username.toLowerCase() }),
 			}
 		);
-
-		if (!response.ok) {
-			throw new Error(
-				`Error al actualizar la foto de perfil: ${response.statusText}`
-			);
+		const json = await response.json();
+		if (json.result === "success" && Array.isArray(json.data)) {
+			return json.data;
+		} else {
+			console.error("Error: data is not an array");
+			return null;
 		}
-
-		const data = await response.json();
-		console.log("Foto de perfil actualizados", data);
-		return data;
+	} catch (error) {
+		console.error("Error:", error);
+		return null;
 	}
-}
-
-export default ApiService;
+};

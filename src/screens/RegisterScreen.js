@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import Background from "../components/Background";
-import Logo from "../components/Logo";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
@@ -20,15 +19,14 @@ import {
 import { initializeApp } from "firebase/app";
 import {
 	getFirestore,
-	setDoc,
-	doc,
 	collection,
 	query,
 	where,
 	getDocs,
 } from "firebase/firestore";
 import { firebaseConfig } from "../../firebase-config";
-import { getFunctions, httpsCallable } from "firebase/functions"; // Importa httpsCallable
+//import { getFunctions } from "firebase/functions";
+import { saveUserData } from "../components/ApiService";
 
 export default function RegisterScreen({ navigation }) {
 	const [name, setName] = useState({ value: "", error: "" });
@@ -44,43 +42,7 @@ export default function RegisterScreen({ navigation }) {
 	const app = initializeApp(firebaseConfig);
 	const auth = getAuth(app);
 	const db = getFirestore(app);
-	const functions = getFunctions(app);
-
-	const saveUserData = async (id, nombre, apellidos, email, nombre_usuario) => {
-		try {
-			const functionUrl =
-				"https://europe-west2-squadzoneapp.cloudfunctions.net/saveUserData"; // Reemplaza esto con la URL de tu función de Cloud
-			const response = await fetch(functionUrl, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					userId: id,
-					name: nombre,
-					lastName: apellidos,
-					email: email,
-					username: nombre_usuario,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error ${response.status}`);
-			}
-
-			const responseData = await response.json();
-			if (responseData.result === "success") {
-				console.log("User data saved to Firestore successfully");
-			} else {
-				console.error(
-					"Error saving user data to Firestore:",
-					responseData.error
-				);
-			}
-		} catch (error) {
-			console.error("Error saving user data to Firestore:", error);
-		}
-	};
+	//const functions = getFunctions(app);
 
 	const onSignUpPressed = async () => {
 		const nameError = nameValidator(name.value);

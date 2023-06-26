@@ -16,12 +16,16 @@ exports.saveUserData = functions
 
 		const { userId, name, lastName, email, username } = req.body;
 
+		const defaultPhotoUrl =
+			"https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultPP.png?alt=media&token=7f90b50b-6321-484a-9d14-295fbfcfc32f";
+
 		try {
 			await db.collection("users").doc(userId).set({
 				name,
 				lastName,
 				email,
 				username,
+				photoUrl: defaultPhotoUrl, // Establece el valor por defecto para photoUrl
 			});
 			console.log("User data saved to Firestore successfully:", userId);
 			res.status(200).send({ result: "success" });
@@ -157,52 +161,63 @@ exports.uploadPhotos = functions
 		}
 	});
 
-	exports.searchUsers = functions
-  .region('europe-west2')
-  .https.onRequest(async (req, res) => {
-    console.log("Request received:", req.body); // Agrega esta línea
+exports.searchUsers = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		console.log("Request received:", req.body);
 
-    const { username } = req.body;
-    if (!username) {
-      res.status(400).send("Error: El nombre de usuario es requerido");
-      return;
-    }
+		const { username } = req.body;
+		if (!username) {
+			res.status(400).send("Error: El nombre de usuario es requerido");
+			return;
+		}
 
-    try {
-      // Buscar una coincidencia exacta
-      const exactMatchSnapshot = await db.collection('users')
-        .where('username', '==', username)
-        .get();
+		try {
+			// Buscar una coincidencia exacta
+			const exactMatchSnapshot = await db
+				.collection("users")
+				.where("username", "==", username)
+				.get();
 
-      // Buscar coincidencias parciales
-      const partialMatchesSnapshot = await db.collection('users')
-        .orderBy('username')
-        .startAt(username)
-        .endAt(username + '\uf8ff')
-        .limit(50) // limitamos a los primeros 50 resultados
-        .get();
+			// Buscar coincidencias parciales
+			const partialMatchesSnapshot = await db
+				.collection("users")
+				.orderBy("username")
+				.startAt(username)
+				.endAt(username + "\uf8ff")
+				.limit(50) // limitamos a los primeros 50 resultados
+				.get();
 
-      const exactMatchUsers = exactMatchSnapshot.docs.map(doc => doc.data());
-      const partialMatchUsers = partialMatchesSnapshot.docs.map(doc => doc.data());
+			const exactMatchUsers = exactMatchSnapshot.docs.map((doc) => doc.data());
+			let partialMatchUsers = partialMatchesSnapshot.docs.map((doc) =>
+				doc.data()
+			);
 
-      // Filtrar las coincidencias parciales para eliminar la coincidencia exacta
-      const filteredPartialMatchUsers = partialMatchUsers.filter(
-        partialMatchUser => !exactMatchUsers.find(
-          exactMatchUser => exactMatchUser.username === partialMatchUser.username
-        )
-      );
+			// Filtrar las coincidencias parciales para eliminar la coincidencia exacta
+			let filteredPartialMatchUsers = partialMatchUsers.filter(
+				(partialMatchUser) =>
+					!exactMatchUsers.find(
+						(exactMatchUser) =>
+							exactMatchUser.username === partialMatchUser.username
+					)
+			);
 
-      // Combinar los resultados
-      const users = [...exactMatchUsers, ...filteredPartialMatchUsers];
+			// Reordena los usuarios parciales, los verificados van primero
+			filteredPartialMatchUsers.sort((a, b) => {
+				if (a.verified && !b.verified) return -1;
+				if (!a.verified && b.verified) return 1;
+				return 0;
+			});
 
-      console.log("User data found:", users); // Agrega esta línea
-      res.status(200).json({ result: "success", data: users }); // Agrega el objeto "result"
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Error: No se pudo obtener la información de los usuarios");
-    }
-  });
-  
-  
-  
-  
+			// Combinar los resultados
+			const users = [...exactMatchUsers, ...filteredPartialMatchUsers];
+
+			console.log("User data found:", users);
+			res.status(200).json({ result: "success", data: users });
+		} catch (error) {
+			console.error(error);
+			res
+				.status(500)
+				.send("Error: No se pudo obtener la información de los usuarios");
+		}
+	});

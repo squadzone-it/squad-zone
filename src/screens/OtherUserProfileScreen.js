@@ -5,7 +5,6 @@ import {
 	Image,
 	TouchableOpacity,
 	StyleSheet,
-	Modal,
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
@@ -15,69 +14,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { getAuth } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../../firebase-config";
-import { getUserData } from "../components/ApiService";
-
-let uid = null;
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-auth.onAuthStateChanged(function (user) {
-	if (user) {
-		uid = user.uid;
-	}
-});
-
-const ProfileScreen = () => {
+const OtherUserProfileScreen = ({ route }) => {
 	const navigation = useNavigation();
-
-	const [showModal, setShowModal] = useState(false);
+	const { user } = route.params;
 
 	const settingsButton = () => {};
-
-	const onOptionsPressed = () => {
-		setShowModal(true);
-	};
-
-	const onClosePressed = () => {
-		setShowModal(false);
-	};
-
-	const onEditProfilePressed = () => {
-		setShowModal(false);
-		navigation.navigate("EditProfile");
-	};
-
-	const onLogoutPressed = () => {
-		setShowModal(false);
-		navigation.navigate("StartScreen");
-	};
-
-	const [data, setData] = useState(null);
-
-	const tempData = {
-		lastName: " ",
-		email: " ",
-		id: " ",
-		name: " ",
-		username: " ",
-		photoUrl: " ",
-	};
-
-	useEffect(() => {
-		if (uid) {
-			async function fetchData() {
-				try {
-					const result = await getUserData(uid);
-					setData(result);
-				} catch (error) {
-					console.error("Error retrieving user data from Firestore:", error);
-				}
-			}
-			fetchData();
-		}
-	}, [uid]);
 
 	const DatosPersonales = () => (
 		<View style={{ margin: 15 }}>
@@ -111,10 +52,10 @@ const ProfileScreen = () => {
 			<View style={styles.header}>
 				<TouchableOpacity
 					style={styles.headerButtonLeft}
-					onPress={settingsButton}
+					onPress={() => navigation.goBack()}
 				>
 					<Ionic
-						name="add"
+						name="arrow-back"
 						style={{ fontSize: 32, color: theme.colors.text }}
 					/>
 				</TouchableOpacity>
@@ -123,30 +64,14 @@ const ProfileScreen = () => {
 					NE
 				</Text>
 				<TouchableOpacity
-					onPress={onOptionsPressed}
+					onPress={settingsButton}
 					style={styles.headerButtonRight}
 				>
 					<Ionic
 						name="menu-sharp"
-						style={{ fontSize: 25, color: theme.colors.text }}
+						style={{ fontSize: 25, color: "transparent" }}
 					/>
 				</TouchableOpacity>
-
-				<Modal visible={showModal} animationType="slide" transparent={true}>
-					<TouchableOpacity
-						style={styles.modalBackground}
-						onPress={onClosePressed}
-					>
-						<View style={styles.modalContent}>
-							<TouchableOpacity onPress={onEditProfilePressed}>
-								<Text style={styles.modalOption}>Editar perfil</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={onLogoutPressed}>
-								<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
-							</TouchableOpacity>
-						</View>
-					</TouchableOpacity>
-				</Modal>
 			</View>
 
 			{/* Body */}
@@ -175,7 +100,7 @@ const ProfileScreen = () => {
 				>
 					<Image
 						source={{
-							uri: data ? data.photoUrl : tempData.photoUrl,
+							uri: user.photoUrl,
 						}}
 						style={{
 							height: 70,
@@ -198,9 +123,9 @@ const ProfileScreen = () => {
 								color: theme.colors.text,
 							}}
 						>
-							@{data ? data.username : tempData.username}
+							@{user.username}
 							{"  "}
-							{data && data.verified && (
+							{user && user.verified && (
 								<Ionic
 									name="checkmark-circle-sharp"
 									style={{ fontSize: 16, color: "#42caff" }}
@@ -216,9 +141,7 @@ const ProfileScreen = () => {
 								color: theme.colors.text,
 							}}
 						>
-							{data
-								? `${data.name} ${data.lastName}`
-								: `${tempData.name} ${tempData.lastName}`}
+							{`${user.name} ${user.lastName}`}
 						</Text>
 					</View>
 					<View style={{ flex: 1 }}>
@@ -290,7 +213,7 @@ const ProfileScreen = () => {
 		</BackgroundTabs>
 	);
 };
-export default ProfileScreen;
+export default OtherUserProfileScreen;
 
 const styles = StyleSheet.create({
 	header: {
@@ -315,36 +238,5 @@ const styles = StyleSheet.create({
 	headerButtonLeft: {
 		padding: 10,
 		marginRight: "auto",
-	},
-	modalBackground: {
-		flex: 1,
-		justifyContent: "flex-end",
-		alignItems: "center",
-		backgroundColor: "rgba(0,0,0,0.5)",
-	},
-	modalContent: {
-		backgroundColor: theme.colors.secondaryBackground,
-		borderRadius: 10,
-		padding: 10,
-		minWidth: "80%",
-		alignItems: "center",
-	},
-	modalOption: {
-		marginVertical: 5,
-		borderBottomWidth: 1,
-		borderBottomColor: theme.colors.secondary,
-		width: "100%",
-		fontFamily: "SF-Pro",
-		fontSize: 20,
-		color: theme.colors.text,
-	},
-	modalOptionR: {
-		marginVertical: 5,
-		borderBottomWidth: 1,
-		borderBottomColor: theme.colors.secondary,
-		width: "100%",
-		fontFamily: "SF-Pro",
-		fontSize: 20,
-		color: theme.colors.error,
 	},
 });

@@ -14,6 +14,11 @@ import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase-config";
+import {
+	updateUserData,
+	getUserData,
+	uploadPhoto,
+} from "../components/ApiService";
 
 let uid = null;
 const app = initializeApp(firebaseConfig);
@@ -26,116 +31,6 @@ auth.onAuthStateChanged(function (user) {
 
 const EditProfileScreen = () => {
 	const [data, setData] = useState(null);
-	const updateUserData = async (userId, userData) => {
-		try {
-			const functionUrl =
-				"https://europe-west2-squadzoneapp.cloudfunctions.net/updateUserData";
-			const response = await fetch(functionUrl, {
-				method: "PUT", // Usa PUT en lugar de POST
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					userId,
-					userData,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error ${response.status}`);
-			}
-
-			const responseData = await response.json();
-
-			if (responseData.result === "success") {
-				console.log("User data updated successfully");
-			} else {
-				throw new Error(
-					`Error updating user data in Firestore: ${responseData.error}`
-				);
-			}
-		} catch (error) {
-			console.error("Error updating user data in Firestore:", error);
-			throw error;
-		}
-	};
-
-	const getUserData = async (userId) => {
-		try {
-			const functionUrl =
-				"https://europe-west2-squadzoneapp.cloudfunctions.net/getUserData";
-			const response = await fetch(functionUrl, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					userId: userId,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error ${response.status}`);
-			}
-
-			const responseData = await response.json();
-
-			if (responseData.result === "success") {
-				console.log("User data retrieved successfully:", responseData.data);
-				return responseData.data;
-			} else {
-				throw new Error(
-					`Error retrieving user data from Firestore: ${responseData.error}`
-				);
-			}
-		} catch (error) {
-			console.error("Error retrieving user data from Firestore:", error);
-			throw error;
-		}
-	};
-
-	const tempData = {
-		lastName: " ",
-		email: " ",
-		id: " ",
-		name: " ",
-		username: " ",
-		photoUrl: " ",
-	};
-
-	const uploadPhoto = async (id, photo) => {
-		try {
-			const functionUrl =
-				"https://europe-west2-squadzoneapp.cloudfunctions.net/uploadPhotos";
-			const response = await fetch(functionUrl, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					id,
-					photo,
-				}),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error ${response.status}`);
-			}
-
-			const responseData = await response.json();
-
-			if (responseData.result === "success") {
-				console.log("Profile photo updated successfully");
-			} else {
-				throw new Error(
-					`Error uploading profile photo to Firestore: ${responseData.error}`
-				);
-			}
-		} catch (error) {
-			console.error("Error uploading profile photo to Firestore:", error);
-			throw error;
-		}
-	};
 
 	const navigation = useNavigation();
 
