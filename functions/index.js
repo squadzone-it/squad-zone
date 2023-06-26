@@ -156,3 +156,53 @@ exports.uploadPhotos = functions
 			return res.status(500).send(`Error uploading photo: ${error.message}`);
 		}
 	});
+
+	exports.searchUsers = functions
+  .region('europe-west2')
+  .https.onRequest(async (req, res) => {
+    console.log("Request received:", req.body); // Agrega esta línea
+
+    const { username } = req.body;
+    if (!username) {
+      res.status(400).send("Error: El nombre de usuario es requerido");
+      return;
+    }
+
+    try {
+      // Buscar una coincidencia exacta
+      const exactMatchSnapshot = await db.collection('users')
+        .where('username', '==', username)
+        .get();
+
+      // Buscar coincidencias parciales
+      const partialMatchesSnapshot = await db.collection('users')
+        .orderBy('username')
+        .startAt(username)
+        .endAt(username + '\uf8ff')
+        .limit(50) // limitamos a los primeros 50 resultados
+        .get();
+
+      const exactMatchUsers = exactMatchSnapshot.docs.map(doc => doc.data());
+      const partialMatchUsers = partialMatchesSnapshot.docs.map(doc => doc.data());
+
+      // Filtrar las coincidencias parciales para eliminar la coincidencia exacta
+      const filteredPartialMatchUsers = partialMatchUsers.filter(
+        partialMatchUser => !exactMatchUsers.find(
+          exactMatchUser => exactMatchUser.username === partialMatchUser.username
+        )
+      );
+
+      // Combinar los resultados
+      const users = [...exactMatchUsers, ...filteredPartialMatchUsers];
+
+      console.log("User data found:", users); // Agrega esta línea
+      res.status(200).json({ result: "success", data: users }); // Agrega el objeto "result"
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error: No se pudo obtener la información de los usuarios");
+    }
+  });
+  
+  
+  
+  
