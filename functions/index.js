@@ -221,3 +221,67 @@ exports.searchUsers = functions
 				.send("Error: No se pudo obtener la información de los usuarios");
 		}
 	});
+
+	exports.createSquad = functions
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        if (req.method !== "POST") {
+            res.status(400).send("Invalid request method. Please use POST.");
+            return;
+        }
+
+        const { squadId, name, captain, members, userId } = req.body;
+
+        try {
+            const squadData = {
+                name,
+                captain,  // YOUR_CAPTAIN_DATA
+                members,  // YOUR_MEMBERS_DATA
+            };
+
+            await db.collection("squads").doc(squadId).set(squadData);
+
+            console.log("Squad data saved to Firestore successfully:", squadId);
+
+            // Ahora actualizamos el campo 'squad' en el documento de usuario
+            await db.collection("users").doc(userId).update({
+                squad: name
+            });
+
+            console.log("User data updated with squad name successfully:", userId);
+
+            res.status(200).send({ result: "success" });
+        } catch (error) {
+            console.error("Error saving squad data to Firestore or updating user data:", error);
+            res.status(500).send({ result: "error", error: error.message });
+        }
+    });
+
+	exports.deleteSquad = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "DELETE") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
+
+		const { userId, squadId } = req.body;
+
+		try {
+			// Eliminar la Squad
+			await db.collection("squads").doc(squadId).delete();
+			
+			// Vacia el campo squad del usuario
+			await db.collection("users").doc(userId).update({
+				squad: admin.firestore.FieldValue.delete()
+			});
+
+			console.log(`Squad ${squadId} deleted successfully and user ${userId} squad field cleared.`);
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error deleting squad and clearing user squad field:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
+
+
