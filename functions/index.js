@@ -248,6 +248,7 @@ exports.searchUsers = functions
             // Creamos un nuevo equipo
             const squadData = {
 				displayname,
+				squadBadgeUrl: ["https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a.png"],
                 name,
                 captain,
                 members: [captain], // El capitán es el primer miembro
@@ -704,6 +705,59 @@ exports.leaveOrKickSquad = functions
         }
     });
 
+	exports.searchSquads = functions
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        console.log("Request received:", req.body);
+
+        const { name } = req.body;
+        if (!name) {
+            res.status(400).send("Error: El nombre del escuadrón es requerido");
+            return;
+        }
+
+        try {
+            // Buscar una coincidencia exacta
+            const exactMatchSnapshot = await db
+                .collection("squads")
+                .where("name", "==", name)
+                .get();
+
+            // Buscar coincidencias parciales
+            const partialMatchesSnapshot = await db
+                .collection("squads")
+                .orderBy("name")
+                .startAt(name)
+                .endAt(name + "\uf8ff")
+                .limit(50) // limitamos a los primeros 50 resultados
+                .get();
+
+            const exactMatchSquads = exactMatchSnapshot.docs.map((doc) => doc.data());
+            let partialMatchSquads = partialMatchesSnapshot.docs.map((doc) =>
+                doc.data()
+            );
+
+            // Filtrar las coincidencias parciales para eliminar la coincidencia exacta
+            let filteredPartialMatchSquads = partialMatchSquads.filter(
+                (partialMatchSquad) =>
+                    !exactMatchSquads.find(
+                        (exactMatchSquad) =>
+                            exactMatchSquad.name === partialMatchSquad.name
+                    )
+            );
+
+            // Combinar los resultados
+            const squads = [...exactMatchSquads, ...filteredPartialMatchSquads];
+
+            console.log("Squad data found:", squads);
+            res.status(200).json({ result: "success", data: squads });
+        } catch (error) {
+            console.error(error);
+            res
+                .status(500)
+                .send("Error: No se pudo obtener la información de los escuadrones");
+        }
+    });
 
 
 
