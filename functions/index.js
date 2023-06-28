@@ -230,7 +230,7 @@ exports.searchUsers = functions
             return;
         }
 
-        const { name, captain } = req.body; // Recibimos el nombre del equipo y el capitán
+        const { displayname, captain } = req.body; // Recibimos el nombre del equipo y el capitán
 
         try {
             const userRef = db.collection("users").doc(captain);
@@ -241,15 +241,20 @@ exports.searchUsers = functions
                 res.status(400).send({ result: "error", error: "User already in a team" });
                 return;
             }
+
+			let name=displayname.toLowerCase();
+
             
             // Creamos un nuevo equipo
             const squadData = {
+				displayname,
                 name,
                 captain,
                 members: [captain], // El capitán es el primer miembro
                 invitations: [], // Inicializamos las invitaciones vacías
                 requests: [] // Inicializamos las solicitudes vacías
             };
+
             const squadRef = db.collection("squads").doc();
             await squadRef.set(squadData);
 
@@ -664,3 +669,41 @@ exports.leaveOrKickSquad = functions
             res.status(500).send({ result: "error", error: error.message });
         }
     });
+
+	exports.getSquadData = functions
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        if (req.method !== "GET") {
+            res.status(400).send("Invalid request method. Please use GET.");
+            return;
+        }
+
+        const { squadId } = req.query;
+
+        try {
+            const squadDoc = await db.collection("squads").doc(squadId).get();
+            if (!squadDoc.exists) {
+                res.status(404).send({ result: "error", error: "No squad found with this id." });
+                return;
+            }
+
+            const squadData = squadDoc.data();
+
+            // Map member ids to their data
+            const memberPromises = squadData.members.map(memberId => db.collection("users").doc(memberId).get());
+            const memberDocs = await Promise.all(memberPromises);
+            const memberData = memberDocs.map(doc => doc.data());
+
+            // Replace member ids with their data
+            squadData.members = memberData;
+
+            res.status(200).send({ result: "success", data: squadData });
+        } catch (error) {
+            console.error("Error fetching squad data:", error);
+            res.status(500).send({ result: "error", error: error.message });
+        }
+    });
+
+
+
+
