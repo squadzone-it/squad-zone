@@ -9,7 +9,7 @@ import {
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -21,7 +21,7 @@ const OtherUserProfileScreen = ({ route }) => {
 	const settingsButton = () => {};
 
 	const DatosPersonales = () => (
-		<View style={{ margin: 15 }}>
+		<View>
 			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 				Datos Personales
 			</Text>
@@ -29,7 +29,7 @@ const OtherUserProfileScreen = ({ route }) => {
 	);
 
 	const Equipo = () => (
-		<View style={{ margin: 15 }}>
+		<View>
 			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 				Equipo
 			</Text>
@@ -37,7 +37,7 @@ const OtherUserProfileScreen = ({ route }) => {
 	);
 
 	const Partidos = () => (
-		<View style={{ margin: 15 }}>
+		<View>
 			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 				Partidos
 			</Text>

@@ -11,8 +11,11 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
 import { theme } from "../core/theme";
 import { Searchbar } from "react-native-paper";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { searchUsers } from "../components/ApiService";
+
+const Tab = createMaterialTopTabNavigator();
 
 const SearchScreen = ({ navigation }) => {
 	const [searchText, setSearchText] = useState("");
@@ -27,44 +30,9 @@ const SearchScreen = ({ navigation }) => {
 		// Tu lógica para el botón de filtro
 	};
 
-	return (
-		<BackgroundNoScroll>
-			{/*   Header   */}
-			<View style={styles.header}>
-				<TouchableOpacity style={styles.headerButtonLeft}>
-					<Ionic
-						name="add"
-						style={{ fontSize: 32, color: theme.colors.text }}
-					/>
-				</TouchableOpacity>
-				<Text style={styles.headerText}>
-					SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
-					NE
-				</Text>
-				<TouchableOpacity
-					onPress={filterButton}
-					style={styles.headerButtonRight}
-				>
-					<Ionic
-						name="filter"
-						style={{ fontSize: 25, color: theme.colors.text }}
-					/>
-				</TouchableOpacity>
-			</View>
-
-			{/*   Body   */}
-			<View style={{ backgroundColor: theme.colors.surface, height: "100%" }}>
-				<Searchbar
-					placeholder="Buscar..."
-					onChangeText={setSearchText}
-					value={searchText}
-					style={styles.searchBar}
-					onSubmitEditing={onSearch}
-					placeholderTextColor={theme.colors.text}
-					iconColor={theme.colors.secondary}
-					inputStyle={{ color: theme.colors.text, fontFamily: "SF-Pro" }}
-				/>
-				{/* Muestra los datos del usuario si están disponibles */}
+	const Usuarios = ({ userData, setUserData }) => {
+		return (
+			<View>
 				{userData && (
 					<FlatList
 						keyboardDismissMode="on-drag"
@@ -117,6 +85,102 @@ const SearchScreen = ({ navigation }) => {
 					</TouchableOpacity>
 				)}
 			</View>
+		);
+	};
+
+	const Equipos = () => {
+		return (
+			<View>
+				<Text>Equipos</Text>
+			</View>
+		);
+	};
+
+	return (
+		<BackgroundNoScroll>
+			{/*   Header   */}
+			<View style={styles.header}>
+				<TouchableOpacity style={styles.headerButtonLeft}>
+					<Ionic
+						name="add"
+						style={{ fontSize: 32, color: theme.colors.text }}
+					/>
+				</TouchableOpacity>
+				<Text style={styles.headerText}>
+					SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
+					NE
+				</Text>
+				<TouchableOpacity
+					onPress={filterButton}
+					style={styles.headerButtonRight}
+				>
+					<Ionic
+						name="filter"
+						style={{ fontSize: 25, color: theme.colors.text }}
+					/>
+				</TouchableOpacity>
+			</View>
+
+			{/*   Body   */}
+			<View style={{ backgroundColor: theme.colors.surface, height: "100%" }}>
+				<Searchbar
+					placeholder="Buscar..."
+					onChangeText={setSearchText}
+					value={searchText}
+					style={styles.searchBar}
+					onSubmitEditing={onSearch}
+					placeholderTextColor={theme.colors.text}
+					iconColor={theme.colors.secondary}
+					inputStyle={{ color: theme.colors.text, fontFamily: "SF-Pro" }}
+				/>
+				<Tab.Navigator
+					screenOptions={{
+						tabBarActiveTintColor: theme.colors.text,
+						tabBarInactiveTintColor: theme.colors.secondary,
+						tabBarPressColor: "transparent",
+						tabBarShowLabel: false,
+						tabBarIndicatorStyle: {
+							backgroundColor: theme.colors.primary,
+						},
+						tabBarStyle: {
+							backgroundColor: theme.colors.surface,
+							borderBottomWidth: 1,
+							borderBottomColor: theme.colors.primary,
+							paddingTop: 0,
+							height: 50,
+							borderColor: theme.colors.primary,
+						},
+					}}
+				>
+					<Tab.Screen
+						name="Usuarios"
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ focused, color }) =>
+								focused ? (
+									<Ionic name="person" color={color} size={25} />
+								) : (
+									<Ionic name="person-outline" color={color} size={23} />
+								),
+						}}
+					>
+						{() => <Usuarios userData={userData} setUserData={setUserData} />}
+					</Tab.Screen>
+					<Tab.Screen
+						name="Equipos"
+						component={Equipos}
+						options={{
+							headerShown: false,
+							tabBarIcon: ({ focused, color }) =>
+								focused ? (
+									<Ionic name="shield" color={color} size={25} />
+								) : (
+									<Ionic name="ios-shield-outline" color={color} size={23} />
+								),
+						}}
+					/>
+				</Tab.Navigator>
+			</View>
 		</BackgroundNoScroll>
 	);
 };
@@ -163,7 +227,7 @@ const styles = StyleSheet.create({
 	},
 	clearButton: {
 		alignItems: "center",
-		marginTop: 10,
+		marginTop: 20,
 		marginBottom: 25,
 		backgroundColor: theme.colors.surface,
 	},

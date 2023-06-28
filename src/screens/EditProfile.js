@@ -34,10 +34,6 @@ const EditProfileScreen = () => {
 
 	const navigation = useNavigation();
 
-	const crossPress = () => {
-		navigation.navigate("Profile");
-	};
-
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
@@ -132,7 +128,10 @@ const EditProfileScreen = () => {
 		<BackgroundMore>
 			{/* Header */}
 			<View style={styles.header}>
-				<TouchableOpacity style={styles.headerButtonLeft} onPress={crossPress}>
+				<TouchableOpacity
+					style={styles.headerButtonLeft}
+					onPress={navigation.goBack}
+				>
 					<Ionic
 						name="close-sharp"
 						style={{ fontSize: 32, color: theme.colors.text }}

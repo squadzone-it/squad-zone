@@ -1,27 +1,56 @@
-import React from "react";
-import { ImageBackground, StyleSheet, View, StatusBar } from "react-native";
+import React, { useState } from "react";
+import {
+	ImageBackground,
+	StyleSheet,
+	View,
+	StatusBar,
+	RefreshControl,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../core/theme";
 
-export default function BackgroundNoScroll({ children }) {
+export default function BackgroundTabs({ children }) {
 	const navigation = useNavigation();
+	const [refreshing, setRefreshing] = useState(false);
+
 	const route = useRoute().name;
+	//console.log(route);
 
 	const onRefresh = () => {
+		setRefreshing(true);
+
 		navigation.reset({
 			index: 0,
 			routes: [{ name: route }],
 		});
+		setTimeout(() => {
+			setRefreshing(false);
+		}, 1000);
 	};
-
 	return (
-		<ImageBackground style={styles.background}>
+		<ImageBackground
+			/*source={require("../assets/background_dot.png")}
+			resizeMode="repeat"*/
+
+			style={styles.background}
+		>
 			<StatusBar
 				backgroundColor={theme.colors.surface}
 				barStyle="light-content"
 				animated={true}
 			/>
-			<View style={styles.container}>{children}</View>
+			<KeyboardAwareScrollView
+				behavior="padding"
+				contentContainerStyle={styles.scrollViewContent}
+				keyboardShouldPersistTaps="never"
+				refreshControl={
+					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+				}
+			>
+				<View style={styles.container}>{children}</View>
+			</KeyboardAwareScrollView>
 		</ImageBackground>
 	);
 }
@@ -34,10 +63,17 @@ const styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
+		//padding: 20,
 		paddingVertical: 20,
 		width: "100%",
+		//maxWidth: 350,
 		alignSelf: "center",
 		alignItems: "flex-start",
+		justifyContent: "center",
+	},
+	scrollViewContent: {
+		flexGrow: 1,
+		alignItems: "center",
 		justifyContent: "center",
 	},
 });

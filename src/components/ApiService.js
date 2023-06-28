@@ -162,3 +162,64 @@ export const searchUsers = async (username) => {
 		return null;
 	}
 };
+
+export const getSquadData = async (squadId) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}getSquadData?squadId=${squadId}`;
+		const response = await fetch(functionUrl, {
+			method: "GET", // Usa GET en lugar de POST
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Squad data retrieved successfully:", responseData.data);
+			return responseData.data;
+		} else {
+			throw new Error(
+				`Error retrieving squad data from Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error retrieving squad data from Firestore:", error);
+		throw error;
+	}
+};
+
+export const createSquad = async (displayname, captain) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}createSquad`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ displayname, captain }), // Pasamos los datos en el cuerpo de la solicitud
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Squad created successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error creating squad in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error creating squad in Firestore:", error);
+		throw error;
+	}
+};

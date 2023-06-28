@@ -22,6 +22,8 @@ import {
 	ProfileScreen,
 	EditProfile,
 	OtherUserProfileScreen,
+	CreateSquadScreen,
+	SquadProfileScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -114,6 +116,14 @@ const App = () => {
 					<Stack.Screen
 						name="OtherUserProfileScreen"
 						component={OtherUserProfileScreen}
+					/>
+					<Stack.Screen
+						name="CreateSquadScreen"
+						component={CreateSquadScreen}
+					/>
+					<Stack.Screen
+						name="SquadProfileScreen"
+						component={SquadProfileScreen}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

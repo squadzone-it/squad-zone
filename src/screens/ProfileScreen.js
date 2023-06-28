@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
+import Button from "../components/Button";
 import { theme } from "../core/theme";
 import React, { useState, useEffect } from "react";
 
@@ -18,7 +19,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { getAuth } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase-config";
-import { getUserData } from "../components/ApiService";
+import { getUserData, getSquadData } from "../components/ApiService";
 
 let uid = null;
 const app = initializeApp(firebaseConfig);
@@ -55,16 +56,6 @@ const ProfileScreen = () => {
 	};
 
 	const [data, setData] = useState(null);
-
-	const tempData = {
-		lastName: " ",
-		email: " ",
-		id: " ",
-		name: " ",
-		username: " ",
-		photoUrl: " ",
-	};
-
 	useEffect(() => {
 		if (uid) {
 			async function fetchData() {
@@ -79,24 +70,88 @@ const ProfileScreen = () => {
 		}
 	}, [uid]);
 
+	const [teamData, setTeamData] = useState(null);
+	useEffect(() => {
+		if (data && data.team) {
+			async function fetchSquadData() {
+				try {
+					const result = await getSquadData(data.team); // <--- Obtener datos del equipo
+					setTeamData(result); // <--- Actualizar el estado con los datos del equipo
+				} catch (error) {
+					console.error("Error retrieving squad data:", error);
+				}
+			}
+			fetchSquadData();
+		}
+	}, [data]);
+
 	const DatosPersonales = () => (
-		<View style={{ margin: 15 }}>
+		<View>
 			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 				Datos Personales
 			</Text>
 		</View>
 	);
 
-	const Equipo = () => (
-		<View style={{ margin: 15 }}>
-			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
-				Equipo
-			</Text>
-		</View>
-	);
+	const Equipo = () => {
+		if (data && data.team && teamData) {
+			// Si el usuario ya está en un equipo, muestre la información del equipo
+			return (
+				<View>
+					<View style={styles.teamContainer}>
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate("SquadProfileScreen", {
+									squadData: teamData,
+								})
+							}
+						>
+							{data.photoUrl && (
+								<Image
+									source={{
+										uri: teamData.squadBadgeUrl,
+									}}
+									style={styles.teamImage}
+								/>
+							)}
+						</TouchableOpacity>
+						<View style={styles.teamSubContainer}>
+							<View style={styles.teamNameContainer}>
+								<Text style={styles.teamNameText}>{teamData.displayname}</Text>
+							</View>
+							<View style={styles.teamStateContainer}>
+								<Text style={styles.teamStateText}>{teamData.description}</Text>
+							</View>
+						</View>
+					</View>
+
+					{/* Aquí es donde se mostraría la información del equipo */}
+				</View>
+			);
+		} else {
+			// Si el usuario no está en un equipo, muestra las opciones para unirse o crear un equipo
+			return (
+				<View style={{ alignItems: "center", padding: 30 }}>
+					<Text style={styles.teamOptionsText}>¿No tienes equipo?</Text>
+					<Button mode="outlined" onPress={() => navigation.navigate("Search")}>
+						UNETE A UN SQUAD
+					</Button>
+					<Text style={styles.teamOptionsText}> ó </Text>
+					<Button
+						mode="outlined"
+						onPress={() =>
+							navigation.navigate("CreateSquadScreen", { userUid: uid })
+						}
+					>
+						CREA UN SQUAD
+					</Button>
+				</View>
+			);
+		}
+	};
 
 	const Partidos = () => (
-		<View style={{ margin: 15 }}>
+		<View>
 			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
 				Partidos
 			</Text>
@@ -175,7 +230,9 @@ const ProfileScreen = () => {
 				>
 					<Image
 						source={{
-							uri: data ? data.photoUrl : tempData.photoUrl,
+							uri: data
+								? data.photoUrl
+								: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultPP.png?alt=media&token=7f90b50b-6321-484a-9d14-295fbfcfc32f.png",
 						}}
 						style={{
 							height: 70,
@@ -198,7 +255,7 @@ const ProfileScreen = () => {
 								color: theme.colors.text,
 							}}
 						>
-							@{data ? data.username : tempData.username}
+							@{data ? data.username : ""}
 							{"  "}
 							{data && data.verified && (
 								<Ionic
@@ -216,9 +273,7 @@ const ProfileScreen = () => {
 								color: theme.colors.text,
 							}}
 						>
-							{data
-								? `${data.name} ${data.lastName}`
-								: `${tempData.name} ${tempData.lastName}`}
+							{data ? `${data.name} ${data.lastName}` : ""}
 						</Text>
 					</View>
 					<View style={{ flex: 1 }}>
@@ -346,5 +401,49 @@ const styles = StyleSheet.create({
 		fontFamily: "SF-Pro",
 		fontSize: 20,
 		color: theme.colors.error,
+	},
+	teamContainer: {
+		flexDirection: "column",
+		padding: 10,
+		alignItems: "center",
+		marginVertical: 40,
+		backgroundColor: theme.colors.surface,
+	},
+	teamOptionsText: {
+		textAlign: "center",
+		marginVertical: 5,
+		color: theme.colors.text,
+		fontSize: 16,
+		fontFamily: "SF-Pro",
+	},
+	teamImage: {
+		width: 250,
+		height: 250,
+		borderRadius: 50, // Hace la imagen circular
+		borderWidth: 1, // Tamaño del borde
+		borderColor: theme.colors.text, // Color del borde
+		marginRight: 10, // Espacio a la derecha de la imagen
+	},
+	teamSubContainer: {
+		flexDirection: "column",
+		alignItems: "center",
+		marginVertical: 30,
+	},
+	teamNameContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginVertical: 5,
+	},
+	teamNameText: {
+		color: theme.colors.text,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+	teamStateContainer: {
+		flexDirection: "row",
+	},
+	teamStateText: {
+		color: theme.colors.secondary,
+		fontSize: 18,
 	},
 });
