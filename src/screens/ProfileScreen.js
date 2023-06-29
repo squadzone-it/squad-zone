@@ -205,25 +205,42 @@ const ProfileScreen = () => {
 											</Text>
 											{data.squadInvitations.map((invitation, index) => (
 												<View style={styles.invitationContainer}>
-													<Image
-														source={{
-															uri: invitation.squadBadgeUrl,
-														}}
-														style={styles.invitationBadge}
-													/>
+													<TouchableOpacity
+														onPress={() =>
+															navigation.navigate("SquadProfileScreen", {
+																squadId: invitation.id,
+															})
+														}
+													>
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
+															}}
+														>
+															<Image
+																source={{
+																	uri: invitation.squadBadgeUrl,
+																}}
+																style={styles.invitationBadge}
+															/>
 
-													<View style={styles.invitationSubContainer}>
-														<View style={styles.invitationNameContainer}>
-															<Text style={styles.invitationNameText}>
-															 {invitation.displayname}
-															</Text>
+															<View style={styles.invitationSubContainer}>
+																<View style={styles.invitationNameContainer}>
+																	<Text style={styles.invitationNameText}>
+																		{invitation.displayname}
+																	</Text>
+																</View>
+																<View
+																	style={styles.invitationDescriptionContainer}
+																>
+																	<Text style={styles.invitationDecriptionText}>
+																		Descripcion de equipo
+																	</Text>
+																</View>
+															</View>
 														</View>
-														<View style={styles.invitationDescriptionContainer}>
-															<Text style={styles.invitationDecriptionText}>
-																Descripcion de equipo
-															</Text>
-														</View>
-													</View>
+													</TouchableOpacity>
 													<View style={{ flexDirection: "row" }}>
 														<TouchableOpacity style={{ paddingHorizontal: 30 }}>
 															<Ionic
