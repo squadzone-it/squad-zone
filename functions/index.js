@@ -35,10 +35,10 @@ exports.saveUserData = functions
 		}
 	});
 
-exports.getUserData = functions
+	exports.getUserData = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
-		console.log("Request received:", req.body); // Agrega esta línea
+		console.log("Request received:", req.body);
 
 		const { userId } = req.body;
 		if (!userId) {
@@ -56,8 +56,25 @@ exports.getUserData = functions
 				return;
 			}
 
-			console.log("User data found:", userDoc.data()); // Agrega esta línea
-			res.status(200).json({ result: "success", data: userDoc.data() }); // Agrega el objeto "result"
+			let userData = userDoc.data();
+			const squadRef = db.collection("squads");
+			const squadsData = [];
+
+			// Obtiene los datos de cada squad
+			for(let squadId of userData.squadInvitations) {
+				const squadDoc = await squadRef.doc(squadId).get();
+
+				if(squadDoc.exists) {
+					let squadData = squadDoc.data();
+					squadData.id = squadDoc.id;  // Añade el ID del squad al principio del objeto
+					squadsData.push(squadData);
+				}
+			}
+
+			userData.squadInvitations = squadsData; // Reemplaza las ID de los squads con los datos de los squads
+
+			console.log("User data found:", userData);
+			res.status(200).json({ result: "success", data: userData });
 		} catch (error) {
 			console.error(error);
 			res
@@ -65,6 +82,7 @@ exports.getUserData = functions
 				.send("Error: No se pudo obtener la información del usuario");
 		}
 	});
+
 
 exports.updateUserData = functions
 	.region("europe-west2")
