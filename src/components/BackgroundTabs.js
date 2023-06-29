@@ -11,20 +11,24 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { theme } from "../core/theme";
 
-export default function BackgroundTabs({ children }) {
+export default function BackgroundTabs({ children, onRefresh }) {
 	const navigation = useNavigation();
 	const [refreshing, setRefreshing] = useState(false);
 
 	const route = useRoute().name;
-	//console.log(route);
 
-	const onRefresh = () => {
+	const internalOnRefresh = () => {
 		setRefreshing(true);
 
-		navigation.reset({
-			index: 0,
-			routes: [{ name: route }],
-		});
+		if (typeof onRefresh === "function") {
+			onRefresh();
+		} else {
+			navigation.reset({
+				index: 0,
+				routes: [{ name: route }],
+			});
+		}
+
 		setTimeout(() => {
 			setRefreshing(false);
 		}, 1000);
@@ -46,7 +50,10 @@ export default function BackgroundTabs({ children }) {
 				contentContainerStyle={styles.scrollViewContent}
 				keyboardShouldPersistTaps="never"
 				refreshControl={
-					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={internalOnRefresh}
+					/>
 				}
 			>
 				<View style={styles.container}>{children}</View>

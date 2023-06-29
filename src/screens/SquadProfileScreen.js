@@ -7,8 +7,9 @@ import {
 	StatusBar,
 	TouchableOpacity,
 	Modal,
-	FlatList,
-	Alert
+	Alert,
+	ScrollView,
+	RefreshControl,
 } from "react-native";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
 import { useNavigation } from "@react-navigation/native";
@@ -17,10 +18,23 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { UserContext } from "../contexts/UserContext";
-import { getSquadData, leaveOrKickSquad, changeUserRole } from "../components/ApiService";
+import {
+	getSquadData,
+	leaveOrKickSquad,
+	changeUserRole,
+} from "../components/ApiService";
 
 const SquadProfileScreen = ({ route }) => {
 	const { user } = useContext(UserContext);
+	const [refreshing, setRefreshing] = useState(false);
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		//navigation.setParams({ disableAnimation: true });
+		navigation.replace("SquadProfileScreen", {
+			squadId: route.params.squadId ? route.params.squadId : squadData.squadId,
+		});
+		setRefreshing(false);
+	}, [navigation, route.params]);
 
 	const navigation = useNavigation();
 
@@ -28,7 +42,6 @@ const SquadProfileScreen = ({ route }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
-	
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
@@ -49,27 +62,25 @@ const SquadProfileScreen = ({ route }) => {
 		setShowModal(false);
 	};
 
-	const onEditProfilePressed = () => {
-		setShowModal(false);
-		navigation.navigate("EditProfile");
-	};
-
 	const Miembros = () => (
-		<View>
-			{typeof squadData.members[0] === "object" && (
-				<FlatList
-					keyboardDismissMode="on-drag"
-					overScrollMode="never"
-					bounces="false"
-					data={squadData.members}
-					keyExtractor={(item) => item.username}
-					renderItem={({ item }) => (
-						<View style={styles.userContainer}>
-							<TouchableOpacity
-								onPress={() =>
-									navigation.navigate("OtherUserProfileScreen", { user: item })
-								}
-							>
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			refreshControl={
+				<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+			}
+		>
+			{typeof squadData.members[0] === "object" &&
+				squadData.members.map((item) => (
+					<View style={styles.userContainer} key={item.username}>
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate("OtherUserProfileScreen", {
+									user: item,
+									squadData: squadData,
+								})
+							}
+						>
+							<View style={{ flexDirection: "row", alignItems: "center" }}>
 								<View style={styles.userContainer2}>
 									{item.photoUrl && (
 										<Image
@@ -81,10 +92,32 @@ const SquadProfileScreen = ({ route }) => {
 										<View style={styles.usernameContainer}>
 											<Text style={styles.usernameText}>{item.username}</Text>
 											{item.verified && (
-												<Ionic
-													name="checkmark-circle"
-													style={styles.verifiedIcon}
+												<Image
+													source={require("../assets/verified.png")}
+													style={{
+														width: 16,
+														height: 16,
+														marginLeft: 5,
+													}}
 												/>
+											)}
+											{item.userId === squadData.captain ||
+											squadData.veterans.includes(item.userId) ? (
+												<Image
+													source={
+														item.userId === squadData.captain
+															? require("../assets/cap.png")
+															: require("../assets/vet.png")
+													}
+													style={{
+														width: 20,
+														height: 14,
+														borderRadius: 1,
+														marginLeft: 10,
+													}}
+												/>
+											) : (
+												<></>
 											)}
 										</View>
 										<View style={styles.nameContainer}>
@@ -93,31 +126,49 @@ const SquadProfileScreen = ({ route }) => {
 										</View>
 									</View>
 								</View>
+							</View>
+						</TouchableOpacity>
+						{user &&
+						user.uid === squadData.captain &&
+						item.userId !== squadData.captain ? (
+							<TouchableOpacity
+								style={{ right: 10, position: "absolute" }}
+								onPress={() => {
+									setSelectedUser(item);
+									setOptionModalVisible(true);
+								}}
+							>
+								<Ionic
+									name="ellipsis-vertical-sharp"
+									style={{ fontSize: 32, color: theme.colors.text }}
+								/>
 							</TouchableOpacity>
-							{user && user.uid === squadData.captain ? (
-								<TouchableOpacity 
-									style={{ right: 10, position: "absolute" }}
-									onPress={() => {
-										setSelectedUser(item);
-										setOptionModalVisible(true);
-									}}
-								>
-									<Ionic
-										name="ellipsis-vertical-sharp"
-										style={{ fontSize: 32, color: theme.colors.text }}
-									/>
-								</TouchableOpacity>
-							) : (
-								<></>
-							)}
-						</View>
-					)}
-					
-				/>
-			)}
-		</View>
+						) : (
+							<></>
+						)}
+					</View>
+				))}
 
-		
+			<TouchableOpacity
+				style={styles.inviteButton}
+				onPress={() => navigation.navigate("Search", { screen: "Usuarios" })}
+			>
+				<Ionic
+					name="person-add-outline"
+					style={{ fontSize: 25, color: theme.colors.secondary }}
+				/>
+			</TouchableOpacity>
+			<Text
+				style={{
+					fontFamily: "SF-Pro",
+					alignSelf: "center",
+					marginTop: 5,
+					color: theme.colors.secondary,
+				}}
+			>
+				Invita a tus amigos!
+			</Text>
+		</ScrollView>
 	);
 
 	const Estadisticas = () => (
@@ -137,98 +188,94 @@ const SquadProfileScreen = ({ route }) => {
 	);
 
 	const changeRole = async (role) => {
-		console.log(`Cambiar el rol de ${selectedUser && selectedUser.name} a ${role}`);
+		console.log(
+			`Cambiar el rol de ${selectedUser && selectedUser.name} a ${role}`
+		);
 		try {
-		  const userId = selectedUser.userId;
-		  const squadId = selectedUser.team;
-		  await changeUserRole(squadId, userId, role);
-		  console.log('Role changed successfully');
-		} catch (error) {
-		  console.error('Error changing user role:', error);
-		} finally {
-		  setOptionModalVisible(false); // Cerrar el modal al finalizar
-		}
-	  };
-	  
-	  const optionsAlert = () => {
-		Alert.alert(
-		  'Cambio de Rol',
-		  'Selecciona el nuevo rol para el usuario',
-		  [
-			{
-			  text: 'Ascender a Veterano',
-			  onPress: () => changeRole('veteran'),
-			},
-			{
-			  text: 'Descender a Miembro',
-			  onPress: () => changeRole('down'),
-			},
-			{
-			  text: 'Pasarle la capitanía',
-			  onPress: () => changeRole('captain'),
-			},
-			{
-			  text: 'Cancel',
-			  style: 'cancel',
-			},
-		  ],
-		  { cancelable: false }
-		);
-	  };
-	  
-	  
-	  const kickUser = () => {
-		Alert.alert(
-		  "Confirmación",
-		  `¿Estás seguro de que quieres expulsar a ${selectedUser && selectedUser.name}?`,
-		  [
-			{
-			  text: "No",
-			  style: "cancel",
-			},
-			{
-			  text: "Sí",
-			  onPress: async () => {
-				try {
-				  // Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
-				  const userId = selectedUser.userId;
-				  const squadId = selectedUser.team;
-				  await leaveOrKickSquad(userId, squadId);
-				  console.log(`Expulsado con éxito a ${selectedUser && selectedUser.name}`);
+			const userId = selectedUser.userId;
+			const squadId = selectedUser.team;
+			await changeUserRole(squadId, userId, role);
+			console.log("Role changed successfully");
 
-				// Expulsar al usuario a nivel local
-				let updatedMembers = squadData.members.filter(member => member.userId !== userId);
-				
-				// Actualizar el estado
-				setSquadData({...squadData, members: updatedMembers});
-				} catch (error) {
-				  console.error("Error al expulsar al usuario:", error);
-				} finally {
-				  setOptionModalVisible(false); // Cerrar el modal al finalizar
+			// Actualizar el estado local del equipo
+			if (role === "veteran") {
+				if (!squadData.veterans.includes(userId)) {
+					setSquadData({
+						...squadData,
+						veterans: [...squadData.veterans, userId],
+					});
 				}
-			  },
-			  style: "destructive",
-			},
-		  ],
-		  { cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
+			} else if (role === "down") {
+				setSquadData({
+					...squadData,
+					veterans: squadData.veterans.filter(
+						(veteranId) => veteranId !== userId
+					),
+				});
+			}
+		} catch (error) {
+			console.error("Error changing user role:", error);
+		} finally {
+			setOptionModalVisible(false); // Cerrar el modal al finalizar
+		}
+	};
+
+	const kickUser = () => {
+		Alert.alert(
+			"Confirmación",
+			`¿Estás seguro de que quieres expulsar a ${
+				selectedUser && selectedUser.name
+			} ${selectedUser.lastName}?`,
+			[
+				{
+					text: "No",
+					style: "cancel",
+				},
+				{
+					text: "Sí",
+					onPress: async () => {
+						try {
+							// Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
+							const userId = selectedUser.userId;
+							const squadId = selectedUser.team;
+							await leaveOrKickSquad(userId, squadId);
+							console.log(
+								`Expulsado con éxito a ${selectedUser && selectedUser.name}`
+							);
+
+							// Expulsar al usuario a nivel local
+							let updatedMembers = squadData.members.filter(
+								(member) => member.userId !== userId
+							);
+
+							let updatedVeterans = squadData.veterans.filter(
+								(veteranId) => veteranId !== userId
+							);
+
+							// Actualizar el estado
+							setSquadData({
+								...squadData,
+								members: updatedMembers,
+								veterans: updatedVeterans,
+							});
+						} catch (error) {
+							console.error("Error al expulsar al usuario:", error);
+						} finally {
+							setOptionModalVisible(false); // Cerrar el modal al finalizar
+						}
+					},
+					style: "destructive",
+				},
+			],
+			{ cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
 		);
-	  };
-	  
-	  const passCaptaincy = () => {
-		console.log(`Pasar la capitanía a ${selectedUser && selectedUser.name}`);
-		console.log(selectedUser.userId);
-		console.log(selectedUser.team);
-		console.log(typeof squadData);
-		console.log(squadData);
-		// Aquí va el código para pasar la capitanía al usuario seleccionado
-		setOptionModalVisible(false); // Cerrar el modal al finalizar
-	  };
+	};
 
 	const tempButton = () => {};
 
 	const Tab = createMaterialTopTabNavigator();
 
-	return (
+	return squadData ? (
 		<BackgroundNoScroll>
 			{/* Header */}
 			<View style={styles.header}>
@@ -272,8 +319,6 @@ const SquadProfileScreen = ({ route }) => {
 							</TouchableOpacity>
 						</View>
 					</TouchableOpacity>
-
-					
 				</Modal>
 			</View>
 
@@ -306,7 +351,7 @@ const SquadProfileScreen = ({ route }) => {
 					/>
 					<View style={{ alignItems: "center" }}>
 						<Text style={styles.squadName}>{squadData.displayname}</Text>
-						<Text style={styles.squadDescription}>{squadData.displayname}</Text>
+						<Text style={styles.squadDescription}>{squadData.description}</Text>
 					</View>
 				</View>
 
@@ -371,25 +416,46 @@ const SquadProfileScreen = ({ route }) => {
 					/>
 				</Tab.Navigator>
 			</View>
-			<Modal visible={optionModalVisible} animationType="slide" transparent={true}>
-      <TouchableOpacity
-        style={styles.modalBackground}
-        onPress={() => setOptionModalVisible(false)}
-      >
-        <View style={styles.modalContent}>
-          <TouchableOpacity onPress={optionsAlert}>
-            <Text style={styles.modalOption}>Cambiar rol a {selectedUser && selectedUser.name}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={kickUser}>
-            <Text style={styles.modalOption}>Expulsar a {selectedUser && selectedUser.name}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={passCaptaincy}>
-            <Text style={styles.modalOption}>Pasar capitan a {selectedUser && selectedUser.name}</Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    </Modal>
+			<Modal
+				visible={optionModalVisible}
+				animationType="slide"
+				transparent={true}
+			>
+				<TouchableOpacity
+					style={styles.modalBackground}
+					onPress={() => setOptionModalVisible(false)}
+				>
+					<View style={styles.modalContent}>
+						{selectedUser &&
+						squadData.veterans.includes(selectedUser.userId) ? (
+							<>
+								<TouchableOpacity onPress={() => changeRole("down")}>
+									<Text style={styles.modalOption}>Descender a miembro</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => changeRole("captain")}>
+									<Text style={styles.modalOption}>
+										Pasar capitan a {selectedUser && selectedUser.name}
+									</Text>
+								</TouchableOpacity>
+							</>
+						) : (
+							<>
+								<TouchableOpacity onPress={() => changeRole("veteran")}>
+									<Text style={styles.modalOption}>Ascender a veterano</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={kickUser}>
+									<Text style={styles.modalOptionR}>
+										Expulsar a {selectedUser && selectedUser.name}
+									</Text>
+								</TouchableOpacity>
+							</>
+						)}
+					</View>
+				</TouchableOpacity>
+			</Modal>
 		</BackgroundNoScroll>
+	) : (
+		<></>
 	);
 };
 
@@ -433,21 +499,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	modalOption: {
+		marginBottom: 15,
 		marginVertical: 5,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 20,
+		fontSize: 18,
 		color: theme.colors.text,
 	},
 	modalOptionR: {
-		marginVertical: 5,
+		marginBottom: 5,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 20,
+		fontSize: 18,
 		color: theme.colors.error,
 	},
 	squadImage: {
@@ -463,6 +530,8 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: "SF-Pro",
 		color: theme.colors.secondary,
+		textAlign: "center",
+		paddingHorizontal: 25,
 	},
 	squadCaptain: {
 		fontSize: 16,
@@ -510,11 +579,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 	},
-	verifiedIcon: {
-		fontSize: 16,
-		color: "#42caff",
-		marginLeft: 5,
-	},
 	nameContainer: {
 		flexDirection: "row",
 	},
@@ -526,5 +590,17 @@ const styles = StyleSheet.create({
 		color: theme.colors.secondary,
 		marginLeft: 4,
 		fontSize: 14,
+	},
+	inviteButton: {
+		alignItems: "center",
+		alignSelf: "center",
+		justifyContent: "center",
+		marginTop: 20,
+		backgroundColor: theme.colors.surface,
+		borderColor: theme.colors.secondary,
+		borderWidth: 1,
+		borderRadius: 50,
+		width: 50,
+		height: 50,
 	},
 });

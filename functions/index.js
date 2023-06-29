@@ -663,59 +663,58 @@ exports.editSquad = functions
 		}
 	});
 
-	exports.changeRole = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "PUT") {
-            res.status(400).send("Invalid request method. Please use PUT.");
-            return;
-        }
+exports.changeRole = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "PUT") {
+			res.status(400).send("Invalid request method. Please use PUT.");
+			return;
+		}
 
-        const { squadId, userId, role } = req.body;
+		const { squadId, userId, role } = req.body;
 
-        try {
-            const squadRef = db.collection("squads").doc(squadId);
-            const squadDoc = await squadRef.get();
+		try {
+			const squadRef = db.collection("squads").doc(squadId);
+			const squadDoc = await squadRef.get();
 
-            if (!squadDoc.exists) {
-                res
-                    .status(404)
-                    .send({ result: "error", error: "Squad does not exist." });
-                return;
-            }
+			if (!squadDoc.exists) {
+				res
+					.status(404)
+					.send({ result: "error", error: "Squad does not exist." });
+				return;
+			}
 
-            // Si el role es 'captain', cambiamos el capitán actual
-            if (role === 'captain') {
-                await squadRef.update({
-                    captain: userId,
-                });
-            }
-            // Si el role es 'veteran', añadimos el userId a la lista de veterans
-            else if (role === 'veteran') {
-                await squadRef.update({
-                    veterans: admin.firestore.FieldValue.arrayUnion(userId),
-                });
-            } 
-            // Si el role es 'down', quitamos el userId de la lista de veterans
-            else if (role === 'down') {
-                await squadRef.update({
-                    veterans: admin.firestore.FieldValue.arrayRemove(userId),
-                });
-            } else {
-                res.status(400).send({ result: "error", error: "Invalid role." });
-                return;
-            }
+			// Si el role es 'captain', cambiamos el capitán actual
+			if (role === "captain") {
+				await squadRef.update({
+					captain: userId,
+				});
+			}
+			// Si el role es 'veteran', añadimos el userId a la lista de veterans
+			else if (role === "veteran") {
+				await squadRef.update({
+					veterans: admin.firestore.FieldValue.arrayUnion(userId),
+				});
+			}
+			// Si el role es 'down', quitamos el userId de la lista de veterans
+			else if (role === "down") {
+				await squadRef.update({
+					veterans: admin.firestore.FieldValue.arrayRemove(userId),
+				});
+			} else {
+				res.status(400).send({ result: "error", error: "Invalid role." });
+				return;
+			}
 
-            console.log(
-                `Role of member ${userId} changed to ${role} in squad ${squadId}.`
-            );
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error changing role:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
-
+			console.log(
+				`Role of member ${userId} changed to ${role} in squad ${squadId}.`
+			);
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error changing role:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
 exports.getSquadData = functions
 	.region("europe-west2")
@@ -737,6 +736,7 @@ exports.getSquadData = functions
 			}
 
 			const squadData = squadDoc.data();
+			squadData.squadId = squadId;
 
 			// Map member ids to their data
 			const memberPromises = squadData.members.map((memberId) =>

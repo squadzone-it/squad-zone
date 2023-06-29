@@ -8,7 +8,6 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 import BackButton from "../components/BackButton";
-import ProfileScreen from "./ProfileScreen";
 import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
@@ -44,7 +43,14 @@ export default function LoginScreen({ navigation }) {
 				console.log("Signed in!");
 				const user = userCredential.user;
 				setUser(user);
-				//console.log(user);
+				/*try {
+					const userData = await getUserData(user.uid);
+					setUserData(userData);
+					const squadData = await getSquadData(userData.team);
+					setSquadData(squadData);
+				} catch (error) {
+					console.error("Error fetching user or squad data:", error);
+				}*/
 				console.log(auth.currentUser.uid);
 				//navigation.navigate("Home");
 				navigation.reset({

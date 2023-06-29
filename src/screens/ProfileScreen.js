@@ -11,29 +11,28 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import Button from "../components/Button";
 import { theme } from "../core/theme";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
+import { UserContext } from "../contexts/UserContext";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { getAuth } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../../firebase-config";
 import { getUserData, getSquadData } from "../components/ApiService";
-
-let uid = null;
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-auth.onAuthStateChanged(function (user) {
-	if (user) {
-		uid = user.uid;
-	}
-});
 
 const ProfileScreen = () => {
 	const navigation = useNavigation();
 
+	const { user } = useContext(UserContext);
+	const uid = user ? user.uid : null;
+
 	const [showModal, setShowModal] = useState(false);
+
+	const [showInvitationsModal, setShowInvitationsModal] = useState(false);
+
+	const onInvitationsPressed = () => {
+		setShowInvitationsModal(true);
+	};
 
 	const settingsButton = () => {};
 
@@ -58,32 +57,38 @@ const ProfileScreen = () => {
 	const [data, setData] = useState(null);
 	useEffect(() => {
 		if (uid) {
-			async function fetchData() {
-				try {
-					const result = await getUserData(uid);
-					setData(result);
-				} catch (error) {
-					console.error("Error retrieving user data from Firestore:", error);
-				}
-			}
 			fetchData();
 		}
 	}, [uid]);
 
+	const fetchData = async () => {
+		if (uid) {
+			try {
+				const result = await getUserData(uid);
+				setData(result);
+			} catch (error) {
+				console.error("Error retrieving user data from Firestore:", error);
+			}
+		}
+	};
+
 	const [teamData, setTeamData] = useState(null);
 	useEffect(() => {
 		if (data && data.team) {
-			async function fetchSquadData() {
-				try {
-					const result = await getSquadData(data.team); // <--- Obtener datos del equipo
-					setTeamData(result); // <--- Actualizar el estado con los datos del equipo
-				} catch (error) {
-					console.error("Error retrieving squad data:", error);
-				}
-			}
 			fetchSquadData();
 		}
 	}, [data]);
+
+	const fetchSquadData = async () => {
+		if (data && data.team) {
+			try {
+				const result = await getSquadData(data.team); // <--- Obtener datos del equipo
+				setTeamData(result); // <--- Actualizar el estado con los datos del equipo
+			} catch (error) {
+				console.error("Error retrieving squad data:", error);
+			}
+		}
+	};
 
 	const DatosPersonales = () => (
 		<View>
@@ -128,12 +133,22 @@ const ProfileScreen = () => {
 					{/* Aquí es donde se mostraría la información del equipo */}
 				</View>
 			);
-		} else {
+		} else if (data && !data.team) {
 			// Si el usuario no está en un equipo, muestra las opciones para unirse o crear un equipo
 			return (
-				<View style={{ alignItems: "center", padding: 30 }}>
+				<View
+					style={{
+						alignItems: "center",
+						padding: 30,
+						position: "relative",
+						height: "100%",
+					}}
+				>
 					<Text style={styles.teamOptionsText}>¿No tienes equipo?</Text>
-					<Button mode="outlined" onPress={() => navigation.navigate("Search")}>
+					<Button
+						mode="outlined"
+						onPress={() => navigation.navigate("Search", { screen: "Equipos" })}
+					>
 						UNETE A UN SQUAD
 					</Button>
 					<Text style={styles.teamOptionsText}> ó </Text>
@@ -145,8 +160,120 @@ const ProfileScreen = () => {
 					>
 						CREA UN SQUAD
 					</Button>
+
+					{data.squadInvitations && data.squadInvitations.length > 0 && (
+						<View
+							style={{
+								position: "absolute",
+								right: 15,
+								bottom: 30,
+							}}
+						>
+							<TouchableOpacity
+								style={{
+									borderRadius: 50,
+									padding: 12,
+									borderWidth: 2,
+									borderColor: theme.colors.secondary,
+								}}
+								onPress={onInvitationsPressed}
+							>
+								<Ionic
+									name="file-tray-sharp"
+									style={{ fontSize: 25, color: theme.colors.text }}
+								/>
+								<Modal
+									visible={showInvitationsModal}
+									animationType="slide"
+									transparent={true}
+								>
+									<TouchableOpacity
+										style={styles.modalBackground}
+										onPress={() => setShowInvitationsModal(false)}
+									>
+										<View style={styles.modalContent}>
+											<Text
+												style={{
+													fontFamily: "SF-Pro-Bold",
+													fontSize: 20,
+													color: theme.colors.text,
+													borderBottomWidth: 1,
+													borderBottomColor: theme.colors.secondary,
+												}}
+											>
+												Invitaciones
+											</Text>
+											{data.squadInvitations.map((invitation, index) => (
+												<View style={styles.invitationContainer}>
+													<Image
+														source={{
+															uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a.png",
+														}}
+														style={styles.invitationBadge}
+													/>
+
+													<View style={styles.invitationSubContainer}>
+														<View style={styles.invitationNameContainer}>
+															<Text style={styles.invitationNameText}>
+																Nombre Equipo
+															</Text>
+														</View>
+														<View style={styles.invitationDescriptionContainer}>
+															<Text style={styles.invitationDecriptionText}>
+																Descripcion de equipo
+															</Text>
+														</View>
+													</View>
+													<View style={{ flexDirection: "row" }}>
+														<TouchableOpacity style={{ paddingHorizontal: 30 }}>
+															<Ionic
+																name="close-sharp"
+																style={{
+																	fontSize: 25,
+																	color: theme.colors.text,
+																}}
+															/>
+														</TouchableOpacity>
+														<TouchableOpacity>
+															<Ionic
+																name="checkmark-sharp"
+																style={{
+																	fontSize: 25,
+																	color: theme.colors.text,
+																}}
+															/>
+														</TouchableOpacity>
+													</View>
+												</View>
+											))}
+										</View>
+									</TouchableOpacity>
+								</Modal>
+							</TouchableOpacity>
+							<View
+								style={{
+									position: "absolute",
+									right: 0,
+									bottom: 0,
+									backgroundColor: "red",
+									borderRadius: 50,
+									width: 20,
+									height: 20,
+									alignItems: "center",
+									justifyContent: "center",
+									zIndex: 20,
+								}}
+							>
+								<Text style={{ color: "#fff" }}>
+									{data.squadInvitations.length}
+								</Text>
+							</View>
+						</View>
+					)}
 				</View>
 			);
+		} else {
+			<></>;
 		}
 	};
 
@@ -160,8 +287,13 @@ const ProfileScreen = () => {
 
 	const Tab = createMaterialTopTabNavigator();
 
+	const onRefresh = async () => {
+		await fetchData();
+		await fetchSquadData();
+	};
+
 	return (
-		<BackgroundTabs>
+		<BackgroundTabs onRefresh={onRefresh}>
 			{/* Header */}
 			<View style={styles.header}>
 				<TouchableOpacity
@@ -385,21 +517,22 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	modalOption: {
+		marginBottom: 15,
 		marginVertical: 5,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 20,
+		fontSize: 18,
 		color: theme.colors.text,
 	},
 	modalOptionR: {
-		marginVertical: 5,
+		marginBottom: 5,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 20,
+		fontSize: 18,
 		color: theme.colors.error,
 	},
 	teamContainer: {
@@ -445,5 +578,40 @@ const styles = StyleSheet.create({
 	teamStateText: {
 		color: theme.colors.secondary,
 		fontSize: 18,
+		textAlign: "center",
+	},
+	invitationContainer: {
+		flexDirection: "row",
+		padding: 10,
+		alignItems: "center",
+		borderBottomColor: theme.colors.secondary,
+		borderBottomWidth: 1,
+	},
+	invitationBadge: {
+		width: 50,
+		height: 50,
+		borderRadius: 25, // Hace la imagen circular
+		borderWidth: 2, // Tamaño del borde
+		borderColor: theme.colors.primary, // Color del borde
+		marginRight: 10, // Espacio a la derecha de la imagen
+	},
+	invitationSubContainer: {
+		flexDirection: "column",
+	},
+	invitationNameContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	invitationNameText: {
+		color: theme.colors.text,
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	invitationDescriptionContainer: {
+		flexDirection: "row",
+	},
+	invitationDecriptionText: {
+		color: theme.colors.secondary,
+		fontSize: 14,
 	},
 });

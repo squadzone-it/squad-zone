@@ -27,6 +27,7 @@ import {
 import { firebaseConfig } from "../../firebase-config";
 //import { getFunctions } from "firebase/functions";
 import { saveUserData } from "../components/ApiService";
+import { UserContext } from "../contexts/UserContext";
 
 export default function RegisterScreen({ navigation }) {
 	const { setUser } = useContext(UserContext);
@@ -113,10 +114,15 @@ export default function RegisterScreen({ navigation }) {
 			})
 			.catch((error) => {
 				if (error.code === "auth/email-already-in-use") {
-					console.log("That email address is already in use!");
+					setEmail({
+						...email,
+						error: "That email address is already in use!",
+					});
+					//console.log("That email address is already in use!");
 				}
 
 				if (error.code === "auth/invalid-email") {
+					setEmail({ ...email, error: "That email address is invalid!" });
 					console.log("That email address is invalid!");
 				}
 

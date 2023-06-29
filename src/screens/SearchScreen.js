@@ -27,8 +27,9 @@ const SearchScreen = ({ navigation }) => {
 	const [squadsData, setSquadsData] = useState(null);
 
 	const onSearch = async () => {
-		const data = await searchUsers(searchText);
-		const squadsData = await searchSquads(searchText);
+		let searchTextToUse = searchText !== "" ? searchText : " ";
+		const data = await searchUsers(searchTextToUse);
+		const squadsData = await searchSquads(searchTextToUse);
 		setUserData(data);
 		setSquadsData(squadsData);
 	};
@@ -64,9 +65,13 @@ const SearchScreen = ({ navigation }) => {
 										<View style={styles.usernameContainer}>
 											<Text style={styles.usernameText}>{item.username}</Text>
 											{item.verified && (
-												<Ionic
-													name="checkmark-circle"
-													style={styles.verifiedIcon}
+												<Image
+													source={require("../assets/verified.png")}
+													style={{
+														width: 16,
+														height: 16,
+														marginLeft: 5,
+													}}
 												/>
 											)}
 										</View>

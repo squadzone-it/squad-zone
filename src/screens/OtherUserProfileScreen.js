@@ -9,16 +9,60 @@ import {
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { getUserData, getSquadData } from "../components/ApiService";
 
 const OtherUserProfileScreen = ({ route }) => {
 	const navigation = useNavigation();
-	const { user } = route.params;
+	const [user, setUser] = useState(route.params.user);
+
+	const [teamData, setTeamData] = useState(null);
+	useEffect(() => {
+		if (user && user.team) {
+			if (route.params.squadData) {
+				setTeamData(route.params.squadData);
+			} else if (user && user.team) {
+				fetchSquadData();
+			}
+		}
+	}, [user]);
+
+	const fetchSquadData = async () => {
+		if (user && user.team) {
+			try {
+				const result = await getSquadData(user.team);
+				setTeamData(result);
+			} catch (error) {
+				console.error("Error retrieving squad data:", error);
+			}
+		}
+	};
+
+	const fetchUserData = async () => {
+		if (user && user.userId) {
+			try {
+				const result = await getUserData(user.userId);
+				setUser((prevUser) => ({
+					...result,
+					userId: prevUser.userId,
+				}));
+			} catch (error) {
+				console.error("Error retrieving user data:", error);
+			}
+		}
+	};
 
 	const settingsButton = () => {};
+
+	const onRefresh = async () => {
+		if (user && user.userId) {
+			await fetchUserData();
+			await fetchSquadData();
+		}
+	};
 
 	const DatosPersonales = () => (
 		<View>
@@ -28,13 +72,87 @@ const OtherUserProfileScreen = ({ route }) => {
 		</View>
 	);
 
-	const Equipo = () => (
-		<View>
-			<Text style={{ fontFamily: "SF-Pro", color: theme.colors.text }}>
-				Equipo
-			</Text>
-		</View>
-	);
+	const Equipo = () => {
+		if (user && user.team && teamData) {
+			// Si el usuario ya está en un equipo, muestre la información del equipo
+			return (
+				<View>
+					<View style={styles.teamContainer}>
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate("SquadProfileScreen", {
+									squadData: teamData,
+								})
+							}
+						>
+							{user.photoUrl && (
+								<Image
+									source={{
+										uri: teamData.squadBadgeUrl,
+									}}
+									style={styles.teamImage}
+								/>
+							)}
+						</TouchableOpacity>
+						<View style={styles.teamSubContainer}>
+							<View style={styles.teamNameContainer}>
+								<Text style={styles.teamNameText}>{teamData.displayname}</Text>
+							</View>
+							<View style={styles.teamStateContainer}>
+								<Text style={styles.teamStateText}>{teamData.description}</Text>
+							</View>
+						</View>
+					</View>
+
+					{/* Aquí es donde se mostraría la información del equipo */}
+				</View>
+			);
+		} else if (user && !user.team) {
+			// Si el usuario no está en un equipo, muestra las opciones para unirse o crear un equipo
+			return (
+				<View style={{ alignItems: "center", paddingTop: "30%" }}>
+					<Text style={styles.teamOptionsText}>
+						Este jugador no tiene Squad...
+					</Text>
+
+					<TouchableOpacity>
+						<View
+							style={{
+								flexDirection: "column",
+								alignItems: "center",
+								paddingTop: "5%",
+								borderWidth: 1,
+								borderRadius: 50,
+								borderColor: theme.colors.primary,
+								padding: 20,
+							}}
+						>
+							<Ionic
+								name="person-add-outline"
+								style={{
+									fontSize: 50,
+									color: theme.colors.text,
+									textAlign: "center",
+								}}
+							/>
+						</View>
+					</TouchableOpacity>
+					<Text
+						style={{
+							fontFamily: "CODE-Bold",
+							fontSize: 30,
+							padding: 10,
+							color: theme.colors.text,
+						}}
+					>
+						INVITAR A SQUAD
+					</Text>
+				</View>
+			);
+		} else {
+			<></>;
+		}
+	};
 
 	const Partidos = () => (
 		<View>
@@ -47,7 +165,7 @@ const OtherUserProfileScreen = ({ route }) => {
 	const Tab = createMaterialTopTabNavigator();
 
 	return (
-		<BackgroundTabs>
+		<BackgroundTabs onRefresh={onRefresh}>
 			{/* Header */}
 			<View style={styles.header}>
 				<TouchableOpacity
@@ -68,8 +186,8 @@ const OtherUserProfileScreen = ({ route }) => {
 					style={styles.headerButtonRight}
 				>
 					<Ionic
-						name="menu-sharp"
-						style={{ fontSize: 25, color: "transparent" }}
+						name="paper-plane-sharp"
+						style={{ fontSize: 25, color: theme.colors.text }}
 					/>
 				</TouchableOpacity>
 			</View>
@@ -238,5 +356,51 @@ const styles = StyleSheet.create({
 	headerButtonLeft: {
 		padding: 10,
 		marginRight: "auto",
+	},
+	teamContainer: {
+		flexDirection: "column",
+		padding: 10,
+		alignItems: "center",
+		marginVertical: 40,
+		backgroundColor: theme.colors.surface,
+	},
+	teamOptionsText: {
+		textAlign: "center",
+		marginVertical: 5,
+		color: theme.colors.secondary,
+		fontSize: 16,
+		fontFamily: "SF-Pro",
+		paddingBottom: "10%",
+	},
+	teamImage: {
+		width: 250,
+		height: 250,
+		borderRadius: 50, // Hace la imagen circular
+		borderWidth: 1, // Tamaño del borde
+		borderColor: theme.colors.text, // Color del borde
+		marginRight: 10, // Espacio a la derecha de la imagen
+	},
+	teamSubContainer: {
+		flexDirection: "column",
+		alignItems: "center",
+		marginVertical: 30,
+	},
+	teamNameContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginVertical: 5,
+	},
+	teamNameText: {
+		color: theme.colors.text,
+		fontSize: 25,
+		fontWeight: "bold",
+	},
+	teamStateContainer: {
+		flexDirection: "row",
+	},
+	teamStateText: {
+		color: theme.colors.secondary,
+		fontSize: 18,
+		textAlign: "center",
 	},
 });

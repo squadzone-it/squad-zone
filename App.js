@@ -53,47 +53,45 @@ const App = () => {
 
 	const TabNavigator = () => {
 		return (
-			<UserProvider>
-				<Tab.Navigator
-					screenOptions={({ route }) => ({
-						tabBarShowLabel: false,
-						headerShown: false,
-						tabBarStyle: {
-							height: 50,
-						},
+			<Tab.Navigator
+				screenOptions={({ route }) => ({
+					tabBarShowLabel: false,
+					headerShown: false,
+					tabBarStyle: {
+						height: 50,
+					},
 
-						tabBarIcon: ({ focused, size, color }) => {
-							let iconName;
-							if (route.name === "Home") {
-								iconName = focused ? "home-sharp" : "ios-home-outline";
-								size = focused ? size + 8 : size + 2;
-								color = focused ? theme.colors.text : theme.colors.secondary;
-							} else if (route.name === "News") {
-								iconName = focused ? "megaphone" : "ios-megaphone-outline";
-								size = focused ? size + 8 : size + 2;
-								color = focused ? theme.colors.text : theme.colors.secondary;
-							} else if (route.name === "Search") {
-								iconName = focused ? "shield" : "ios-shield-outline";
-								size = focused ? size + 8 : size + 2;
-								color = focused ? theme.colors.text : theme.colors.secondary;
-							} else if (route.name === "Profile") {
-								iconName = focused ? "person" : "ios-person-outline";
-								size = focused ? size + 8 : size + 2;
-								color = focused ? theme.colors.text : theme.colors.secondary;
-							}
+					tabBarIcon: ({ focused, size, color }) => {
+						let iconName;
+						if (route.name === "Home") {
+							iconName = focused ? "home-sharp" : "ios-home-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "News") {
+							iconName = focused ? "megaphone" : "ios-megaphone-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "Search") {
+							iconName = focused ? "shield" : "ios-shield-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						} else if (route.name === "Profile") {
+							iconName = focused ? "person" : "ios-person-outline";
+							size = focused ? size + 8 : size + 2;
+							color = focused ? theme.colors.text : theme.colors.secondary;
+						}
 
-							return <Ionic name={iconName} size={size} color={color} />;
-						},
-						tabBarActiveBackgroundColor: theme.colors.surface,
-						tabBarInactiveBackgroundColor: theme.colors.surface,
-					})}
-				>
-					<Tab.Screen name="Home" component={HomeScreen} />
-					<Tab.Screen name="Search" component={SearchScreen} />
-					<Tab.Screen name="News" component={NewsScreen} />
-					<Tab.Screen name="Profile" component={ProfileScreen} />
-				</Tab.Navigator>
-			</UserProvider>
+						return <Ionic name={iconName} size={size} color={color} />;
+					},
+					tabBarActiveBackgroundColor: theme.colors.surface,
+					tabBarInactiveBackgroundColor: theme.colors.surface,
+				})}
+			>
+				<Tab.Screen name="Home" component={HomeScreen} />
+				<Tab.Screen name="Search" component={SearchScreen} />
+				<Tab.Screen name="News" component={NewsScreen} />
+				<Tab.Screen name="Profile" component={ProfileScreen} />
+			</Tab.Navigator>
 		);
 	};
 
