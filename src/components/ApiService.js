@@ -272,3 +272,34 @@ export const leaveOrKickSquad = async (userId, squadId) => {
 		throw error;
 	}
 };
+
+export const changeUserRole = async (squadId, userId, role) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}changeRole`;
+		const response = await fetch(functionUrl, {
+			method: "PUT", // Asegúrate de usar el método correcto
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ squadId, userId, role }), // Pasamos los datos en el cuerpo de la solicitud
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log(`User role was changed to ${role} successfully.`);
+			return;
+		} else {
+			throw new Error(
+				`Error with changing user role in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with changing user role in Firestore:", error);
+		throw error;
+	}
+};

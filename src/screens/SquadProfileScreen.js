@@ -17,7 +17,7 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { UserContext } from "../contexts/UserContext";
-import { getSquadData, leaveOrKickSquad } from "../components/ApiService";
+import { getSquadData, leaveOrKickSquad, changeUserRole } from "../components/ApiService";
 
 const SquadProfileScreen = ({ route }) => {
 	const { user } = useContext(UserContext);
@@ -136,11 +136,46 @@ const SquadProfileScreen = ({ route }) => {
 		</View>
 	);
 
-	const changeRole = () => {
-		console.log(`Cambiar el rol de ${selectedUser && selectedUser.name}`);
-		// Aquí va el código para cambiar el rol del usuario seleccionado
-		setOptionModalVisible(false); // Cerrar el modal al finalizar
+	const changeRole = async (role) => {
+		console.log(`Cambiar el rol de ${selectedUser && selectedUser.name} a ${role}`);
+		try {
+		  const userId = selectedUser.userId;
+		  const squadId = selectedUser.team;
+		  await changeUserRole(squadId, userId, role);
+		  console.log('Role changed successfully');
+		} catch (error) {
+		  console.error('Error changing user role:', error);
+		} finally {
+		  setOptionModalVisible(false); // Cerrar el modal al finalizar
+		}
 	  };
+	  
+	  const optionsAlert = () => {
+		Alert.alert(
+		  'Cambio de Rol',
+		  'Selecciona el nuevo rol para el usuario',
+		  [
+			{
+			  text: 'Ascender a Veterano',
+			  onPress: () => changeRole('veteran'),
+			},
+			{
+			  text: 'Descender a Miembro',
+			  onPress: () => changeRole('down'),
+			},
+			{
+			  text: 'Pasarle la capitanía',
+			  onPress: () => changeRole('captain'),
+			},
+			{
+			  text: 'Cancel',
+			  style: 'cancel',
+			},
+		  ],
+		  { cancelable: false }
+		);
+	  };
+	  
 	  
 	  const kickUser = () => {
 		Alert.alert(
@@ -342,7 +377,7 @@ const SquadProfileScreen = ({ route }) => {
         onPress={() => setOptionModalVisible(false)}
       >
         <View style={styles.modalContent}>
-          <TouchableOpacity onPress={changeRole}>
+          <TouchableOpacity onPress={optionsAlert}>
             <Text style={styles.modalOption}>Cambiar rol a {selectedUser && selectedUser.name}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={kickUser}>
