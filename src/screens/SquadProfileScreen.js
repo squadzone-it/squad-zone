@@ -42,6 +42,7 @@ const SquadProfileScreen = ({ route }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
+	const [showRequestsModal, setShowRequestsModal] = useState(false);
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
@@ -148,16 +149,117 @@ const SquadProfileScreen = ({ route }) => {
 						)}
 					</View>
 				))}
+			<View style={{ flexDirection: "row", alignSelf: "center" }}>
+				<TouchableOpacity
+					style={styles.inviteOrRequestsButton}
+					onPress={() => navigation.navigate("Search", { screen: "Usuarios" })}
+				>
+					<Ionic
+						name="person-add-outline"
+						style={{ fontSize: 25, color: theme.colors.secondary }}
+					/>
+				</TouchableOpacity>
+				{squadData.requests.length > 0 && (
+					<View>
+						<TouchableOpacity
+							style={styles.inviteOrRequestsButton}
+							onPress={() => setShowRequestsModal(true)}
+						>
+							<Ionic
+								name="file-tray-outline"
+								style={{ fontSize: 25, color: theme.colors.secondary }}
+							/>
+							{showRequestsModal && (
+								<Modal
+									animationType="slide"
+									transparent={true}
+									visible={showRequestsModal}
+									onRequestClose={() => setShowRequestsModal(false)}
+								>
+									<TouchableOpacity
+										style={styles.modalBackground}
+										onPress={() => setShowRequestsModal(false)}
+									>
+										<View style={styles.modalContent}>
+											<Text
+												style={{
+													fontFamily: "SF-Pro-Bold",
+													fontSize: 20,
+													color: theme.colors.text,
+													borderBottomWidth: 1,
+													borderBottomColor: theme.colors.secondary,
+												}}
+											>
+												Solicitudes
+											</Text>
+											{squadData.requests.map((request, index) => (
+												<View style={styles.requestContainer} key={index}>
+													<Image
+														source={{
+															uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a.png",
+														}}
+														style={styles.requestBadge}
+													/>
 
-			<TouchableOpacity
-				style={styles.inviteButton}
-				onPress={() => navigation.navigate("Search", { screen: "Usuarios" })}
-			>
-				<Ionic
-					name="person-add-outline"
-					style={{ fontSize: 25, color: theme.colors.secondary }}
-				/>
-			</TouchableOpacity>
+													<View style={styles.requestSubContainer}>
+														<View style={styles.requestNameContainer}>
+															<Text style={styles.requestNameText}>
+																@username
+															</Text>
+														</View>
+														<View style={styles.requestDescriptionContainer}>
+															<Text style={styles.requestDecriptionText}>
+																Nombre
+															</Text>
+														</View>
+													</View>
+													<View style={{ flexDirection: "row" }}>
+														<TouchableOpacity style={{ paddingHorizontal: 30 }}>
+															<Ionic
+																name="close-sharp"
+																style={{
+																	fontSize: 25,
+																	color: theme.colors.text,
+																}}
+															/>
+														</TouchableOpacity>
+														<TouchableOpacity>
+															<Ionic
+																name="checkmark-sharp"
+																style={{
+																	fontSize: 25,
+																	color: theme.colors.text,
+																}}
+															/>
+														</TouchableOpacity>
+													</View>
+												</View>
+											))}
+										</View>
+									</TouchableOpacity>
+								</Modal>
+							)}
+						</TouchableOpacity>
+						<View
+							style={{
+								position: "absolute",
+								right: 15,
+								bottom: 0,
+								backgroundColor: "red",
+								borderRadius: 50,
+								width: 20,
+								height: 20,
+								alignItems: "center",
+								justifyContent: "center",
+								zIndex: 20,
+							}}
+						>
+							<Text style={{ color: "#fff" }}>{squadData.requests.length}</Text>
+						</View>
+					</View>
+				)}
+			</View>
+
 			<Text
 				style={{
 					fontFamily: "SF-Pro",
@@ -591,7 +693,7 @@ const styles = StyleSheet.create({
 		marginLeft: 4,
 		fontSize: 14,
 	},
-	inviteButton: {
+	inviteOrRequestsButton: {
 		alignItems: "center",
 		alignSelf: "center",
 		justifyContent: "center",
@@ -602,5 +704,40 @@ const styles = StyleSheet.create({
 		borderRadius: 50,
 		width: 50,
 		height: 50,
+		marginHorizontal: 20,
+	},
+	requestContainer: {
+		flexDirection: "row",
+		padding: 10,
+		alignItems: "center",
+		borderBottomColor: theme.colors.secondary,
+		borderBottomWidth: 1,
+	},
+	requestBadge: {
+		width: 50,
+		height: 50,
+		borderRadius: 25, // Hace la imagen circular
+		borderWidth: 2, // Tamaño del borde
+		borderColor: theme.colors.primary, // Color del borde
+		marginRight: 10, // Espacio a la derecha de la imagen
+	},
+	requestSubContainer: {
+		flexDirection: "column",
+	},
+	requestNameContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	requestNameText: {
+		color: theme.colors.text,
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	requestDescriptionContainer: {
+		flexDirection: "row",
+	},
+	requestDecriptionText: {
+		color: theme.colors.secondary,
+		fontSize: 14,
 	},
 });
