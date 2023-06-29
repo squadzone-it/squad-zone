@@ -207,7 +207,7 @@ const ProfileScreen = () => {
 												<View style={styles.invitationContainer}>
 													<Image
 														source={{
-															uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a.png",
+															uri: invitation.squadBadgeUrl,
 														}}
 														style={styles.invitationBadge}
 													/>
@@ -215,7 +215,7 @@ const ProfileScreen = () => {
 													<View style={styles.invitationSubContainer}>
 														<View style={styles.invitationNameContainer}>
 															<Text style={styles.invitationNameText}>
-																Nombre Equipo
+															 {invitation.displayname}
 															</Text>
 														</View>
 														<View style={styles.invitationDescriptionContainer}>
