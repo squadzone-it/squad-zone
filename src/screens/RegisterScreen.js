@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import Background from "../components/Background";
@@ -29,6 +29,8 @@ import { firebaseConfig } from "../../firebase-config";
 import { saveUserData } from "../components/ApiService";
 
 export default function RegisterScreen({ navigation }) {
+	const { setUser } = useContext(UserContext);
+
 	const [name, setName] = useState({ value: "", error: "" });
 	const [lastName, setLastName] = useState({ value: "", error: "" });
 	const [username, setUsername] = useState({ value: "", error: "" });
@@ -85,6 +87,7 @@ export default function RegisterScreen({ navigation }) {
 			.then(async (userCredential) => {
 				console.log("Account created!");
 				const user = userCredential.user;
+				setUser(user);
 				updateProfile(auth.currentUser, {
 					displayName: username.value,
 				});

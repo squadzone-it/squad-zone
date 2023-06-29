@@ -13,17 +13,24 @@ import { theme } from "../core/theme";
 import { Searchbar } from "react-native-paper";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { searchUsers } from "../components/ApiService";
+import {
+	searchUsers,
+	searchSquads,
+	getSquadData,
+} from "../components/ApiService";
 
 const Tab = createMaterialTopTabNavigator();
 
 const SearchScreen = ({ navigation }) => {
 	const [searchText, setSearchText] = useState("");
 	const [userData, setUserData] = useState(null);
+	const [squadsData, setSquadsData] = useState(null);
 
 	const onSearch = async () => {
 		const data = await searchUsers(searchText);
+		const squadsData = await searchSquads(searchText);
 		setUserData(data);
+		setSquadsData(squadsData);
 	};
 
 	const filterButton = () => {
@@ -88,10 +95,58 @@ const SearchScreen = ({ navigation }) => {
 		);
 	};
 
-	const Equipos = () => {
+	const Equipos = ({ squadsData, setSquadsData }) => {
 		return (
 			<View>
-				<Text>Equipos</Text>
+				{squadsData && (
+					<FlatList
+						keyboardDismissMode="on-drag"
+						overScrollMode="never"
+						bounces="false"
+						data={squadsData}
+						keyExtractor={(item) => item.displayname}
+						renderItem={({ item }) => (
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("SquadProfileScreen", {
+										squadId: item.squadId,
+										squadData: item,
+									})
+								}
+							>
+								<View style={styles.userContainer}>
+									{item.squadBadgeUrl && (
+										<Image
+											source={{ uri: item.squadBadgeUrl }}
+											style={styles.userImage}
+										/>
+									)}
+									<View style={styles.userSubContainer}>
+										<View style={styles.usernameContainer}>
+											<Text style={styles.usernameText}>
+												{item.displayname}
+											</Text>
+										</View>
+										<View style={styles.nameContainer}>
+											<Text style={styles.nameText}>{item.description}</Text>
+										</View>
+									</View>
+								</View>
+							</TouchableOpacity>
+						)}
+					/>
+				)}
+				{squadsData && squadsData.length > 0 && (
+					<TouchableOpacity
+						style={styles.clearButton}
+						onPress={() => setSquadsData(null)}
+					>
+						<Ionic
+							name="close-circle"
+							style={{ fontSize: 25, color: theme.colors.secondary }}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 		);
 	};
@@ -168,7 +223,6 @@ const SearchScreen = ({ navigation }) => {
 					</Tab.Screen>
 					<Tab.Screen
 						name="Equipos"
-						component={Equipos}
 						options={{
 							headerShown: false,
 							tabBarIcon: ({ focused, color }) =>
@@ -178,7 +232,11 @@ const SearchScreen = ({ navigation }) => {
 									<Ionic name="ios-shield-outline" color={color} size={23} />
 								),
 						}}
-					/>
+					>
+						{() => (
+							<Equipos squadsData={squadsData} setSquadsData={setSquadsData} />
+						)}
+					</Tab.Screen>
 				</Tab.Navigator>
 			</View>
 		</BackgroundNoScroll>

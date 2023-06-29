@@ -8,8 +8,7 @@ export const saveUserData = async (
 	nombre_usuario
 ) => {
 	try {
-		const functionUrl =
-			"https://europe-west2-squadzoneapp.cloudfunctions.net/saveUserData";
+		const functionUrl = `${baseFunctionUrl}saveUserData`;
 		const response = await fetch(functionUrl, {
 			method: "POST",
 			headers: {
@@ -140,16 +139,13 @@ export const uploadPhoto = async (id, photo) => {
 
 export const searchUsers = async (username) => {
 	try {
-		const response = await fetch(
-			"https://europe-west2-squadzoneapp.cloudfunctions.net/searchUsers",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ username: username.toLowerCase() }),
-			}
-		);
+		const response = await fetch(`${baseFunctionUrl}searchUsers`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ username: username.toLowerCase() }),
+		});
 		const json = await response.json();
 		if (json.result === "success" && Array.isArray(json.data)) {
 			return json.data;
@@ -221,5 +217,27 @@ export const createSquad = async (displayname, captain) => {
 	} catch (error) {
 		console.error("Error creating squad in Firestore:", error);
 		throw error;
+	}
+};
+
+export const searchSquads = async (name) => {
+	try {
+		const response = await fetch(`${baseFunctionUrl}/searchSquads`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ name: name.toLowerCase() }),
+		});
+		const json = await response.json();
+		if (json.result === "success" && Array.isArray(json.data)) {
+			return json.data;
+		} else {
+			console.error("Error: data is not an array");
+			return null;
+		}
+	} catch (error) {
+		console.error("Error:", error);
+		return null;
 	}
 };

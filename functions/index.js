@@ -292,12 +292,10 @@ exports.deleteSquad = functions
 
 			// Verificamos que el equipo solo tenga un miembro
 			if (squadData.members.length > 1) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error: "You must expel all members before deleting the squad.",
-					});
+				res.status(400).send({
+					result: "error",
+					error: "You must expel all members before deleting the squad.",
+				});
 				return;
 			}
 
@@ -341,12 +339,10 @@ exports.inviteToSquad = functions
 			// Verificar que el capitán es el que hace la invitación
 			const squadDoc = await squadRef.get();
 			if (!squadDoc.exists || squadDoc.data().captain !== captainId) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error: "You must be the captain to invite users.",
-					});
+				res.status(400).send({
+					result: "error",
+					error: "You must be the captain to invite users.",
+				});
 				return;
 			}
 
@@ -361,12 +357,10 @@ exports.inviteToSquad = functions
 
 			// Verificar que no exista ya una invitación
 			if (squadDoc.data().invitations.includes(userId)) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error: "The user has already been invited.",
-					});
+				res.status(400).send({
+					result: "error",
+					error: "The user has already been invited.",
+				});
 				return;
 			}
 
@@ -464,13 +458,11 @@ exports.requestToJoinSquad = functions
 				(userDoc.data().squadRequests &&
 					userDoc.data().squadRequests.includes(squadId))
 			) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error:
-							"User already has a team or has already requested to join this squad.",
-					});
+				res.status(400).send({
+					result: "error",
+					error:
+						"User already has a team or has already requested to join this squad.",
+				});
 				return;
 			}
 
@@ -512,12 +504,10 @@ exports.handleRequest = functions
 				!squadDoc.data().requests.includes(userId) &&
 				userDoc.data().squadRequests.includes(squadId)
 			) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error: "No request from user to join this squad.",
-					});
+				res.status(400).send({
+					result: "error",
+					error: "No request from user to join this squad.",
+				});
 				return;
 			}
 
@@ -577,12 +567,10 @@ exports.leaveOrKickSquad = functions
 
 			// Si el usuario no es miembro del equipo
 			if (!members.includes(userId)) {
-				res
-					.status(400)
-					.send({
-						result: "error",
-						error: "User is not a member of the squad.",
-					});
+				res.status(400).send({
+					result: "error",
+					error: "User is not a member of the squad.",
+				});
 				return;
 			}
 
@@ -653,12 +641,10 @@ exports.editSquad = functions
 			// Comprobar que el usuario es el capitán del equipo
 			const captain = squadDoc.data().captain;
 			if (captain !== userId) {
-				res
-					.status(403)
-					.send({
-						result: "error",
-						error: "Only the captain can edit the squad.",
-					});
+				res.status(403).send({
+					result: "error",
+					error: "Only the captain can edit the squad.",
+				});
 				return;
 			}
 
@@ -701,12 +687,10 @@ exports.changeRole = functions
 			// Comprobar que el usuario es el capitán del equipo
 			const captain = squadDoc.data().captain;
 			if (captain == captainId) {
-				res
-					.status(403)
-					.send({
-						result: "error " + captain,
-						error: "Only the captain can change roles.",
-					});
+				res.status(403).send({
+					result: "error " + captain,
+					error: "Only the captain can change roles.",
+				});
 				return;
 			}
 			/*
@@ -766,7 +750,10 @@ exports.getSquadData = functions
 				db.collection("users").doc(memberId).get()
 			);
 			const memberDocs = await Promise.all(memberPromises);
-			const memberData = memberDocs.map((doc) => doc.data());
+			const memberData = memberDocs.map((doc) => {
+				let data = doc.data();
+				return { userId: doc.id, ...data };
+			});
 
 			// Replace member ids with their data
 			squadData.members = memberData;
@@ -805,10 +792,15 @@ exports.searchSquads = functions
 				.limit(50) // limitamos a los primeros 50 resultados
 				.get();
 
-			const exactMatchSquads = exactMatchSnapshot.docs.map((doc) => doc.data());
-			let partialMatchSquads = partialMatchesSnapshot.docs.map((doc) =>
-				doc.data()
-			);
+			const exactMatchSquads = exactMatchSnapshot.docs.map((doc) => {
+				let data = doc.data();
+				return { squadId: doc.id, ...data };
+			});
+
+			let partialMatchSquads = partialMatchesSnapshot.docs.map((doc) => {
+				let data = doc.data();
+				return { squadId: doc.id, ...data };
+			});
 
 			// Filtrar las coincidencias parciales para eliminar la coincidencia exacta
 			let filteredPartialMatchSquads = partialMatchSquads.filter(

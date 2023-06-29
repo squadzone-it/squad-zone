@@ -47,7 +47,7 @@ const ProfileScreen = () => {
 
 	const onEditProfilePressed = () => {
 		setShowModal(false);
-		navigation.navigate("EditProfile");
+		navigation.navigate("EditProfile", { data: data });
 	};
 
 	const onLogoutPressed = () => {

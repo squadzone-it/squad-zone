@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
 	Text,
@@ -11,18 +11,31 @@ import {
 } from "react-native";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
 import { useNavigation } from "@react-navigation/native";
-
 import { theme } from "../core/theme";
-
 import Ionic from "react-native-vector-icons/Ionicons";
-
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
+import { UserContext } from "../contexts/UserContext";
+import { getSquadData } from "../components/ApiService";
+
 const SquadProfileScreen = ({ route }) => {
-	const squadData = route.params.squadData;
+	const { user } = useContext(UserContext);
+
 	const navigation = useNavigation();
 
+	const [squadData, setSquadData] = useState(route.params.squadData);
 	const [showModal, setShowModal] = useState(false);
+
+	useEffect(() => {
+		const fetchSquadData = async () => {
+			if (route.params.squadId) {
+				const data = await getSquadData(route.params.squadId);
+				setSquadData(data);
+			}
+		};
+
+		fetchSquadData();
+	}, [route.params.squadId]);
 
 	const onOptionsPressed = () => {
 		setShowModal(true);
@@ -39,7 +52,7 @@ const SquadProfileScreen = ({ route }) => {
 
 	const Miembros = () => (
 		<View>
-			{squadData && (
+			{typeof squadData.members[0] === "object" && (
 				<FlatList
 					keyboardDismissMode="on-drag"
 					overScrollMode="never"
@@ -47,49 +60,50 @@ const SquadProfileScreen = ({ route }) => {
 					data={squadData.members}
 					keyExtractor={(item) => item.username}
 					renderItem={({ item }) => (
-						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("OtherUserProfileScreen", { user: item })
-							}
-						>
-							<View style={styles.userContainer}>
-								{item.photoUrl && (
-									<Image
-										source={{ uri: item.photoUrl }}
-										style={styles.userImage}
-									/>
-								)}
-								<View style={styles.userSubContainer}>
-									<View style={styles.usernameContainer}>
-										<Text style={styles.usernameText}>{item.username}</Text>
-										{item.verified && (
-											<Ionic
-												name="checkmark-circle"
-												style={styles.verifiedIcon}
-											/>
-										)}
-									</View>
-									<View style={styles.nameContainer}>
-										<Text style={styles.nameText}>{item.name}</Text>
-										<Text style={styles.lastnameText}>{item.lastName}</Text>
+						<View style={styles.userContainer}>
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("OtherUserProfileScreen", { user: item })
+								}
+							>
+								<View style={styles.userContainer2}>
+									{item.photoUrl && (
+										<Image
+											source={{ uri: item.photoUrl }}
+											style={styles.userImage}
+										/>
+									)}
+									<View style={styles.userSubContainer}>
+										<View style={styles.usernameContainer}>
+											<Text style={styles.usernameText}>{item.username}</Text>
+											{item.verified && (
+												<Ionic
+													name="checkmark-circle"
+													style={styles.verifiedIcon}
+												/>
+											)}
+										</View>
+										<View style={styles.nameContainer}>
+											<Text style={styles.nameText}>{item.name}</Text>
+											<Text style={styles.lastnameText}>{item.lastName}</Text>
+										</View>
 									</View>
 								</View>
-							</View>
-						</TouchableOpacity>
+							</TouchableOpacity>
+							{user && user.uid === squadData.captain ? (
+								<TouchableOpacity style={{ right: 10, position: "absolute" }}>
+									<Ionic
+										name="ellipsis-vertical-sharp"
+										style={{ fontSize: 32, color: theme.colors.text }}
+									/>
+								</TouchableOpacity>
+							) : (
+								<></>
+							)}
+						</View>
 					)}
 				/>
 			)}
-			{/*{userData && userData.length > 0 && (
-					<TouchableOpacity
-						style={styles.clearButton}
-						onPress={() => setUserData(null)}
-					>
-						<Ionic
-							name="close-circle"
-							style={{ fontSize: 25, color: theme.colors.secondary }}
-						/>
-					</TouchableOpacity>
-                )}*/}
 		</View>
 	);
 
@@ -349,6 +363,11 @@ const styles = StyleSheet.create({
 		backgroundColor: theme.colors.surface,
 		borderBottomColor: theme.colors.secondaryBackground,
 		borderBottomWidth: 1,
+	},
+	userContainer2: {
+		flexDirection: "row",
+		alignItems: "center",
+		backgroundColor: theme.colors.surface,
 	},
 	userImage: {
 		width: 50,

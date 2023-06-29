@@ -27,6 +27,7 @@ import {
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
+import { UserProvider } from "./src/contexts/UserContext";
 
 const App = () => {
 	const [fontsLoaded] = useFonts({
@@ -52,82 +53,86 @@ const App = () => {
 
 	const TabNavigator = () => {
 		return (
-			<Tab.Navigator
-				screenOptions={({ route }) => ({
-					tabBarShowLabel: false,
-					headerShown: false,
-					tabBarStyle: {
-						height: 50,
-					},
+			<UserProvider>
+				<Tab.Navigator
+					screenOptions={({ route }) => ({
+						tabBarShowLabel: false,
+						headerShown: false,
+						tabBarStyle: {
+							height: 50,
+						},
 
-					tabBarIcon: ({ focused, size, color }) => {
-						let iconName;
-						if (route.name === "Home") {
-							iconName = focused ? "home-sharp" : "ios-home-outline";
-							size = focused ? size + 8 : size + 2;
-							color = focused ? theme.colors.text : theme.colors.secondary;
-						} else if (route.name === "News") {
-							iconName = focused ? "megaphone" : "ios-megaphone-outline";
-							size = focused ? size + 8 : size + 2;
-							color = focused ? theme.colors.text : theme.colors.secondary;
-						} else if (route.name === "Search") {
-							iconName = focused ? "shield" : "ios-shield-outline";
-							size = focused ? size + 8 : size + 2;
-							color = focused ? theme.colors.text : theme.colors.secondary;
-						} else if (route.name === "Profile") {
-							iconName = focused ? "person" : "ios-person-outline";
-							size = focused ? size + 8 : size + 2;
-							color = focused ? theme.colors.text : theme.colors.secondary;
-						}
+						tabBarIcon: ({ focused, size, color }) => {
+							let iconName;
+							if (route.name === "Home") {
+								iconName = focused ? "home-sharp" : "ios-home-outline";
+								size = focused ? size + 8 : size + 2;
+								color = focused ? theme.colors.text : theme.colors.secondary;
+							} else if (route.name === "News") {
+								iconName = focused ? "megaphone" : "ios-megaphone-outline";
+								size = focused ? size + 8 : size + 2;
+								color = focused ? theme.colors.text : theme.colors.secondary;
+							} else if (route.name === "Search") {
+								iconName = focused ? "shield" : "ios-shield-outline";
+								size = focused ? size + 8 : size + 2;
+								color = focused ? theme.colors.text : theme.colors.secondary;
+							} else if (route.name === "Profile") {
+								iconName = focused ? "person" : "ios-person-outline";
+								size = focused ? size + 8 : size + 2;
+								color = focused ? theme.colors.text : theme.colors.secondary;
+							}
 
-						return <Ionic name={iconName} size={size} color={color} />;
-					},
-					tabBarActiveBackgroundColor: theme.colors.surface,
-					tabBarInactiveBackgroundColor: theme.colors.surface,
-				})}
-			>
-				<Tab.Screen name="Home" component={HomeScreen} />
-				<Tab.Screen name="Search" component={SearchScreen} />
-				<Tab.Screen name="News" component={NewsScreen} />
-				<Tab.Screen name="Profile" component={ProfileScreen} />
-			</Tab.Navigator>
+							return <Ionic name={iconName} size={size} color={color} />;
+						},
+						tabBarActiveBackgroundColor: theme.colors.surface,
+						tabBarInactiveBackgroundColor: theme.colors.surface,
+					})}
+				>
+					<Tab.Screen name="Home" component={HomeScreen} />
+					<Tab.Screen name="Search" component={SearchScreen} />
+					<Tab.Screen name="News" component={NewsScreen} />
+					<Tab.Screen name="Profile" component={ProfileScreen} />
+				</Tab.Navigator>
+			</UserProvider>
 		);
 	};
 
 	return (
-		<Provider theme={theme}>
-			<NavigationContainer theme={DarkTheme}>
-				<Stack.Navigator
-					initialRouteName="StartScreen"
-					screenOptions={{
-						headerShown: false,
-						presentation: "modal",
-					}}
-				>
-					<Stack.Screen name="StartScreen" component={StartScreen} />
-					<Stack.Screen name="LoginScreen" component={LoginScreen} />
-					<Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-					<Stack.Screen name="Dashboard" component={TabNavigator} />
-					<Stack.Screen
-						name="ResetPasswordScreen"
-						component={ResetPasswordScreen}
-					/>
-					<Stack.Screen name="EditProfile" component={EditProfile} />
-					<Stack.Screen
-						name="OtherUserProfileScreen"
-						component={OtherUserProfileScreen}
-					/>
-					<Stack.Screen
-						name="CreateSquadScreen"
-						component={CreateSquadScreen}
-					/>
-					<Stack.Screen
-						name="SquadProfileScreen"
-						component={SquadProfileScreen}
-					/>
-				</Stack.Navigator>
-			</NavigationContainer>
-		</Provider>
+		<UserProvider>
+			<Provider theme={theme}>
+				<NavigationContainer theme={DarkTheme}>
+					<Stack.Navigator
+						initialRouteName="StartScreen"
+						screenOptions={{
+							headerShown: false,
+							presentation: "modal",
+						}}
+					>
+						<Stack.Screen name="StartScreen" component={StartScreen} />
+						<Stack.Screen name="LoginScreen" component={LoginScreen} />
+						<Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+						<Stack.Screen name="Dashboard" component={TabNavigator} />
+						<Stack.Screen
+							name="ResetPasswordScreen"
+							component={ResetPasswordScreen}
+						/>
+						<Stack.Screen name="EditProfile" component={EditProfile} />
+						<Stack.Screen
+							name="OtherUserProfileScreen"
+							component={OtherUserProfileScreen}
+						/>
+						<Stack.Screen
+							name="CreateSquadScreen"
+							component={CreateSquadScreen}
+						/>
+						<Stack.Screen
+							name="SquadProfileScreen"
+							component={SquadProfileScreen}
+						/>
+					</Stack.Navigator>
+				</NavigationContainer>
+			</Provider>
+		</UserProvider>
 	);
 };
 

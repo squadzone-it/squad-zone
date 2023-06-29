@@ -2,51 +2,23 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundMore from "../components/BackgroundMore";
 import { theme } from "../core/theme";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import TextInput from "../components/TextInput";
 
 import { requestGalleryPermission } from "../components/requestPermissions";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 
+import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 
-import { getAuth } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../../firebase-config";
-import {
-	updateUserData,
-	getUserData,
-	uploadPhoto,
-} from "../components/ApiService";
+import { updateUserData, uploadPhoto } from "../components/ApiService";
 
-let uid = null;
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-auth.onAuthStateChanged(function (user) {
-	if (user) {
-		uid = user.uid;
-	}
-});
-
-const EditProfileScreen = () => {
-	const [data, setData] = useState(null);
+const EditProfileScreen = ({ route }) => {
+	const { user } = useContext(UserContext);
+	const [data, setData] = useState(route.params.data);
 
 	const navigation = useNavigation();
-
-	useEffect(() => {
-		if (uid) {
-			async function fetchData() {
-				try {
-					const result = await getUserData(uid);
-					setData(result);
-				} catch (error) {
-					console.error("Error retrieving user data from Firestore:", error);
-				}
-			}
-			fetchData();
-		}
-	}, [uid]);
 
 	const tickPress = async () => {
 		try {
@@ -54,7 +26,7 @@ const EditProfileScreen = () => {
 				name: name.value,
 				lastName: lastName.value,
 			};
-			await updateUserData(uid, userData);
+			await updateUserData(user.uid, userData);
 			navigation.navigate("Profile");
 		} catch (error) {
 			console.log(error);
@@ -113,7 +85,7 @@ const EditProfileScreen = () => {
 			const base64Image = `data:image/jpeg;base64,${base64}`;
 
 			try {
-				await uploadPhoto(uid, base64Image);
+				await uploadPhoto(user.uid, base64Image);
 
 				if (data) {
 					setData({ ...data, photoUrl: base64Image });

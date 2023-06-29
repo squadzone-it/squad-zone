@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 import { Ionicons as Ionic } from "@expo/vector-icons";
@@ -12,6 +12,7 @@ import ProfileScreen from "./ProfileScreen";
 import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
+import { UserContext } from "../contexts/UserContext";
 
 import {
 	getAuth,
@@ -22,6 +23,8 @@ import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../../firebase-config";
 
 export default function LoginScreen({ navigation }) {
+	const { setUser } = useContext(UserContext);
+
 	const [email, setEmail] = useState({ value: "", error: "" });
 	const [password, setPassword] = useState({ value: "", error: "" });
 
@@ -40,6 +43,7 @@ export default function LoginScreen({ navigation }) {
 			.then((userCredential) => {
 				console.log("Signed in!");
 				const user = userCredential.user;
+				setUser(user);
 				//console.log(user);
 				console.log(auth.currentUser.uid);
 				//navigation.navigate("Home");
