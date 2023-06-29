@@ -241,3 +241,34 @@ export const searchSquads = async (name) => {
 		return null;
 	}
 };
+
+export const leaveOrKickSquad = async (userId, squadId) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}leaveOrKickSquad`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ userId, squadId }), // Pasamos los datos en el cuerpo de la solicitud
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("User left or was kicked from the squad successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with leaving or kicking from squad in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with leaving or kicking from squad in Firestore:", error);
+		throw error;
+	}
+};

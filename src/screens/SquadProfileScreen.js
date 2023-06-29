@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	Modal,
 	FlatList,
+	Alert
 } from "react-native";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
 import { useNavigation } from "@react-navigation/native";
@@ -16,7 +17,7 @@ import Ionic from "react-native-vector-icons/Ionicons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import { UserContext } from "../contexts/UserContext";
-import { getSquadData } from "../components/ApiService";
+import { getSquadData, leaveOrKickSquad } from "../components/ApiService";
 
 const SquadProfileScreen = ({ route }) => {
 	const { user } = useContext(UserContext);
@@ -25,6 +26,9 @@ const SquadProfileScreen = ({ route }) => {
 
 	const [squadData, setSquadData] = useState(route.params.squadData);
 	const [showModal, setShowModal] = useState(false);
+	const [selectedUser, setSelectedUser] = useState(null);
+	const [optionModalVisible, setOptionModalVisible] = useState(false);
+	
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
@@ -91,7 +95,13 @@ const SquadProfileScreen = ({ route }) => {
 								</View>
 							</TouchableOpacity>
 							{user && user.uid === squadData.captain ? (
-								<TouchableOpacity style={{ right: 10, position: "absolute" }}>
+								<TouchableOpacity 
+									style={{ right: 10, position: "absolute" }}
+									onPress={() => {
+										setSelectedUser(item);
+										setOptionModalVisible(true);
+									}}
+								>
 									<Ionic
 										name="ellipsis-vertical-sharp"
 										style={{ fontSize: 32, color: theme.colors.text }}
@@ -102,9 +112,12 @@ const SquadProfileScreen = ({ route }) => {
 							)}
 						</View>
 					)}
+					
 				/>
 			)}
 		</View>
+
+		
 	);
 
 	const Estadisticas = () => (
@@ -122,6 +135,59 @@ const SquadProfileScreen = ({ route }) => {
 			</Text>
 		</View>
 	);
+
+	const changeRole = () => {
+		console.log(`Cambiar el rol de ${selectedUser && selectedUser.name}`);
+		// Aquí va el código para cambiar el rol del usuario seleccionado
+		setOptionModalVisible(false); // Cerrar el modal al finalizar
+	  };
+	  
+	  const kickUser = () => {
+		Alert.alert(
+		  "Confirmación",
+		  `¿Estás seguro de que quieres expulsar a ${selectedUser && selectedUser.name}?`,
+		  [
+			{
+			  text: "No",
+			  style: "cancel",
+			},
+			{
+			  text: "Sí",
+			  onPress: async () => {
+				try {
+				  // Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
+				  const userId = selectedUser.userId;
+				  const squadId = selectedUser.team;
+				  await leaveOrKickSquad(userId, squadId);
+				  console.log(`Expulsado con éxito a ${selectedUser && selectedUser.name}`);
+
+				// Expulsar al usuario a nivel local
+				let updatedMembers = squadData.members.filter(member => member.userId !== userId);
+				
+				// Actualizar el estado
+				setSquadData({...squadData, members: updatedMembers});
+				} catch (error) {
+				  console.error("Error al expulsar al usuario:", error);
+				} finally {
+				  setOptionModalVisible(false); // Cerrar el modal al finalizar
+				}
+			  },
+			  style: "destructive",
+			},
+		  ],
+		  { cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
+		);
+	  };
+	  
+	  const passCaptaincy = () => {
+		console.log(`Pasar la capitanía a ${selectedUser && selectedUser.name}`);
+		console.log(selectedUser.userId);
+		console.log(selectedUser.team);
+		console.log(typeof squadData);
+		console.log(squadData);
+		// Aquí va el código para pasar la capitanía al usuario seleccionado
+		setOptionModalVisible(false); // Cerrar el modal al finalizar
+	  };
 
 	const tempButton = () => {};
 
@@ -171,6 +237,8 @@ const SquadProfileScreen = ({ route }) => {
 							</TouchableOpacity>
 						</View>
 					</TouchableOpacity>
+
+					
 				</Modal>
 			</View>
 
@@ -268,6 +336,24 @@ const SquadProfileScreen = ({ route }) => {
 					/>
 				</Tab.Navigator>
 			</View>
+			<Modal visible={optionModalVisible} animationType="slide" transparent={true}>
+      <TouchableOpacity
+        style={styles.modalBackground}
+        onPress={() => setOptionModalVisible(false)}
+      >
+        <View style={styles.modalContent}>
+          <TouchableOpacity onPress={changeRole}>
+            <Text style={styles.modalOption}>Cambiar rol a {selectedUser && selectedUser.name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={kickUser}>
+            <Text style={styles.modalOption}>Expulsar a {selectedUser && selectedUser.name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={passCaptaincy}>
+            <Text style={styles.modalOption}>Pasar capitan a {selectedUser && selectedUser.name}</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    </Modal>
 		</BackgroundNoScroll>
 	);
 };
