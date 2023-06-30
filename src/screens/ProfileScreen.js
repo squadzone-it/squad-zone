@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	StyleSheet,
 	Modal,
+	Alert,
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
@@ -18,7 +19,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { getUserData, getSquadData } from "../components/ApiService";
+import { getUserData, getSquadData, handleSquadInvitation } from "../components/ApiService";
 
 const ProfileScreen = () => {
 	const navigation = useNavigation();
@@ -242,7 +243,7 @@ const ProfileScreen = () => {
 														</View>
 													</TouchableOpacity>
 													<View style={{ flexDirection: "row" }}>
-														<TouchableOpacity style={{ paddingHorizontal: 30 }}>
+														<TouchableOpacity style={{ paddingHorizontal: 30 }} onPress={() => handleInvitationRejection(invitation.id)}>
 															<Ionic
 																name="close-sharp"
 																style={{
@@ -251,7 +252,7 @@ const ProfileScreen = () => {
 																}}
 															/>
 														</TouchableOpacity>
-														<TouchableOpacity>
+														<TouchableOpacity onPress={() => handleInvitationAcceptance(invitation.id)}>
 															<Ionic
 																name="checkmark-sharp"
 																style={{
@@ -301,6 +302,41 @@ const ProfileScreen = () => {
 			</Text>
 		</View>
 	);
+
+	const handleInvitationAcceptance = async (invitationId) => {
+		try {
+		  await handleSquadInvitation(uid, invitationId, true);
+		  Alert.alert(
+			"Invitación aceptada",
+			"Has aceptado la invitación para unirte al equipo.",
+			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+			{ cancelable: false }
+		  );
+		} catch (error) {
+		  console.error("Error accepting invitation:", error);
+		}
+	  }
+	  
+	  const handleInvitationRejection = async (invitationId) => {
+		try {
+		  await handleSquadInvitation(uid, invitationId, false);
+		  // Aquí es donde actualizas el estado para eliminar la invitación
+		  if(data && data.squadInvitations) {
+			const updatedInvitations = data.squadInvitations.filter(invitation => invitation.id !== invitationId);
+			setData({ ...data, squadInvitations: updatedInvitations });
+		  }
+		  Alert.alert(
+			"Invitación rechazada",
+			"Has rechazado la invitación para unirte al equipo.",
+			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+			{ cancelable: false }
+		  );
+		} catch (error) {
+		  console.error("Error rejecting invitation:", error);
+		}
+	  }
+	  
+	  
 
 	const Tab = createMaterialTopTabNavigator();
 

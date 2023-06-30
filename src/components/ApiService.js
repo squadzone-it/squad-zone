@@ -303,3 +303,99 @@ export const changeUserRole = async (squadId, userId, role) => {
 		throw error;
 	}
 };
+
+export const handleSquadInvitation = async (userId, squadId, accept) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}handleInvitation`;
+		const response = await fetch(functionUrl, {
+			method: "PUT", // Aquí usamos PUT ya que tu API lo requiere
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ userId, squadId, accept }), // Pasamos los datos en el cuerpo de la solicitud
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Squad invitation handled successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with handling squad invitation in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with handling squad invitation in Firestore:", error);
+		throw error;
+	}
+};
+
+
+
+export const handleSquadRequest = async (userId, squadId, accept) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}handleRequest`; 
+		const response = await fetch(functionUrl, {
+			method: "PUT", // Aquí usamos PUT ya que tu API lo requiere
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ userId, squadId, accept }), // Pasamos los datos en el cuerpo de la solicitud
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Squad request handled successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with handling squad request in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with handling squad request in Firestore:", error);
+		throw error;
+	}
+};
+
+export const inviteUserToSquad = async (captainId, squadId, userId) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}inviteToSquad`; 
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ captainId, squadId, userId }),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("User invited to squad successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with inviting user to squad in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with inviting user to squad in Firestore:", error);
+		throw error;
+	}
+};
+

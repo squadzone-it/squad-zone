@@ -734,7 +734,7 @@ exports.changeRole = functions
 		}
 	});
 
-exports.getSquadData = functions
+	exports.getSquadData = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		if (req.method !== "GET") {
@@ -769,12 +769,26 @@ exports.getSquadData = functions
 			// Replace member ids with their data
 			squadData.members = memberData;
 
+            // Map request ids to their data
+            const requestPromises = squadData.requests.map((requestId) =>
+                db.collection("users").doc(requestId).get()
+            );
+            const requestDocs = await Promise.all(requestPromises);
+            const requestData = requestDocs.map((doc) => {
+                let data = doc.data();
+                return { userId: doc.id, ...data };
+            });
+
+            // Replace request ids with their data
+            squadData.requests = requestData;
+
 			res.status(200).send({ result: "success", data: squadData });
 		} catch (error) {
 			console.error("Error fetching squad data:", error);
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
+
 
 exports.searchSquads = functions
 	.region("europe-west2")

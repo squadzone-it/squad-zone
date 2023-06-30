@@ -13,7 +13,7 @@ import React, { useState, useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getUserData, getSquadData } from "../components/ApiService";
+import { getUserData, getSquadData, inviteUserToSquad } from "../components/ApiService";
 
 const OtherUserProfileScreen = ({ route }) => {
 	const navigation = useNavigation();
@@ -115,7 +115,17 @@ const OtherUserProfileScreen = ({ route }) => {
 						Este jugador no tiene Squad...
 					</Text>
 
-					<TouchableOpacity>
+					<TouchableOpacity
+					 onPress={async () => {
+						try {
+							//mete bien los campos yo estoy colapsao
+						  await inviteUserToSquad(captainId, squadId, userId);
+						  Alert.alert("Invitación enviada exitosamente");
+						} catch (error) {
+						  Alert.alert("Hubo un error al enviar la invitación");
+						}
+					  }}
+					>
 						<View
 							style={{
 								flexDirection: "column",
@@ -147,6 +157,7 @@ const OtherUserProfileScreen = ({ route }) => {
 					>
 						INVITAR A SQUAD
 					</Text>
+					
 				</View>
 			);
 		} else {

@@ -22,6 +22,7 @@ import {
 	getSquadData,
 	leaveOrKickSquad,
 	changeUserRole,
+	handleSquadRequest,
 } from "../components/ApiService";
 
 const SquadProfileScreen = ({ route }) => {
@@ -38,7 +39,8 @@ const SquadProfileScreen = ({ route }) => {
 
 	const navigation = useNavigation();
 
-	const [squadData, setSquadData] = useState(route.params.squadData);
+		const [squadData, setSquadData] = useState(route.params.squadData);
+		const [squadId, setSquadId] = useState(route.params.squadId);
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
@@ -46,14 +48,14 @@ const SquadProfileScreen = ({ route }) => {
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
-			if (route.params.squadId) {
-				const data = await getSquadData(route.params.squadId);
+			if (squadId) {
+				const data = await getSquadData(squadId);
 				setSquadData(data);
 			}
 		};
-
+	
 		fetchSquadData();
-	}, [route.params.squadId]);
+	}, [squadId]);
 
 	const onOptionsPressed = () => {
 		setShowModal(true);
@@ -62,6 +64,45 @@ const SquadProfileScreen = ({ route }) => {
 	const onClosePressed = () => {
 		setShowModal(false);
 	};
+
+	const handleRequestAcceptance = async (userId, squadId) => {
+		try {
+			console.log(userId, squadId)
+		  await handleSquadRequest(userId, squadId, true);
+		  ;
+		  Alert.alert(
+			"Invitación aceptada",
+			"Has aceptado la invitación para que se una al equipo.",
+			
+			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+			{ cancelable: false }
+		  );
+		} catch (error) {
+		  console.error("Error accepting request:", error);
+		}
+	};
+	
+	const handleRequestRejection = async (userId, squadId) => {
+		try {
+			console.log(userId, squadId)
+		  await handleSquadRequest(userId, squadId, false);
+		  // Aquí es donde actualizas el estado para eliminar la invitación
+		  if(data && data.squadInvitations) {
+			const updatedInvitations = data.squadInvitations.filter(invitation => invitation.id !== requestId);
+			setData({ ...data, squadInvitations: updatedInvitations });
+		  }
+		  Alert.alert(
+			"Invitación rechazada",
+			"Has rechazado la invitación para unirte al equipo.",
+			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+			{ cancelable: false }
+		  );
+		} catch (error) {
+		  console.error("Error rejecting invitation:", error);
+		}
+	};
+	
+
 
 	const Miembros = () => (
 		<ScrollView
@@ -204,17 +245,17 @@ const SquadProfileScreen = ({ route }) => {
 													<View style={styles.requestSubContainer}>
 														<View style={styles.requestNameContainer}>
 															<Text style={styles.requestNameText}>
-																@username
+																{request.username}
 															</Text>
 														</View>
 														<View style={styles.requestDescriptionContainer}>
 															<Text style={styles.requestDecriptionText}>
-																Nombre
+																{request.name} {request.lastName}
 															</Text>
 														</View>
 													</View>
 													<View style={{ flexDirection: "row" }}>
-														<TouchableOpacity style={{ paddingHorizontal: 30 }}>
+													<TouchableOpacity style={{ paddingHorizontal: 30 }} onPress={() => handleRequestRejection(request.userId, squadId)}>
 															<Ionic
 																name="close-sharp"
 																style={{
@@ -223,7 +264,7 @@ const SquadProfileScreen = ({ route }) => {
 																}}
 															/>
 														</TouchableOpacity>
-														<TouchableOpacity>
+														<TouchableOpacity onPress={() => handleRequestAcceptance(request.userId, squadId)}>
 															<Ionic
 																name="checkmark-sharp"
 																style={{
