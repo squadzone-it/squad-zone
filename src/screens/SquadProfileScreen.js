@@ -39,8 +39,8 @@ const SquadProfileScreen = ({ route }) => {
 
 	const navigation = useNavigation();
 
-		const [squadData, setSquadData] = useState(route.params.squadData);
-		const [squadId, setSquadId] = useState(route.params.squadId);
+	const [squadData, setSquadData] = useState(route.params.squadData);
+	const [squadId, setSquadId] = useState(route.params.squadId);
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
@@ -53,7 +53,7 @@ const SquadProfileScreen = ({ route }) => {
 				setSquadData(data);
 			}
 		};
-	
+
 		fetchSquadData();
 	}, [squadId]);
 
@@ -67,42 +67,50 @@ const SquadProfileScreen = ({ route }) => {
 
 	const handleRequestAcceptance = async (userId, squadId) => {
 		try {
-			console.log(userId, squadId)
-		  await handleSquadRequest(userId, squadId, true);
-		  ;
-		  Alert.alert(
-			"Invitación aceptada",
-			"Has aceptado la invitación para que se una al equipo.",
-			
-			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-			{ cancelable: false }
-		  );
+			console.log(userId, squadId);
+			await handleSquadRequest(userId, squadId, true);
+
+			refreshRequests();
+			Alert.alert(
+				"Invitación aceptada",
+				"Has aceptado la invitación para que se una al equipo.",
+
+				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+				{ cancelable: false }
+			);
 		} catch (error) {
-		  console.error("Error accepting request:", error);
+			console.error("Error accepting request:", error);
 		}
 	};
-	
+
 	const handleRequestRejection = async (userId, squadId) => {
 		try {
-			console.log(userId, squadId)
-		  await handleSquadRequest(userId, squadId, false);
-		  // Aquí es donde actualizas el estado para eliminar la invitación
-		  if(data && data.squadInvitations) {
-			const updatedInvitations = data.squadInvitations.filter(invitation => invitation.id !== requestId);
-			setData({ ...data, squadInvitations: updatedInvitations });
-		  }
-		  Alert.alert(
-			"Invitación rechazada",
-			"Has rechazado la invitación para unirte al equipo.",
-			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-			{ cancelable: false }
-		  );
+			console.log(userId, squadId);
+			await handleSquadRequest(userId, squadId, false);
+			// Aquí es donde actualizas el estado para eliminar el request
+			if (squadData && squadData.requests) {
+				const updatedRequests = squadData.requests.filter(
+					(requestId) => requestId !== userId
+				);
+				setSquadData({ ...squadData, requests: updatedRequests });
+			}
+			refreshRequests();
+			Alert.alert(
+				"Solicitud rechazada",
+				"Has rechazado la solicitud para unirte al equipo.",
+				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+				{ cancelable: false }
+			);
 		} catch (error) {
-		  console.error("Error rejecting invitation:", error);
+			console.error("Error rejecting request:", error);
 		}
 	};
-	
 
+	const refreshRequests = async () => {
+		setShowRequestsModal(false);
+		const data = await getSquadData(squadId);
+		setSquadData(data);
+	};
 
 	const Miembros = () => (
 		<ScrollView
@@ -190,127 +198,200 @@ const SquadProfileScreen = ({ route }) => {
 						)}
 					</View>
 				))}
-			<View style={{ flexDirection: "row", alignSelf: "center" }}>
-				<TouchableOpacity
-					style={styles.inviteOrRequestsButton}
-					onPress={() => navigation.navigate("Search", { screen: "Usuarios" })}
-				>
-					<Ionic
-						name="person-add-outline"
-						style={{ fontSize: 25, color: theme.colors.secondary }}
-					/>
-				</TouchableOpacity>
-				{squadData.requests.length > 0 && (
-					<View>
-						<TouchableOpacity
-							style={styles.inviteOrRequestsButton}
-							onPress={() => setShowRequestsModal(true)}
-						>
-							<Ionic
-								name="file-tray-outline"
-								style={{ fontSize: 25, color: theme.colors.secondary }}
-							/>
-							{showRequestsModal && (
-								<Modal
-									animationType="slide"
-									transparent={true}
-									visible={showRequestsModal}
-									onRequestClose={() => setShowRequestsModal(false)}
-								>
-									<TouchableOpacity
-										style={styles.modalBackground}
-										onPress={() => setShowRequestsModal(false)}
-									>
-										<View style={styles.modalContent}>
-											<Text
-												style={{
-													fontFamily: "SF-Pro-Bold",
-													fontSize: 20,
-													color: theme.colors.text,
-													borderBottomWidth: 1,
-													borderBottomColor: theme.colors.secondary,
-												}}
-											>
-												Solicitudes
-											</Text>
-											{squadData.requests.map((request, index) => (
-												<View style={styles.requestContainer} key={index}>
-													<Image
-														source={{
-															uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a.png",
-														}}
-														style={styles.requestBadge}
-													/>
+			{user.uid && ( //CONDICION A CAMBIAR
+				<View style={{ flexDirection: "column", alignSelf: "center" }}>
+					<TouchableOpacity
+						style={styles.inviteOrRequestsButton}
+						onPress={
+							() => navigation.navigate("Search", { screen: "Usuarios" }) //LOGICA A IMPLEMENTAR
+						}
+					>
+						<Ionic
+							name="person-add-outline"
+							style={{ fontSize: 25, color: theme.colors.secondary }}
+						/>
+					</TouchableOpacity>
+					<Text
+						style={{
+							fontFamily: "SF-Pro",
+							alignSelf: "center",
+							marginTop: 5,
+							color: theme.colors.secondary,
+						}}
+					>
+						¡Solicita unirte!
+					</Text>
+				</View>
+			)}
 
-													<View style={styles.requestSubContainer}>
-														<View style={styles.requestNameContainer}>
-															<Text style={styles.requestNameText}>
-																{request.username}
-															</Text>
-														</View>
-														<View style={styles.requestDescriptionContainer}>
-															<Text style={styles.requestDecriptionText}>
-																{request.name} {request.lastName}
-															</Text>
-														</View>
+			{squadData.veterans &&
+				(user.uid === squadData.captain ||
+					squadData.veterans.includes(user.uid)) && (
+					<View>
+						<View style={{ flexDirection: "row", alignSelf: "center" }}>
+							<TouchableOpacity
+								style={styles.inviteOrRequestsButton}
+								onPress={() =>
+									navigation.navigate("Search", { screen: "Usuarios" })
+								}
+							>
+								<Ionic
+									name="person-add-outline"
+									style={{ fontSize: 25, color: theme.colors.secondary }}
+								/>
+							</TouchableOpacity>
+							{squadData.requests.length > 0 && (
+								<View>
+									<TouchableOpacity
+										style={styles.inviteOrRequestsButton}
+										onPress={() => setShowRequestsModal(true)}
+									>
+										<Ionic
+											name="file-tray-outline"
+											style={{ fontSize: 25, color: theme.colors.secondary }}
+										/>
+										{showRequestsModal && (
+											<Modal
+												animationType="slide"
+												transparent={true}
+												visible={showRequestsModal}
+												onRequestClose={() => setShowRequestsModal(false)}
+											>
+												<TouchableOpacity
+													style={styles.modalBackground}
+													onPress={() => setShowRequestsModal(false)}
+												>
+													<View style={styles.modalContent}>
+														<Text
+															style={{
+																fontFamily: "SF-Pro-Bold",
+																fontSize: 20,
+																color: theme.colors.text,
+																borderBottomWidth: 1,
+																borderBottomColor: theme.colors.secondary,
+															}}
+														>
+															Solicitudes
+														</Text>
+														{squadData.requests.map((request, index) => (
+															<View style={styles.requestContainer} key={index}>
+																<TouchableOpacity
+																	onPress={() =>
+																		navigation.navigate(
+																			"OtherUserProfileScreen",
+																			{ user: request }
+																		)
+																	}
+																>
+																	<View
+																		style={{
+																			flexDirection: "row",
+																			alignItems: "center",
+																		}}
+																	>
+																		<Image
+																			source={{
+																				uri: request.photoUrl,
+																			}}
+																			style={styles.requestBadge}
+																		/>
+
+																		<View style={styles.requestSubContainer}>
+																			<View style={styles.requestNameContainer}>
+																				<Text style={styles.requestNameText}>
+																					{request.username}
+																				</Text>
+																			</View>
+																			<View
+																				style={
+																					styles.requestDescriptionContainer
+																				}
+																			>
+																				<Text
+																					style={styles.requestDecriptionText}
+																				>
+																					{request.name} {request.lastName}
+																				</Text>
+																			</View>
+																		</View>
+																	</View>
+																</TouchableOpacity>
+																<View style={{ flexDirection: "row" }}>
+																	<TouchableOpacity
+																		style={{ paddingHorizontal: 30 }}
+																		onPress={() =>
+																			handleRequestRejection(
+																				request.userId,
+																				squadId
+																			)
+																		}
+																	>
+																		<Ionic
+																			name="close-sharp"
+																			style={{
+																				fontSize: 25,
+																				color: theme.colors.text,
+																			}}
+																		/>
+																	</TouchableOpacity>
+																	<TouchableOpacity
+																		onPress={() =>
+																			handleRequestAcceptance(
+																				request.userId,
+																				squadId
+																			)
+																		}
+																	>
+																		<Ionic
+																			name="checkmark-sharp"
+																			style={{
+																				fontSize: 25,
+																				color: theme.colors.text,
+																			}}
+																		/>
+																	</TouchableOpacity>
+																</View>
+															</View>
+														))}
 													</View>
-													<View style={{ flexDirection: "row" }}>
-													<TouchableOpacity style={{ paddingHorizontal: 30 }} onPress={() => handleRequestRejection(request.userId, squadId)}>
-															<Ionic
-																name="close-sharp"
-																style={{
-																	fontSize: 25,
-																	color: theme.colors.text,
-																}}
-															/>
-														</TouchableOpacity>
-														<TouchableOpacity onPress={() => handleRequestAcceptance(request.userId, squadId)}>
-															<Ionic
-																name="checkmark-sharp"
-																style={{
-																	fontSize: 25,
-																	color: theme.colors.text,
-																}}
-															/>
-														</TouchableOpacity>
-													</View>
-												</View>
-											))}
-										</View>
+												</TouchableOpacity>
+											</Modal>
+										)}
 									</TouchableOpacity>
-								</Modal>
+									<View
+										style={{
+											position: "absolute",
+											right: 15,
+											bottom: 0,
+											backgroundColor: "red",
+											borderRadius: 50,
+											width: 20,
+											height: 20,
+											alignItems: "center",
+											justifyContent: "center",
+											zIndex: 20,
+										}}
+									>
+										<Text style={{ color: "#fff" }}>
+											{squadData.requests.length}
+										</Text>
+									</View>
+								</View>
 							)}
-						</TouchableOpacity>
-						<View
+						</View>
+
+						<Text
 							style={{
-								position: "absolute",
-								right: 15,
-								bottom: 0,
-								backgroundColor: "red",
-								borderRadius: 50,
-								width: 20,
-								height: 20,
-								alignItems: "center",
-								justifyContent: "center",
-								zIndex: 20,
+								fontFamily: "SF-Pro",
+								alignSelf: "center",
+								marginTop: 5,
+								color: theme.colors.secondary,
 							}}
 						>
-							<Text style={{ color: "#fff" }}>{squadData.requests.length}</Text>
-						</View>
+							Invita a tus amigos!
+						</Text>
 					</View>
 				)}
-			</View>
-
-			<Text
-				style={{
-					fontFamily: "SF-Pro",
-					alignSelf: "center",
-					marginTop: 5,
-					color: theme.colors.secondary,
-				}}
-			>
-				Invita a tus amigos!
-			</Text>
 		</ScrollView>
 	);
 

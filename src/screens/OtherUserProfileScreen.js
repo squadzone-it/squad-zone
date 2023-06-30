@@ -5,21 +5,31 @@ import {
 	Image,
 	TouchableOpacity,
 	StyleSheet,
+	Alert,
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { theme } from "../core/theme";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { getUserData, getSquadData, inviteUserToSquad } from "../components/ApiService";
+import {
+	getUserData,
+	getSquadData,
+	inviteUserToSquad,
+} from "../components/ApiService";
 
 const OtherUserProfileScreen = ({ route }) => {
 	const navigation = useNavigation();
 	const [user, setUser] = useState(route.params.user);
+	const { user: loggedUser } = useContext(UserContext);
 
 	const [teamData, setTeamData] = useState(null);
+	const [loggedUserData, setLoggedUserData] = useState(null);
+	const [loggedSquadData, setLoggedSquadData] = useState(null);
+
 	useEffect(() => {
 		if (user && user.team) {
 			if (route.params.squadData) {
@@ -29,6 +39,12 @@ const OtherUserProfileScreen = ({ route }) => {
 			}
 		}
 	}, [user]);
+	useEffect(() => {
+		if (!user.team) {
+			//SOLO CARGA MIS DATOS SI EL USUARIO NO TIENE EQUIPO, ASI PODREMOS INVITARLE
+			fetchLoggedUserData(loggedUser.uid);
+		}
+	}, [loggedUser]);
 
 	const fetchSquadData = async () => {
 		if (user && user.team) {
@@ -52,6 +68,29 @@ const OtherUserProfileScreen = ({ route }) => {
 			} catch (error) {
 				console.error("Error retrieving user data:", error);
 			}
+		}
+	};
+	useEffect(() => {
+		if (loggedUserData && loggedUserData.team && !user.team) {
+			fetchLoggedSquadData(loggedUserData.team);
+		}
+	}, [loggedUserData]);
+
+	const fetchLoggedUserData = async (uid) => {
+		try {
+			const result = await getUserData(uid);
+			setLoggedUserData(result);
+		} catch (error) {
+			console.error("Error retrieving logged user data:", error);
+		}
+	};
+
+	const fetchLoggedSquadData = async (teamId) => {
+		try {
+			const result = await getSquadData(teamId);
+			setLoggedSquadData(result);
+		} catch (error) {
+			console.error("Error retrieving logged squad data:", error);
 		}
 	};
 
@@ -109,55 +148,76 @@ const OtherUserProfileScreen = ({ route }) => {
 			);
 		} else if (user && !user.team) {
 			// Si el usuario no está en un equipo, muestra las opciones para unirse o crear un equipo
+			let isUserInvited =
+				loggedSquadData &&
+				loggedSquadData.invitations &&
+				loggedSquadData.invitations.includes(user.userId);
+
 			return (
 				<View style={{ alignItems: "center", paddingTop: "30%" }}>
 					<Text style={styles.teamOptionsText}>
-						Este jugador no tiene Squad...
+						{isUserInvited
+							? "¡Este jugador ya ha sido invitado a tu Squad!"
+							: "Este jugador no tiene Squad..."}
 					</Text>
-
-					<TouchableOpacity
-					 onPress={async () => {
-						try {
-							//mete bien los campos yo estoy colapsao
-						  await inviteUserToSquad(captainId, squadId, userId);
-						  Alert.alert("Invitación enviada exitosamente");
-						} catch (error) {
-						  Alert.alert("Hubo un error al enviar la invitación");
-						}
-					  }}
-					>
-						<View
-							style={{
-								flexDirection: "column",
-								alignItems: "center",
-								paddingTop: "5%",
-								borderWidth: 1,
-								borderRadius: 50,
-								borderColor: theme.colors.primary,
-								padding: 20,
-							}}
-						>
-							<Ionic
-								name="person-add-outline"
-								style={{
-									fontSize: 50,
-									color: theme.colors.text,
-									textAlign: "center",
-								}}
-							/>
-						</View>
-					</TouchableOpacity>
-					<Text
-						style={{
-							fontFamily: "CODE-Bold",
-							fontSize: 30,
-							padding: 10,
-							color: theme.colors.text,
-						}}
-					>
-						INVITAR A SQUAD
-					</Text>
-					
+					{loggedSquadData &&
+						(loggedUser.uid === loggedSquadData.captain ||
+							loggedSquadData.veterans.includes(loggedUser.uid)) && (
+							<>
+								<TouchableOpacity
+									disabled={isUserInvited}
+									onPress={async () => {
+										try {
+											//mete bien los campos yo estoy colapsao
+											await inviteUserToSquad(
+												loggedSquadData.captain,
+												loggedSquadData.squadId,
+												user.userId
+											);
+											fetchLoggedSquadData(loggedUserData.team);
+											Alert.alert("Invitación enviada exitosamente");
+										} catch (error) {
+											Alert.alert("Hubo un error al enviar la invitación");
+										}
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "column",
+											alignItems: "center",
+											paddingTop: "5%",
+											borderWidth: 1,
+											borderRadius: 50,
+											borderColor: isUserInvited
+												? theme.colors.secondary
+												: theme.colors.primary,
+											padding: 20,
+										}}
+									>
+										<Ionic
+											name="person-add-outline"
+											style={{
+												fontSize: 50,
+												color: isUserInvited
+													? theme.colors.secondary
+													: theme.colors.text,
+												textAlign: "center",
+											}}
+										/>
+									</View>
+								</TouchableOpacity>
+								<Text
+									style={{
+										fontFamily: "CODE-Bold",
+										fontSize: 30,
+										padding: 10,
+										color: theme.colors.text,
+									}}
+								>
+									{isUserInvited ? "INVITADO" : "INVITAR A SQUAD"}
+								</Text>
+							</>
+						)}
 				</View>
 			);
 		} else {
