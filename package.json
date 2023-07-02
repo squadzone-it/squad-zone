@@ -42,6 +42,7 @@
     "react-native-popup-menu": "^0.16.1",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-tab-view": "^3.5.1",
+    "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.10"
   },
   "devDependencies": {

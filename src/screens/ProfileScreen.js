@@ -113,6 +113,7 @@ const ProfileScreen = () => {
 							onPress={() =>
 								navigation.navigate("SquadProfileScreen", {
 									squadData: teamData,
+									userData: data,
 								})
 							}
 						>
@@ -503,12 +504,13 @@ const ProfileScreen = () => {
 						component={DatosPersonales}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="person" color={color} size={25} />
-								) : (
-									<Ionic name="person-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "person-sharp" : "person-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 					<Tab.Screen
@@ -516,12 +518,13 @@ const ProfileScreen = () => {
 						component={Equipo}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="football" color={color} size={25} />
-								) : (
-									<Ionic name="football-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "shield-sharp" : "ios-shield-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 					<Tab.Screen
@@ -529,12 +532,13 @@ const ProfileScreen = () => {
 						component={Partidos}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="calendar" color={color} size={25} />
-								) : (
-									<Ionic name="calendar-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "calendar" : "calendar-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 				</Tab.Navigator>

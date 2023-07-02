@@ -23,6 +23,8 @@ import {
 	leaveOrKickSquad,
 	changeUserRole,
 	handleSquadRequest,
+	getUserData,
+	requestToJoinSquad,
 } from "../components/ApiService";
 
 const SquadProfileScreen = ({ route }) => {
@@ -39,12 +41,14 @@ const SquadProfileScreen = ({ route }) => {
 
 	const navigation = useNavigation();
 
+	const [userData, setUserData] = useState(null);
 	const [squadData, setSquadData] = useState(route.params.squadData);
 	const [squadId, setSquadId] = useState(route.params.squadId);
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
 	const [showRequestsModal, setShowRequestsModal] = useState(false);
+	const [requestSent, setRequestSent] = useState(false);
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
@@ -57,12 +61,34 @@ const SquadProfileScreen = ({ route }) => {
 		fetchSquadData();
 	}, [squadId]);
 
+	useEffect(() => {
+		const fetchUserData = async () => {
+			if (!route.params.userData) {
+				const data = await getUserData(user.uid);
+				setUserData(data);
+			} else {
+				setUserData(route.params.userData);
+			}
+		};
+
+		fetchUserData();
+	}, [squadData, user.uid]);
+
 	const onOptionsPressed = () => {
 		setShowModal(true);
 	};
 
 	const onClosePressed = () => {
 		setShowModal(false);
+	};
+
+	const handleJoinRequest = async () => {
+		try {
+			await requestToJoinSquad(squadData.squadId, user.uid);
+			setRequestSent(true); // Marcar que la solicitud se ha enviado
+		} catch (error) {
+			console.error("Error requesting to join squad:", error);
+		}
 	};
 
 	const handleRequestAcceptance = async (userId, squadId) => {
@@ -198,31 +224,41 @@ const SquadProfileScreen = ({ route }) => {
 						)}
 					</View>
 				))}
-			{user.uid && ( //CONDICION A CAMBIAR
-				<View style={{ flexDirection: "column", alignSelf: "center" }}>
-					<TouchableOpacity
-						style={styles.inviteOrRequestsButton}
-						onPress={
-							() => navigation.navigate("Search", { screen: "Usuarios" }) //LOGICA A IMPLEMENTAR
-						}
-					>
-						<Ionic
-							name="person-add-outline"
-							style={{ fontSize: 25, color: theme.colors.secondary }}
-						/>
-					</TouchableOpacity>
-					<Text
-						style={{
-							fontFamily: "SF-Pro",
-							alignSelf: "center",
-							marginTop: 5,
-							color: theme.colors.secondary,
-						}}
-					>
-						¡Solicita unirte!
-					</Text>
-				</View>
-			)}
+			{userData &&
+				!userData.team && ( //CONDICION A CAMBIAR
+					<View style={{ flexDirection: "column", alignSelf: "center" }}>
+						<TouchableOpacity
+							style={
+								requestSent ||
+								userData.squadRequests.includes(squadData.squadId)
+									? styles.blockedButton
+									: styles.inviteOrRequestsButton
+							}
+							onPress={handleJoinRequest}
+							disabled={
+								requestSent ||
+								userData.squadRequests.includes(squadData.squadId)
+							}
+						>
+							<Ionic
+								name="person-add-outline"
+								style={{ fontSize: 25, color: theme.colors.secondary }}
+							/>
+						</TouchableOpacity>
+						<Text
+							style={{
+								fontFamily: "SF-Pro",
+								alignSelf: "center",
+								marginTop: 5,
+								color: theme.colors.secondary,
+							}}
+						>
+							{requestSent || userData.squadRequests.includes(squadData.squadId)
+								? "¡Solicitado!"
+								: "¡Solicita unirte!"}
+						</Text>
+					</View>
+				)}
 
 			{squadData.veterans &&
 				(user.uid === squadData.captain ||
@@ -495,11 +531,43 @@ const SquadProfileScreen = ({ route }) => {
 		);
 	};
 
+	const leaveSquad = () => {
+		Alert.alert(
+			"Confirmación",
+			`¿Estás seguro de que quieres abandonar ${squadData.displayname}`,
+			[
+				{
+					text: "No",
+					style: "cancel",
+				},
+				{
+					text: "Sí",
+					onPress: async () => {
+						try {
+							// Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
+							const userId = user.uid;
+							const squadId = squadData.squadId;
+							await leaveOrKickSquad(userId, squadId);
+							console.log("Se ha salido del squad con éxito");
+
+							// Navegar a la pantalla anterior
+							navigation.goBack();
+						} catch (error) {
+							console.error("Error al salir del squad:", error);
+						}
+					},
+					style: "destructive",
+				},
+			],
+			{ cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
+		);
+	};
+
 	const tempButton = () => {};
 
 	const Tab = createMaterialTopTabNavigator();
 
-	return squadData ? (
+	return squadData && userData ? (
 		<BackgroundNoScroll>
 			{/* Header */}
 			<View style={styles.header}>
@@ -516,15 +584,25 @@ const SquadProfileScreen = ({ route }) => {
 					SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
 					NE
 				</Text>
-				<TouchableOpacity
-					onPress={onOptionsPressed}
-					style={styles.headerButtonRight}
-				>
+				{userData && squadData && userData.team === squadData.squadId ? (
+					<TouchableOpacity
+						onPress={onOptionsPressed}
+						style={styles.headerButtonRight}
+					>
+						<Ionic
+							name="menu-sharp"
+							style={{ fontSize: 25, color: theme.colors.text }}
+						/>
+					</TouchableOpacity>
+				) : (
 					<Ionic
 						name="menu-sharp"
-						style={{ fontSize: 25, color: theme.colors.text }}
+						style={[
+							styles.headerButtonRight,
+							{ fontSize: 25, color: "transparent" },
+						]}
 					/>
-				</TouchableOpacity>
+				)}
 
 				<Modal visible={showModal} animationType="slide" transparent={true}>
 					<TouchableOpacity
@@ -538,8 +616,8 @@ const SquadProfileScreen = ({ route }) => {
 							<TouchableOpacity onPress={tempButton}>
 								<Text style={styles.modalOption}>Opcion 2</Text>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={tempButton}>
-								<Text style={styles.modalOption}>Opcion 3</Text>
+							<TouchableOpacity onPress={leaveSquad}>
+								<Text style={styles.modalOptionR}>Abandonar Squad</Text>
 							</TouchableOpacity>
 						</View>
 					</TouchableOpacity>
@@ -657,7 +735,7 @@ const SquadProfileScreen = ({ route }) => {
 									<Text style={styles.modalOption}>Descender a miembro</Text>
 								</TouchableOpacity>
 								<TouchableOpacity onPress={() => changeRole("captain")}>
-									<Text style={styles.modalOption}>
+									<Text style={[styles.modalOption, { marginBottom: 5 }]}>
 										Pasar capitan a {selectedUser && selectedUser.name}
 									</Text>
 								</TouchableOpacity>
@@ -822,6 +900,19 @@ const styles = StyleSheet.create({
 		marginTop: 20,
 		backgroundColor: theme.colors.surface,
 		borderColor: theme.colors.secondary,
+		borderWidth: 1,
+		borderRadius: 50,
+		width: 50,
+		height: 50,
+		marginHorizontal: 20,
+	},
+	blockedButton: {
+		alignItems: "center",
+		alignSelf: "center",
+		justifyContent: "center",
+		marginTop: 20,
+		backgroundColor: theme.colors.surface,
+		borderColor: theme.colors.secondaryBackground,
 		borderWidth: 1,
 		borderRadius: 50,
 		width: 50,

@@ -1,0 +1,63 @@
+Luis (20):
+      Adding API saveUserData sql
+      adding api readDataUser
+      adding api updateperfil
+      Merge branch 'main' of https://github.com/squadzone-it/squad-zone
+      Merge branch 'guzmangriancho'
+      Merge branch 'guzmangriancho'
+      Merge branch 'guzmangriancho' into luisCollado
+      Merge branch 'guzmangriancho' into luisCollado
+      Merge branch 'guzmangriancho' into luisCollado
+      Busqueda de usuarios
+      Apis Create and delete squads
+      Apis y apis
+      squad apis
+      squad get apis
+      Expulsao
+      Añadido cambio de roles
+      invitame manito
+      Merge branch 'guzmangriancho' into luisCollado
+      Merge branch 'guzmangriancho'
+      puta
+
+guzmangriancho (35):
+      Login y Register- BACK END (Firebase)
+      pequeños cambios color texto
+      git ignore
+      fb config del
+      new
+      vulnerabilities fix
+      FRONT END arreglos
+      me empieza a dar asco front end
+      bottom tab navigation
+      web pack
+      user data print
+      mas front (pantalla usuario)
+      fixes
+      FRONT END OSTIAAA (editar perfil)
+      apiService
+      updatedata
+      refresh y edit profile
+      retoque
+      profile 3 tabs
+      arreglos
+      foto de perfil api consumida
+      firebase functions
+      updateUserData firebase API
+      foto api firebase
+      api fotos consumida
+      redimensiona imagen
+      barra de busqueda front
+      ver perfiles de otros usuarios y retoques a todo en general
+      perfil de equipo y creacion de equipo
+      3 puntos capi equipo, usercontext (faltan mejoras), ver miembros de equipo desde buscador
+      bastantes arreglos y front de apis restantes de squad
+      boton requests de union a equipo
+      Merge branch 'luisCollado' of https://github.com/squadzone-it/squad-zone into guzmangriancho
+      entrar a equipo desde invitacion
+      logica de invitar, accedes a usuarios en solicitudes y funciona guay, boton solicitar descripcion en jira
+
+guzmangrianchoUNEAT (2):
+      Initial commit
+      Login y Register - FRONT END
+

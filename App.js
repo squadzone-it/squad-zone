@@ -68,15 +68,15 @@ const App = () => {
 							size = focused ? size + 8 : size + 2;
 							color = focused ? theme.colors.text : theme.colors.secondary;
 						} else if (route.name === "News") {
-							iconName = focused ? "megaphone" : "ios-megaphone-outline";
+							iconName = focused ? "megaphone-sharp" : "ios-megaphone-outline";
 							size = focused ? size + 8 : size + 2;
 							color = focused ? theme.colors.text : theme.colors.secondary;
 						} else if (route.name === "Search") {
-							iconName = focused ? "shield" : "ios-shield-outline";
+							iconName = focused ? "search" : "search-outline";
 							size = focused ? size + 8 : size + 2;
 							color = focused ? theme.colors.text : theme.colors.secondary;
 						} else if (route.name === "Profile") {
-							iconName = focused ? "person" : "ios-person-outline";
+							iconName = focused ? "person-sharp" : "ios-person-outline";
 							size = focused ? size + 8 : size + 2;
 							color = focused ? theme.colors.text : theme.colors.secondary;
 						}
