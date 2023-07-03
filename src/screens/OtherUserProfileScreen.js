@@ -324,7 +324,6 @@ const OtherUserProfileScreen = ({ route }) => {
 						<Text
 							style={{
 								fontSize: 13,
-								fontWeight: "500",
 								marginLeft: 10,
 								fontFamily: "SF-Pro",
 								color: theme.colors.text,

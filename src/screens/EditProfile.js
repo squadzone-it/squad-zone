@@ -54,7 +54,7 @@ const EditProfileScreen = ({ route }) => {
 
 		const result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			quality: 1,
+			quality: 0.5,
 		});
 
 		if (!result.canceled) {

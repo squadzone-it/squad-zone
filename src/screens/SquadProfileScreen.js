@@ -16,6 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 import { theme } from "../core/theme";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import ConfirmModal from "../components/ConfirmModal";
+import NotificationModal from "../components/NotificationModal";
 
 import { UserContext } from "../contexts/UserContext";
 import {
@@ -43,12 +45,27 @@ const SquadProfileScreen = ({ route }) => {
 
 	const [userData, setUserData] = useState(null);
 	const [squadData, setSquadData] = useState(route.params.squadData);
-	const [squadId, setSquadId] = useState(route.params.squadId);
+	const squadId = route.params.squadId;
 	const [showModal, setShowModal] = useState(false);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [optionModalVisible, setOptionModalVisible] = useState(false);
 	const [showRequestsModal, setShowRequestsModal] = useState(false);
 	const [requestSent, setRequestSent] = useState(false);
+
+	//confirm modal
+	const [modalVisible, setModalVisible] = useState(false);
+	const [modalContent, setModalContent] = useState({
+		title: "",
+		message: "",
+		action: null,
+	});
+	//notification modal
+	const [notificationModalVisible, setNotificationModalVisible] =
+		useState(false);
+	const [notificationModalContent, setNotificationModalContent] = useState({
+		title: "",
+		message: "",
+	});
 
 	useEffect(() => {
 		const fetchSquadData = async () => {
@@ -95,15 +112,12 @@ const SquadProfileScreen = ({ route }) => {
 		try {
 			console.log(userId, squadId);
 			await handleSquadRequest(userId, squadId, true);
-
 			refreshRequests();
-			Alert.alert(
-				"Invitación aceptada",
-				"Has aceptado la invitación para que se una al equipo.",
-
-				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-				{ cancelable: false }
-			);
+			setNotificationModalContent({
+				title: "Invitación aceptada",
+				message: "Has aceptado la invitación para que se una al equipo.",
+			});
+			setNotificationModalVisible(true);
 		} catch (error) {
 			console.error("Error accepting request:", error);
 		}
@@ -113,7 +127,6 @@ const SquadProfileScreen = ({ route }) => {
 		try {
 			console.log(userId, squadId);
 			await handleSquadRequest(userId, squadId, false);
-			// Aquí es donde actualizas el estado para eliminar el request
 			if (squadData && squadData.requests) {
 				const updatedRequests = squadData.requests.filter(
 					(requestId) => requestId !== userId
@@ -121,12 +134,11 @@ const SquadProfileScreen = ({ route }) => {
 				setSquadData({ ...squadData, requests: updatedRequests });
 			}
 			refreshRequests();
-			Alert.alert(
-				"Solicitud rechazada",
-				"Has rechazado la solicitud para unirte al equipo.",
-				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-				{ cancelable: false }
-			);
+			setNotificationModalContent({
+				title: "Solicitud rechazada",
+				message: "Has rechazado la solicitud para unirte al equipo.",
+			});
+			setNotificationModalVisible(true);
 		} catch (error) {
 			console.error("Error rejecting request:", error);
 		}
@@ -481,89 +493,67 @@ const SquadProfileScreen = ({ route }) => {
 	};
 
 	const kickUser = () => {
-		Alert.alert(
-			"Confirmación",
-			`¿Estás seguro de que quieres expulsar a ${
+		setModalContent({
+			title: "Confirmación",
+			message: `¿Estás seguro de que quieres expulsar a ${
 				selectedUser && selectedUser.name
 			} ${selectedUser.lastName}?`,
-			[
-				{
-					text: "No",
-					style: "cancel",
-				},
-				{
-					text: "Sí",
-					onPress: async () => {
-						try {
-							// Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
-							const userId = selectedUser.userId;
-							const squadId = selectedUser.team;
-							await leaveOrKickSquad(userId, squadId);
-							console.log(
-								`Expulsado con éxito a ${selectedUser && selectedUser.name}`
-							);
+			action: async () => {
+				try {
+					const userId = selectedUser.userId;
+					const squadId = selectedUser.team;
+					await leaveOrKickSquad(userId, squadId);
+					console.log(
+						`Expulsado con éxito a ${selectedUser && selectedUser.name}`
+					);
 
-							// Expulsar al usuario a nivel local
-							let updatedMembers = squadData.members.filter(
-								(member) => member.userId !== userId
-							);
+					let updatedMembers = squadData.members.filter(
+						(member) => member.userId !== userId
+					);
+					let updatedVeterans = squadData.veterans.filter(
+						(veteranId) => veteranId !== userId
+					);
 
-							let updatedVeterans = squadData.veterans.filter(
-								(veteranId) => veteranId !== userId
-							);
-
-							// Actualizar el estado
-							setSquadData({
-								...squadData,
-								members: updatedMembers,
-								veterans: updatedVeterans,
-							});
-						} catch (error) {
-							console.error("Error al expulsar al usuario:", error);
-						} finally {
-							setOptionModalVisible(false); // Cerrar el modal al finalizar
-						}
-					},
-					style: "destructive",
-				},
-			],
-			{ cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
-		);
+					setSquadData({
+						...squadData,
+						members: updatedMembers,
+						veterans: updatedVeterans,
+					});
+				} catch (error) {
+					console.error("Error al expulsar al usuario:", error);
+				} finally {
+					setModalVisible(false);
+				}
+			},
+		});
+		setModalVisible(true);
 	};
 
 	const leaveSquad = () => {
-		Alert.alert(
-			"Confirmación",
-			`¿Estás seguro de que quieres abandonar ${squadData.displayname}`,
-			[
-				{
-					text: "No",
-					style: "cancel",
-				},
-				{
-					text: "Sí",
-					onPress: async () => {
-						try {
-							// Aquí debes obtener o definir userId y squadId de acuerdo a tu aplicación
-							const userId = user.uid;
-							const squadId = squadData.squadId;
-							await leaveOrKickSquad(userId, squadId);
-							console.log("Se ha salido del squad con éxito");
+		setModalContent({
+			title: "Confirmación",
+			message: `¿Estás seguro de que quieres abandonar ${squadData.displayname}?`,
+			action: async () => {
+				try {
+					const userId = user.uid;
+					const squadId = squadData.squadId;
+					await leaveOrKickSquad(userId, squadId);
+					console.log("Se ha salido del squad con éxito");
 
-							// Navegar a la pantalla anterior
-							navigation.goBack();
-						} catch (error) {
-							console.error("Error al salir del squad:", error);
-						}
-					},
-					style: "destructive",
-				},
-			],
-			{ cancelable: false } // Si configuras esto como false, se requiere que el usuario haga una selección antes de que pueda cerrarse la ventana emergente.
-		);
+					navigation.goBack();
+				} catch (error) {
+					console.error("Error al salir del squad:", error);
+				} finally {
+					setModalVisible(false);
+				}
+			},
+		});
+		setModalVisible(true);
 	};
 
-	const tempButton = () => {};
+	const tempButton = () => {
+		navigation.navigate("CreateSquadBadge");
+	};
 
 	const Tab = createMaterialTopTabNavigator();
 
@@ -755,6 +745,19 @@ const SquadProfileScreen = ({ route }) => {
 					</View>
 				</TouchableOpacity>
 			</Modal>
+			<ConfirmModal
+				visible={modalVisible}
+				title={modalContent.title}
+				message={modalContent.message}
+				onConfirm={modalContent.action}
+				onCancel={() => setModalVisible(false)}
+			/>
+			<NotificationModal
+				visible={notificationModalVisible}
+				title={notificationModalContent.title}
+				message={notificationModalContent.message}
+				onConfirm={() => setNotificationModalVisible(false)}
+			/>
 		</BackgroundNoScroll>
 	) : (
 		<></>
@@ -797,7 +800,7 @@ const styles = StyleSheet.create({
 		backgroundColor: theme.colors.secondaryBackground,
 		borderRadius: 10,
 		padding: 10,
-		minWidth: "80%",
+		width: "80%",
 		alignItems: "center",
 	},
 	modalOption: {
@@ -807,8 +810,9 @@ const styles = StyleSheet.create({
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 18,
+		fontSize: 16,
 		color: theme.colors.text,
+		textAlign: "center",
 	},
 	modalOptionR: {
 		marginBottom: 5,
@@ -816,8 +820,9 @@ const styles = StyleSheet.create({
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",
 		fontFamily: "SF-Pro",
-		fontSize: 18,
+		fontSize: 16,
 		color: theme.colors.error,
+		textAlign: "center",
 	},
 	squadImage: {
 		width: 100,
@@ -887,11 +892,13 @@ const styles = StyleSheet.create({
 	nameText: {
 		color: theme.colors.secondary,
 		fontSize: 14,
+		fontFamily: "SF-Pro",
 	},
 	lastnameText: {
 		color: theme.colors.secondary,
 		marginLeft: 4,
 		fontSize: 14,
+		fontFamily: "SF-Pro",
 	},
 	inviteOrRequestsButton: {
 		alignItems: "center",

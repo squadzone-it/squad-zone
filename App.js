@@ -24,6 +24,7 @@ import {
 	OtherUserProfileScreen,
 	CreateSquadScreen,
 	SquadProfileScreen,
+	CreateSquadBadge,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -36,6 +37,7 @@ const App = () => {
 		"SF-Pro": require("./src/assets/fonts/SF-Pro.ttf"),
 		"SF-Pro-Italic": require("./src/assets/fonts/SF-Pro-Italic.ttf"),
 		"SF-Pro-Bold": require("./src/assets/fonts/SF-Pro-Bold.ttf"),
+		"SF-Pro-Semibold": require("./src/assets/fonts/SF-Pro-Semibold.ttf"),
 	});
 
 	const Stack = createStackNavigator();
@@ -126,6 +128,10 @@ const App = () => {
 						<Stack.Screen
 							name="SquadProfileScreen"
 							component={SquadProfileScreen}
+						/>
+						<Stack.Screen
+							name="CreateSquadBadge"
+							component={CreateSquadBadge}
 						/>
 					</Stack.Navigator>
 				</NavigationContainer>
