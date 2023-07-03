@@ -847,3 +847,125 @@ exports.searchSquads = functions
 				.send("Error: No se pudo obtener la información de los escuadrones");
 		}
 	});
+
+	exports.createMatch = functions
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        if (req.method !== "POST") {
+            res.status(400).send("Invalid request method. Please use POST.");
+            return;
+        }
+
+        const { status, mode, teamSelection, startTime, maxPlayers, gameData, players, teams } = req.body; // Recibimos los datos del partido
+
+        try {
+            // Creamos un nuevo partido
+            const matchData = {
+                status,
+                mode,
+                startTime,
+                maxPlayers,
+                gameData,
+                invitations: [], // Inicializamos las invitaciones vacías
+            };
+
+            if (mode === 'pickup') {
+                matchData.players = players;
+            } else if (mode === 'teamMatch') {
+                matchData.teams = teams;
+            } else {
+                throw new Error("Invalid mode. It should be 'pickup' or 'teams'.");
+            }
+
+            const matchRef = db.collection("matches").doc();
+            await matchRef.set(matchData);
+
+            res.status(200).send({ result: "success" });
+        } catch (error) {
+            console.error("Error creating match:", error);
+            res.status(500).send({ result: "error", error: error.message });
+        }
+    });
+
+	exports.startMatch = functions
+.region("europe-west2")
+.https.onRequest(async (req, res) => {
+    if (req.method !== "POST") {
+        res.status(400).send("Invalid request method. Please use POST.");
+        return;
+    }
+
+    const { matchId, startType, teams } = req.body; // Recibimos el ID del partido, el tipo de inicio y la estructura de los equipos (si se proporciona)
+
+    try {
+        const matchRef = db.collection("matches").doc(matchId);
+        const match = await matchRef.get();
+
+        const matchData = match.data();
+
+        if (matchData.mode === 'pickup' && (startType === 'random' || startType === 'manual')) {
+            // Creamos una copia de la lista de jugadores
+            let players = [...matchData.players];
+
+            // Creamos los equipos vacíos
+            let teamA = [];
+            let teamB = [];
+
+            if (startType === 'random') {
+                // Mientras haya jugadores, vamos seleccionando uno aleatoriamente y lo asignamos a un equipo
+                while (players.length > 0) {
+                    let randomIndex = Math.floor(Math.random() * players.length);
+                    let player = players[randomIndex];
+
+                    // Asignamos el jugador a un equipo, alternando entre el equipo A y el equipo B
+                    if (teamA.length < teamB.length) {
+                        teamA.push(player);
+                    } else {
+                        teamB.push(player);
+                    }
+
+                    // Eliminamos el jugador de la lista
+                    players.splice(randomIndex, 1);
+                }
+            } else if (startType === 'manual') {
+                // Asignamos los equipos proporcionados
+                teamA = teams.teamA;
+                teamB = teams.teamB;
+            }
+
+            // Actualizamos los equipos en la base de datos
+            await matchRef.update({
+                'teams.teamA': teamA,
+                'teams.teamB': teamB,
+                'status': 'in-progress'
+            });
+
+            res.status(200).send({ result: "success" });
+
+		} else if (matchData.mode === 'teamMatch' && teams) {
+			// Para partidos de equipos, simplemente asignamos los equipos proporcionados
+			let teamA = [];
+            let teamB = [];
+			//teamA = { teamId: teams.teamA.teamId, players: teamA.players };
+			//teamB = { teamId: teams.teamB.teamId, players: teamB.players };
+
+			teamA = teams.teamA;
+			teamB = teams.teamB;
+		
+			// Actualizamos los equipos en la base de datos
+			await matchRef.update({
+				'teams.teamA': teamA,
+				'teams.teamB': teamB,
+				'status': 'in-progress'
+			});
+		
+			res.status(200).send({ result: "success" });
+		
+        } else {
+            res.status(400).send({ result: "error", error: "Only pickup matches can be started with random or manually selected teams." });
+        }
+    } catch (error) {
+        console.error("Error starting match:", error);
+        res.status(500).send({ result: "error", error: error.message });
+    }
+});
