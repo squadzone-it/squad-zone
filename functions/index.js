@@ -35,7 +35,7 @@ exports.saveUserData = functions
 		}
 	});
 
-	exports.getUserData = functions
+exports.getUserData = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		console.log("Request received:", req.body);
@@ -61,12 +61,12 @@ exports.saveUserData = functions
 			const squadsData = [];
 
 			// Obtiene los datos de cada squad
-			for(let squadId of userData.squadInvitations) {
+			for (let squadId of userData.squadInvitations) {
 				const squadDoc = await squadRef.doc(squadId).get();
 
-				if(squadDoc.exists) {
+				if (squadDoc.exists) {
 					let squadData = squadDoc.data();
-					squadData.id = squadDoc.id;  // Añade el ID del squad al principio del objeto
+					squadData.id = squadDoc.id; // Añade el ID del squad al principio del objeto
 					squadsData.push(squadData);
 				}
 			}
@@ -82,7 +82,6 @@ exports.saveUserData = functions
 				.send("Error: No se pudo obtener la información del usuario");
 		}
 	});
-
 
 exports.updateUserData = functions
 	.region("europe-west2")
@@ -206,11 +205,17 @@ exports.searchUsers = functions
 				.limit(50) // limitamos a los primeros 50 resultados
 				.get();
 
-			const exactMatchUsers = exactMatchSnapshot.docs.map((doc) => doc.data());
-			let partialMatchUsers = partialMatchesSnapshot.docs.map((doc) =>
-				doc.data()
-			);
+			const exactMatchUsers = exactMatchSnapshot.docs.map((doc) => {
+				const data = doc.data();
+				data.userId = doc.id; // Agregar el ID del documento
+				return data;
+			});
 
+			let partialMatchUsers = partialMatchesSnapshot.docs.map((doc) => {
+				const data = doc.data();
+				data.userId = doc.id; // Agregar el ID del documento
+				return data;
+			});
 			// Filtrar las coincidencias parciales para eliminar la coincidencia exacta
 			let filteredPartialMatchUsers = partialMatchUsers.filter(
 				(partialMatchUser) =>
@@ -734,7 +739,7 @@ exports.changeRole = functions
 		}
 	});
 
-	exports.getSquadData = functions
+exports.getSquadData = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		if (req.method !== "GET") {
@@ -769,18 +774,18 @@ exports.changeRole = functions
 			// Replace member ids with their data
 			squadData.members = memberData;
 
-            // Map request ids to their data
-            const requestPromises = squadData.requests.map((requestId) =>
-                db.collection("users").doc(requestId).get()
-            );
-            const requestDocs = await Promise.all(requestPromises);
-            const requestData = requestDocs.map((doc) => {
-                let data = doc.data();
-                return { userId: doc.id, ...data };
-            });
+			// Map request ids to their data
+			const requestPromises = squadData.requests.map((requestId) =>
+				db.collection("users").doc(requestId).get()
+			);
+			const requestDocs = await Promise.all(requestPromises);
+			const requestData = requestDocs.map((doc) => {
+				let data = doc.data();
+				return { userId: doc.id, ...data };
+			});
 
-            // Replace request ids with their data
-            squadData.requests = requestData;
+			// Replace request ids with their data
+			squadData.requests = requestData;
 
 			res.status(200).send({ result: "success", data: squadData });
 		} catch (error) {
@@ -788,7 +793,6 @@ exports.changeRole = functions
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
-
 
 exports.searchSquads = functions
 	.region("europe-west2")

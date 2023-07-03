@@ -268,7 +268,10 @@ export const leaveOrKickSquad = async (userId, squadId) => {
 			);
 		}
 	} catch (error) {
-		console.error("Error with leaving or kicking from squad in Firestore:", error);
+		console.error(
+			"Error with leaving or kicking from squad in Firestore:",
+			error
+		);
 		throw error;
 	}
 };
@@ -335,11 +338,9 @@ export const handleSquadInvitation = async (userId, squadId, accept) => {
 	}
 };
 
-
-
 export const handleSquadRequest = async (userId, squadId, accept) => {
 	try {
-		const functionUrl = `${baseFunctionUrl}handleRequest`; 
+		const functionUrl = `${baseFunctionUrl}handleRequest`;
 		const response = await fetch(functionUrl, {
 			method: "PUT", // Aquí usamos PUT ya que tu API lo requiere
 			headers: {
@@ -370,7 +371,7 @@ export const handleSquadRequest = async (userId, squadId, accept) => {
 
 export const inviteUserToSquad = async (captainId, squadId, userId) => {
 	try {
-		const functionUrl = `${baseFunctionUrl}inviteToSquad`; 
+		const functionUrl = `${baseFunctionUrl}inviteToSquad`;
 		const response = await fetch(functionUrl, {
 			method: "POST",
 			headers: {
@@ -399,3 +400,33 @@ export const inviteUserToSquad = async (captainId, squadId, userId) => {
 	}
 };
 
+export const requestToJoinSquad = async (squadId, userId) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}requestToJoinSquad`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ squadId, userId }),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Request to join squad sent successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with request to join squad in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with request to join squad in Firestore:", error);
+		throw error;
+	}
+};

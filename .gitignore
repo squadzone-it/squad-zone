@@ -10,6 +10,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+functions/squadzoneapp-firebase-adminsdk-fo8g5-bb77a364f6.json
 
 # macOS
 .DS_Store

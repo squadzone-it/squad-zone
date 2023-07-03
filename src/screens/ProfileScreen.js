@@ -19,7 +19,11 @@ import { UserContext } from "../contexts/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { getUserData, getSquadData, handleSquadInvitation } from "../components/ApiService";
+import {
+	getUserData,
+	getSquadData,
+	handleSquadInvitation,
+} from "../components/ApiService";
 
 const ProfileScreen = () => {
 	const navigation = useNavigation();
@@ -109,6 +113,7 @@ const ProfileScreen = () => {
 							onPress={() =>
 								navigation.navigate("SquadProfileScreen", {
 									squadData: teamData,
+									userData: data,
 								})
 							}
 						>
@@ -243,7 +248,12 @@ const ProfileScreen = () => {
 														</View>
 													</TouchableOpacity>
 													<View style={{ flexDirection: "row" }}>
-														<TouchableOpacity style={{ paddingHorizontal: 30 }} onPress={() => handleInvitationRejection(invitation.id)}>
+														<TouchableOpacity
+															style={{ paddingHorizontal: 30 }}
+															onPress={() =>
+																handleInvitationRejection(invitation.id)
+															}
+														>
 															<Ionic
 																name="close-sharp"
 																style={{
@@ -252,7 +262,11 @@ const ProfileScreen = () => {
 																}}
 															/>
 														</TouchableOpacity>
-														<TouchableOpacity onPress={() => handleInvitationAcceptance(invitation.id)}>
+														<TouchableOpacity
+															onPress={() =>
+																handleInvitationAcceptance(invitation.id)
+															}
+														>
 															<Ionic
 																name="checkmark-sharp"
 																style={{
@@ -305,44 +319,43 @@ const ProfileScreen = () => {
 
 	const handleInvitationAcceptance = async (invitationId) => {
 		try {
-		  await handleSquadInvitation(uid, invitationId, true);
-		  Alert.alert(
-			"Invitación aceptada",
-			"Has aceptado la invitación para unirte al equipo.",
-			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-			{ cancelable: false }
-		  );
+			await handleSquadInvitation(uid, invitationId, true);
+			Alert.alert(
+				"Invitación aceptada",
+				"Has aceptado la invitación para unirte al equipo.",
+				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+				{ cancelable: false }
+			);
 		} catch (error) {
-		  console.error("Error accepting invitation:", error);
+			console.error("Error accepting invitation:", error);
 		}
-	  }
-	  
-	  const handleInvitationRejection = async (invitationId) => {
+	};
+
+	const handleInvitationRejection = async (invitationId) => {
 		try {
-		  await handleSquadInvitation(uid, invitationId, false);
-		  // Aquí es donde actualizas el estado para eliminar la invitación
-		  if(data && data.squadInvitations) {
-			const updatedInvitations = data.squadInvitations.filter(invitation => invitation.id !== invitationId);
-			setData({ ...data, squadInvitations: updatedInvitations });
-		  }
-		  Alert.alert(
-			"Invitación rechazada",
-			"Has rechazado la invitación para unirte al equipo.",
-			[{ text: "OK", onPress: () => console.log("OK Pressed") }],
-			{ cancelable: false }
-		  );
+			await handleSquadInvitation(uid, invitationId, false);
+			// Aquí es donde actualizas el estado para eliminar la invitación
+			if (data && data.squadInvitations) {
+				const updatedInvitations = data.squadInvitations.filter(
+					(invitation) => invitation.id !== invitationId
+				);
+				setData({ ...data, squadInvitations: updatedInvitations });
+			}
+			Alert.alert(
+				"Invitación rechazada",
+				"Has rechazado la invitación para unirte al equipo.",
+				[{ text: "OK", onPress: () => console.log("OK Pressed") }],
+				{ cancelable: false }
+			);
 		} catch (error) {
-		  console.error("Error rejecting invitation:", error);
+			console.error("Error rejecting invitation:", error);
 		}
-	  }
-	  
-	  
+	};
 
 	const Tab = createMaterialTopTabNavigator();
 
 	const onRefresh = async () => {
 		await fetchData();
-		await fetchSquadData();
 	};
 
 	return (
@@ -491,12 +504,13 @@ const ProfileScreen = () => {
 						component={DatosPersonales}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="person" color={color} size={25} />
-								) : (
-									<Ionic name="person-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "person-sharp" : "person-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 					<Tab.Screen
@@ -504,12 +518,13 @@ const ProfileScreen = () => {
 						component={Equipo}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="football" color={color} size={25} />
-								) : (
-									<Ionic name="football-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "shield-sharp" : "ios-shield-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 					<Tab.Screen
@@ -517,12 +532,13 @@ const ProfileScreen = () => {
 						component={Partidos}
 						options={{
 							headerShown: false,
-							tabBarIcon: ({ focused, color, size }) =>
-								focused ? (
-									<Ionic name="calendar" color={color} size={25} />
-								) : (
-									<Ionic name="calendar-outline" color={color} size={23} />
-								),
+							tabBarIcon: ({ focused, color }) => (
+								<Ionic
+									name={focused ? "calendar" : "calendar-outline"}
+									color={color}
+									size={focused ? 25 : 23}
+								/>
+							),
 						}}
 					/>
 				</Tab.Navigator>
