@@ -18,7 +18,9 @@ import { backgroundDesigns } from "../assets/badges/backgroundDesigns";
 import { overlayDesigns } from "../assets/badges/overlayDesigns";
 import { theme } from "../core/theme";
 
-const CreateSquadBadge = ({ navigation }) => {
+import { uploadSquadBadge } from "../components/ApiService";
+
+const CreateSquadBadge = ({ navigation, route }) => {
 	const [shieldShape, setShieldShape] = useState(
 		Object.values(shieldShapes)[0]
 	);
@@ -47,14 +49,24 @@ const CreateSquadBadge = ({ navigation }) => {
 
 	const handleCapture = async () => {
 		try {
-			const uri = await captureRef(viewRef, {
+			let uri = await captureRef(viewRef, {
 				format: "png",
 				quality: 0.8,
 				result: "base64",
 			});
-			console.log("Captura realizada. URI:", uri);
+			uri = "data:image/png;base64," + uri;
+			//console.log("Captura realizada. URI:", uri);
+			//console.log(route.params.squadId);
+
+			// Ahora subimos la imagen capturada
+			try {
+				await uploadSquadBadge(route.params.squadId, uri);
+				navigation.goBack();
+			} catch (error) {
+				console.error("Error al subir la vista:", error);
+			}
 		} catch (error) {
-			console.error("Error al capturar vista:", error);
+			console.error("Error al capturar la vista:", error);
 		}
 	};
 

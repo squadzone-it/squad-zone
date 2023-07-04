@@ -430,3 +430,36 @@ export const requestToJoinSquad = async (squadId, userId) => {
 		throw error;
 	}
 };
+
+export const uploadSquadBadge = async (squadId, squadBadge) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}uploadSquadBadge`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				squadId,
+				squadBadge,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Squad badge updated successfully");
+		} else {
+			throw new Error(
+				`Error uploading squad badge to Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error uploading squad badge to Firestore:", error);
+		throw error;
+	}
+};

@@ -550,9 +550,13 @@ const SquadProfileScreen = ({ route }) => {
 		setModalVisible(true);
 	};
 
-	const tempButton = () => {
-		navigation.navigate("CreateSquadBadge");
+	const createSquadBadgeHandler = () => {
+		navigation.navigate("CreateSquadBadge", {
+			squadId: route.params.squadId ? route.params.squadId : squadData.squadId,
+		});
 	};
+
+	const tempButton = () => {};
 
 	const Tab = createMaterialTopTabNavigator();
 
@@ -600,11 +604,13 @@ const SquadProfileScreen = ({ route }) => {
 					>
 						<View style={styles.modalContent}>
 							<TouchableOpacity onPress={tempButton}>
-								<Text style={styles.modalOption}>Editar Escudo</Text>
+								<Text style={styles.modalOption}>Opcion 1</Text>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={tempButton}>
-								<Text style={styles.modalOption}>Opcion 2</Text>
-							</TouchableOpacity>
+							{squadData.captain && user.uid === squadData.captain && (
+								<TouchableOpacity onPress={createSquadBadgeHandler}>
+									<Text style={styles.modalOption}>Editar Escudo</Text>
+								</TouchableOpacity>
+							)}
 							<TouchableOpacity onPress={leaveSquad}>
 								<Text style={styles.modalOptionR}>Abandonar Squad</Text>
 							</TouchableOpacity>

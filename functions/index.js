@@ -852,303 +852,401 @@ exports.searchSquads = functions
 		}
 	});
 
-	exports.createMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+exports.uploadSquadBadge = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { status, mode, teamSelection, startTime, maxPlayers, gameData, players, teams } = req.body; // Recibimos los datos del partido
+		const { squadId, squadBadge } = req.body;
 
-        try {
-            // Creamos un nuevo partido
-            const matchData = {
-                status,
-                mode,
-                startTime,
-                maxPlayers,
-                gameData,
-                invitations: [], // Inicializamos las invitaciones vacías
-            };
+		if (!squadId) {
+			return res.status(400).send("Falta el squadId para actualizar el escudo");
+		}
 
-            if (mode === 'pickup') {
-                matchData.players = players;
-            } else if (mode === 'teamMatch') {
-                matchData.teams = teams;
-            } else {
-                throw new Error("Invalid mode. It should be 'pickup' or 'teams'.");
-            }
+		if (!squadBadge) {
+			return res.status(400).send("No se proporcionó ningún escudo");
+		}
 
-            const matchRef = db.collection("matches").doc();
-            await matchRef.set(matchData);
+		const base64Regex = /^data:image\/\w+;base64,/;
+		if (!base64Regex.test(squadBadge)) {
+			return res
+				.status(400)
+				.send("El formato de la imagen del escudo no es base64");
+		}
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error creating match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+		const base64Data = squadBadge.replace(base64Regex, "");
+		const bufferData = Buffer.from(base64Data, "base64");
 
-	exports.startMatch = functions
-.region("europe-west2")
-.https.onRequest(async (req, res) => {
-    if (req.method !== "POST") {
-        res.status(400).send("Invalid request method. Please use POST.");
-        return;
-    }
+		const dateTimeString = new Date().toISOString().replace(/[-:.]/g, "");
+		const gcsFileName = `squad_${squadId}_${dateTimeString}.png`;
 
-    const { matchId, startType, teams } = req.body; // Recibimos el ID del partido, el tipo de inicio y la estructura de los equipos (si se proporciona)
+		const bucket = storage.bucket(bucketName);
+		const file = bucket.file(gcsFileName);
 
-    try {
-        const matchRef = db.collection("matches").doc(matchId);
-        const match = await matchRef.get();
-
-        const matchData = match.data();
-
-        if (matchData.mode === 'pickup' && (startType === 'random' || startType === 'manual')) {
-            // Creamos una copia de la lista de jugadores
-            let players = [...matchData.players];
-
-            // Creamos los equipos vacíos
-            let teamA = [];
-            let teamB = [];
-
-            if (startType === 'random') {
-                // Mientras haya jugadores, vamos seleccionando uno aleatoriamente y lo asignamos a un equipo
-                while (players.length > 0) {
-                    let randomIndex = Math.floor(Math.random() * players.length);
-                    let player = players[randomIndex];
-
-                    // Asignamos el jugador a un equipo, alternando entre el equipo A y el equipo B
-                    if (teamA.length < teamB.length) {
-                        teamA.push(player);
-                    } else {
-                        teamB.push(player);
-                    }
-
-                    // Eliminamos el jugador de la lista
-                    players.splice(randomIndex, 1);
-                }
-            } else if (startType === 'manual') {
-                // Asignamos los equipos proporcionados
-                teamA = teams.teamA;
-                teamB = teams.teamB;
-            }
-
-            // Actualizamos los equipos en la base de datos
-            await matchRef.update({
-                'teams.teamA': teamA,
-                'teams.teamB': teamB,
-                'status': 'in-progress'
-            });
-
-            res.status(200).send({ result: "success" });
-
-		} else if (matchData.mode === 'teamMatch' && teams) {
-			// Para partidos de equipos, simplemente asignamos los equipos proporcionados
-			let teamA = [];
-            let teamB = [];
-			//teamA = { teamId: teams.teamA.teamId, players: teamA.players };
-			//teamB = { teamId: teams.teamB.teamId, players: teamB.players };
-
-			teamA = teams.teamA;
-			teamB = teams.teamB;
-		
-			// Actualizamos los equipos en la base de datos
-			await matchRef.update({
-				'teams.teamA': teamA,
-				'teams.teamB': teamB,
-				'status': 'in-progress'
+		try {
+			await file.save(bufferData, {
+				contentType: "image/png",
+				metadata: {
+					cacheControl: "public, max-age=31536000",
+				},
 			});
-		
+
+			// Generar URL firmado
+			const config = {
+				action: "read",
+				expires: "03-01-2500", // Puedes establecer tu propia fecha de expiración
+			};
+			const url = await file.getSignedUrl(config);
+
+			try {
+				await db
+					.collection("squads")
+					.doc(squadId)
+					.update({ squadBadgeUrl: url[0] });
+				console.log("Squad badge updated successfully:", squadId);
+				res.status(200).send({ result: "success", squadBadgeUrl: url[0] });
+			} catch (error) {
+				console.error("Error updating squad badge in Firestore:", error);
+				res.status(500).send({ result: "error", error: error.message });
+			}
+		} catch (error) {
+			console.error("Error uploading squad badge to storage:", error);
+			return res
+				.status(500)
+				.send(`Error uploading squad badge: ${error.message}`);
+		}
+	});
+
+exports.createMatch = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
+
+		const {
+			status,
+			mode,
+			teamSelection,
+			startTime,
+			maxPlayers,
+			gameData,
+			players,
+			teams,
+		} = req.body; // Recibimos los datos del partido
+
+		try {
+			// Creamos un nuevo partido
+			const matchData = {
+				status,
+				mode,
+				startTime,
+				maxPlayers,
+				gameData,
+				invitations: [], // Inicializamos las invitaciones vacías
+			};
+
+			if (mode === "pickup") {
+				matchData.players = players;
+			} else if (mode === "teamMatch") {
+				matchData.teams = teams;
+			} else {
+				throw new Error("Invalid mode. It should be 'pickup' or 'teams'.");
+			}
+
+			const matchRef = db.collection("matches").doc();
+			await matchRef.set(matchData);
+
 			res.status(200).send({ result: "success" });
-		
-        } else {
-            res.status(400).send({ result: "error", error: "Only pickup matches can be started with random or manually selected teams." });
-        }
-    } catch (error) {
-        console.error("Error starting match:", error);
-        res.status(500).send({ result: "error", error: error.message });
-    }
-});
+		} catch (error) {
+			console.error("Error creating match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
+
+exports.startMatch = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
+
+		const { matchId, startType, teams } = req.body; // Recibimos el ID del partido, el tipo de inicio y la estructura de los equipos (si se proporciona)
+
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const match = await matchRef.get();
+
+			const matchData = match.data();
+
+			if (
+				matchData.mode === "pickup" &&
+				(startType === "random" || startType === "manual")
+			) {
+				// Creamos una copia de la lista de jugadores
+				let players = [...matchData.players];
+
+				// Creamos los equipos vacíos
+				let teamA = [];
+				let teamB = [];
+
+				if (startType === "random") {
+					// Mientras haya jugadores, vamos seleccionando uno aleatoriamente y lo asignamos a un equipo
+					while (players.length > 0) {
+						let randomIndex = Math.floor(Math.random() * players.length);
+						let player = players[randomIndex];
+
+						// Asignamos el jugador a un equipo, alternando entre el equipo A y el equipo B
+						if (teamA.length < teamB.length) {
+							teamA.push(player);
+						} else {
+							teamB.push(player);
+						}
+
+						// Eliminamos el jugador de la lista
+						players.splice(randomIndex, 1);
+					}
+				} else if (startType === "manual") {
+					// Asignamos los equipos proporcionados
+					teamA = teams.teamA;
+					teamB = teams.teamB;
+				}
+
+				// Actualizamos los equipos en la base de datos
+				await matchRef.update({
+					"teams.teamA": teamA,
+					"teams.teamB": teamB,
+					status: "in-progress",
+				});
+
+				res.status(200).send({ result: "success" });
+			} else if (matchData.mode === "teamMatch" && teams) {
+				// Para partidos de equipos, simplemente asignamos los equipos proporcionados
+				let teamA = [];
+				let teamB = [];
+				//teamA = { teamId: teams.teamA.teamId, players: teamA.players };
+				//teamB = { teamId: teams.teamB.teamId, players: teamB.players };
+
+				teamA = teams.teamA;
+				teamB = teams.teamB;
+
+				// Actualizamos los equipos en la base de datos
+				await matchRef.update({
+					"teams.teamA": teamA,
+					"teams.teamB": teamB,
+					status: "in-progress",
+				});
+
+				res.status(200).send({ result: "success" });
+			} else {
+				res
+					.status(400)
+					.send({
+						result: "error",
+						error:
+							"Only pickup matches can be started with random or manually selected teams.",
+					});
+			}
+		} catch (error) {
+			console.error("Error starting match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
 //despues de aqui hay q hablar mas las apis
 
-
 exports.joinMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { matchId, playerId } = req.body; // Recibimos el ID del partido y del jugador
+		const { matchId, playerId } = req.body; // Recibimos el ID del partido y del jugador
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            const matchData = matchDoc.data();
+			const matchData = matchDoc.data();
 
-            if (matchData.status !== 'open') {
-                res.status(400).send({ result: "error", error: "Match is not open." });
-                return;
-            }
+			if (matchData.status !== "open") {
+				res.status(400).send({ result: "error", error: "Match is not open." });
+				return;
+			}
 
-            if (matchData.players.includes(playerId)) {
-                res.status(400).send({ result: "error", error: "Player is already in the match." });
-                return;
-            }
+			if (matchData.players.includes(playerId)) {
+				res
+					.status(400)
+					.send({ result: "error", error: "Player is already in the match." });
+				return;
+			}
 
-            if (matchData.players.length >= matchData.maxPlayers) {
-                res.status(400).send({ result: "error", error: "Match is full." });
-                return;
-            }
+			if (matchData.players.length >= matchData.maxPlayers) {
+				res.status(400).send({ result: "error", error: "Match is full." });
+				return;
+			}
 
-            // Agregamos el jugador al partido
-            await matchRef.update({
-                players: admin.firestore.FieldValue.arrayUnion(playerId)
-            });
+			// Agregamos el jugador al partido
+			await matchRef.update({
+				players: admin.firestore.FieldValue.arrayUnion(playerId),
+			});
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error joining match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error joining match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-	exports.joinMatchAsTeam = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+exports.joinMatchAsTeam = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { matchId, teamId, teamPlayers } = req.body; // Recibimos el ID del partido, el ID del equipo y los jugadores del equipo
+		const { matchId, teamId, teamPlayers } = req.body; // Recibimos el ID del partido, el ID del equipo y los jugadores del equipo
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            const matchData = matchDoc.data();
+			const matchData = matchDoc.data();
 
-            if (matchData.status !== 'open') {
-                res.status(400).send({ result: "error", error: "Match is not open." });
-                return;
-            }
+			if (matchData.status !== "open") {
+				res.status(400).send({ result: "error", error: "Match is not open." });
+				return;
+			}
 
-            if (matchData.mode !== 'teamMatch') {
-                res.status(400).send({ result: "error", error: "Match mode is not 'teamMatch'." });
-                return;
-            }
+			if (matchData.mode !== "teamMatch") {
+				res
+					.status(400)
+					.send({ result: "error", error: "Match mode is not 'teamMatch'." });
+				return;
+			}
 
-            /*if (Object.values(matchData.teams).some(team => team.teamId === teamId)) {
+			/*if (Object.values(matchData.teams).some(team => team.teamId === teamId)) {
                 res.status(400).send({ result: "error", error: "Team is already in the match." });
                 return;
             }*/
 
-            // Agregamos el equipo al partido
-            const teamLetter = Object.keys(matchData.teams).length === 0 ? 'teamA' : 'teamB';
-            await matchRef.update({
-                [`teams.${teamLetter}`]: {
-                    teamId,
-                    players: teamPlayers
-                }
-            });
+			// Agregamos el equipo al partido
+			const teamLetter =
+				Object.keys(matchData.teams).length === 0 ? "teamA" : "teamB";
+			await matchRef.update({
+				[`teams.${teamLetter}`]: {
+					teamId,
+					players: teamPlayers,
+				},
+			});
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error joining match as team:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error joining match as team:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-	exports.getMatchData = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "GET") {
-            res.status(400).send("Invalid request method. Please use GET.");
-            return;
-        }
+exports.getMatchData = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "GET") {
+			res.status(400).send("Invalid request method. Please use GET.");
+			return;
+		}
 
-        const { matchId } = req.query; // Recibimos el ID del partido
+		const { matchId } = req.query; // Recibimos el ID del partido
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            const matchData = matchDoc.data();
-            matchData.matchId = matchId;
+			const matchData = matchDoc.data();
+			matchData.matchId = matchId;
 
-            res.status(200).send({ result: "success", data: matchData });
-        } catch (error) {
-            console.error("Error getting match data:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			res.status(200).send({ result: "success", data: matchData });
+		} catch (error) {
+			console.error("Error getting match data:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-	//el admin supongo que sea el que crea el partido
-	exports.leaveOrKickMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+//el admin supongo que sea el que crea el partido
+exports.leaveOrKickMatch = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { matchId, playerId, adminId } = req.body; // Recibimos el ID del partido, el ID del jugador que quiere abandonar o ser expulsado y el ID del administrador
+		const { matchId, playerId, adminId } = req.body; // Recibimos el ID del partido, el ID del jugador que quiere abandonar o ser expulsado y el ID del administrador
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            let matchData = matchDoc.data();
+			let matchData = matchDoc.data();
 
-            // Comprobamos si el jugador es miembro del partido
-            const playerIndex = matchData.players.findIndex(player => player.id === playerId);
+			// Comprobamos si el jugador es miembro del partido
+			const playerIndex = matchData.players.findIndex(
+				(player) => player.id === playerId
+			);
 
-            if (playerIndex === -1) {
-                res.status(400).send({ result: "error", error: "Player is not part of the match." });
-                return;
-            }
+			if (playerIndex === -1) {
+				res
+					.status(400)
+					.send({ result: "error", error: "Player is not part of the match." });
+				return;
+			}
 
-            // Si el jugador es el administrador del partido o el administrador está tratando de expulsarlo, lo eliminamos de la lista de jugadores
-            if (playerId === adminId || matchData.admin.id === adminId) {
-                matchData.players.splice(playerIndex, 1);
+			// Si el jugador es el administrador del partido o el administrador está tratando de expulsarlo, lo eliminamos de la lista de jugadores
+			if (playerId === adminId || matchData.admin.id === adminId) {
+				matchData.players.splice(playerIndex, 1);
 
-                // Actualizamos los datos del partido en la base de datos
-                await matchRef.update({ 'players': matchData.players });
+				// Actualizamos los datos del partido en la base de datos
+				await matchRef.update({ players: matchData.players });
 
-                res.status(200).send({ result: "success" });
-            } else {
-                res.status(403).send({ result: "error", error: "Only the player themselves or the match admin can remove a player from a match." });
-            }
-        } catch (error) {
-            console.error("Error leaving or kicking match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+				res.status(200).send({ result: "success" });
+			} else {
+				res
+					.status(403)
+					.send({
+						result: "error",
+						error:
+							"Only the player themselves or the match admin can remove a player from a match.",
+					});
+			}
+		} catch (error) {
+			console.error("Error leaving or kicking match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
