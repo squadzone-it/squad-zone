@@ -7,7 +7,6 @@ import {
 	StatusBar,
 	TouchableOpacity,
 	Modal,
-	Alert,
 	ScrollView,
 	RefreshControl,
 } from "react-native";
@@ -601,7 +600,7 @@ const SquadProfileScreen = ({ route }) => {
 					>
 						<View style={styles.modalContent}>
 							<TouchableOpacity onPress={tempButton}>
-								<Text style={styles.modalOption}>Opcion 1</Text>
+								<Text style={styles.modalOption}>Editar Escudo</Text>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={tempButton}>
 								<Text style={styles.modalOption}>Opcion 2</Text>

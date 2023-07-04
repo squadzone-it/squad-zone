@@ -4,44 +4,44 @@ import {
 	Text,
 	ScrollView,
 	StyleSheet,
-	Button,
 	Image,
 	TouchableOpacity,
 	Modal,
 } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import { ColorPicker } from "react-native-color-picker";
-
+import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
+import Button from "../components/Button";
 import { shieldShapes } from "../assets/badges/shieldShapes";
 import { backgroundDesigns } from "../assets/badges/backgroundDesigns";
 import { overlayDesigns } from "../assets/badges/overlayDesigns";
 import { theme } from "../core/theme";
 
-const CreateSquadBadge = () => {
-	const [shieldShape, setShieldShape] = useState(null);
+const CreateSquadBadge = ({ navigation }) => {
+	const [shieldShape, setShieldShape] = useState(
+		Object.values(shieldShapes)[0]
+	);
 	const [backgroundDesign, setBackgroundDesign] = useState(null);
 	const [overlayDesign, setOverlayDesign] = useState(null);
-	const [fill1, setFill1] = useState("#ff0000");
-	const [fill2, setFill2] = useState("#00ffff");
+	const [fill1, setFill1] = useState("#70e9ff");
+	const [fill2, setFill2] = useState("#ff5790");
 	const [colorPickerModalVisible, setColorPickerModalVisible] = useState(false);
 	const [activeColorPicker, setActiveColorPicker] = useState(null);
 
 	const viewRef = useRef();
-
 	const renderImageItem = (Item, index, setItem) => (
 		<TouchableOpacity key={index} onPress={() => setItem(() => Item)}>
-			{typeof Item === "function" ? (
-				<Item
-					width={50}
-					height={50}
-					fill1={fill1}
-					fill2={fill2}
-					style={styles.customImage}
-				/>
-			) : (
-				<Image source={Item} style={[styles.image, styles.customImage]} />
-			)}
+			<View style={styles.roundedSvgContainer}>
+				{typeof Item === "function" ? (
+					<Item width={50} height={50} fill1={fill1} fill2={fill2} />
+				) : (
+					<Image
+						source={Item}
+						style={[styles.image, { resizeMode: "cover" }]}
+					/>
+				)}
+			</View>
 		</TouchableOpacity>
 	);
 
@@ -63,27 +63,27 @@ const CreateSquadBadge = () => {
 		setColorPickerModalVisible(true);
 	};
 
-	const COLORS_ARRAY = [
-		"#FFFFFF",
-		"#C0C0C0",
-		"#808080",
-		"#000000",
-		"#FF0000",
-		"#800000",
-		"#FFFF00",
-		"#808000",
-		"#00FF00",
-		"#008000",
-		"#00FFFF",
-		"#008080",
-		"#0000FF",
-		"#000080",
-		"#FF00FF",
-		"#800080",
-	];
-
 	return (
 		<BackgroundNoScroll>
+			<View style={styles.header}>
+				<TouchableOpacity
+					style={styles.headerButtonLeft}
+					onPress={navigation.goBack}
+				>
+					<Ionic
+						name="arrow-back"
+						style={{ fontSize: 32, color: theme.colors.text }}
+					/>
+				</TouchableOpacity>
+				<Text style={styles.headerText}>CREADOR DE ESCUDO</Text>
+
+				<TouchableOpacity onPress={() => {}} style={styles.headerButtonRight}>
+					<Ionic
+						name="menu-sharp"
+						style={{ fontSize: 25, color: "transparent" }}
+					/>
+				</TouchableOpacity>
+			</View>
 			<View style={styles.container}>
 				<Modal
 					animationType="slide"
@@ -115,20 +115,32 @@ const CreateSquadBadge = () => {
 						</View>
 					</View>
 				</Modal>
-
-				<View ref={viewRef} style={styles.previewContainer}>
-					<View style={styles.finalShield}>
-						{backgroundDesign &&
-							React.createElement(backgroundDesign, {
-								style: styles.layer,
-								fill1: fill1,
-								fill2: fill2,
-							})}
-
-						{shieldShape && <Image source={shieldShape} style={styles.layer} />}
-						{overlayDesign && (
-							<Image source={overlayDesign} style={styles.layer} />
-						)}
+				<View
+					style={{
+						borderWidth: 1,
+						borderColor: theme.colors.secondary,
+						marginHorizontal: 40,
+						paddingVertical: 10,
+						borderRadius: 10,
+					}}
+				>
+					<View ref={viewRef} style={styles.previewContainer}>
+						<View style={styles.finalShield}>
+							<View style={styles.roundedSvgContainer2}>
+								{backgroundDesign &&
+									React.createElement(backgroundDesign, {
+										style: styles.layer,
+										fill1: fill1,
+										fill2: fill2,
+									})}
+							</View>
+							{shieldShape && (
+								<Image source={shieldShape} style={styles.layer} />
+							)}
+							{overlayDesign && (
+								<Image source={overlayDesign} style={styles.layer} />
+							)}
+						</View>
 					</View>
 				</View>
 				<ScrollView style={styles.selectionsContainer}>
@@ -167,8 +179,14 @@ const CreateSquadBadge = () => {
 						/>
 					</View>
 				</ScrollView>
-				<View>
-					<Button title="Aceptar" onPress={handleCapture} />
+				<View style={{ marginBottom: 20 }}>
+					<Button
+						mode="contained"
+						onPress={handleCapture}
+						style={{ marginTop: 10 }}
+					>
+						ACEPTAR
+					</Button>
 				</View>
 			</View>
 		</BackgroundNoScroll>
@@ -176,12 +194,37 @@ const CreateSquadBadge = () => {
 };
 
 const styles = StyleSheet.create({
+	header: {
+		flexDirection: "row",
+		alignItems: "center",
+		paddingTop: 15,
+		backgroundColor: theme.colors.surface,
+		width: "100%",
+		position: "relative",
+		top: 0,
+	},
+	headerText: {
+		fontFamily: "CODE-Bold",
+		fontSize: 24,
+		fontWeight: "500",
+		color: theme.colors.text,
+	},
+	headerButtonRight: {
+		padding: 10,
+		marginLeft: "auto",
+	},
+	headerButtonLeft: {
+		padding: 10,
+		marginRight: "auto",
+	},
 	container: {
-		flex: 1,
 		padding: 20,
 	},
+	selectionsContainer: {
+		marginVertical: 20,
+	},
 	section: {
-		marginBottom: 20,
+		marginBottom: 30,
 	},
 	sectionTitle: {
 		fontSize: 18,
@@ -192,7 +235,6 @@ const styles = StyleSheet.create({
 	previewContainer: {
 		justifyContent: "center",
 		alignItems: "center",
-		marginBottom: 20,
 	},
 	preview: {
 		width: 200,
@@ -269,10 +311,17 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 		fontFamily: "SF-Pro-Semibold",
 	},
-	customImage: {
-		borderRadius: 10, // por ejemplo, para bordes redondeados
-		marginHorizontal: 5, // por ejemplo, para agregar un margen alrededor de la imagen
-		backgroundColor: "white",
+	roundedSvgContainer: {
+		borderRadius: 5, // Elige el valor de radio que prefieras
+		overflow: "hidden",
+		backgroundColor: theme.colors.text,
+		marginHorizontal: 5,
+		width: 50,
+		height: 50,
+	},
+	roundedSvgContainer2: {
+		borderRadius: 5, // Elige el valor de radio que prefieras
+		overflow: "hidden",
 	},
 });
 
