@@ -25,6 +25,7 @@ import {
 	CreateSquadScreen,
 	SquadProfileScreen,
 	CreateSquadBadge,
+	CreateMatchScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -133,6 +134,11 @@ const App = () => {
 							name="CreateSquadBadge"
 							component={CreateSquadBadge}
 						/>
+						<Stack.Screen 
+							name="CreateMatchScreen" 
+							component={CreateMatchScreen} 
+						/>
+
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>
