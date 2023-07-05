@@ -463,3 +463,206 @@ export const uploadSquadBadge = async (squadId, squadBadge) => {
 		throw error;
 	}
 };
+
+export const createMatch = async (status, mode, teamSelection, startTime, maxPlayers, gameData, players, teams) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}createMatch`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ 
+				status, 
+				mode, 
+				teamSelection, 
+				startTime, 
+				maxPlayers, 
+				gameData, 
+				players, 
+				teams 
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Match created successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with creating match in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with creating match in Firestore:", error);
+		throw error;
+	}
+};
+
+export const startMatch = async (matchId, startType, teams) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}startMatch`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ 
+				matchId, 
+				startType, 
+				teams 
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Match started successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with starting match in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with starting match in Firestore:", error);
+		throw error;
+	}
+};
+
+export const joinMatch = async (matchId, playerId) => {
+    try {
+        const functionUrl = `${baseFunctionUrl}joinMatch`;
+        const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                matchId, 
+                playerId
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.result === "success") {
+            console.log("Successfully joined match");
+            return;
+        } else {
+            throw new Error(
+                `Error with joining match in Firestore: ${responseData.error}`
+            );
+        }
+    } catch (error) {
+        console.error("Error with joining match in Firestore:", error);
+        throw error;
+    }
+};
+
+export const joinMatchAsTeam = async (matchId, teamId, teamPlayers) => {
+    try {
+        const functionUrl = `${baseFunctionUrl}joinMatchAsTeam`;
+        const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                matchId, 
+                teamId, 
+                teamPlayers
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.result === "success") {
+            console.log("Successfully joined match as team");
+            return;
+        } else {
+            throw new Error(
+                `Error with joining match as team in Firestore: ${responseData.error}`
+            );
+        }
+    } catch (error) {
+        console.error("Error with joining match as team in Firestore:", error);
+        throw error;
+    }
+};
+
+export const getMatchData = async (matchId) => {
+    try {
+        const functionUrl = `${baseFunctionUrl}getMatchData`;
+        const response = await fetch(`${functionUrl}?matchId=${matchId}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.result === "success") {
+            console.log("Successfully got match data");
+            return responseData.data;
+        } else {
+            throw new Error(
+                `Error with getting match data from Firestore: ${responseData.error}`
+            );
+        }
+    } catch (error) {
+        console.error("Error with getting match data from Firestore:", error);
+        throw error;
+    }
+};
+
+export const leaveOrKickMatch = async (matchId, playerId) => {
+    try {
+        const functionUrl = `${baseFunctionUrl}leaveOrKickMatch`;
+        const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                matchId, 
+                playerId
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.result === "success") {
+            console.log("Successfully left or kicked match");
+            return;
+        } else {
+            throw new Error(
+                `Error with leaving or kicking match in Firestore: ${responseData.error}`
+            );
+        }
+    } catch (error) {
+        console.error("Error with leaving or kicking match in Firestore:", error);
+        throw error;
+    }
+};

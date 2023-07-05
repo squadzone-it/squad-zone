@@ -1131,6 +1131,11 @@ exports.joinMatchAsTeam = functions
 
 			const matchData = matchDoc.data();
 
+			// Si "teams" no existe en matchData, lo establecemos como un objeto vacío
+			if (!matchData.hasOwnProperty('teams')) {
+				matchData.teams = {};
+			}
+
 			if (matchData.status !== "open") {
 				res.status(400).send({ result: "error", error: "Match is not open." });
 				return;
@@ -1195,58 +1200,58 @@ exports.getMatchData = functions
 	});
 
 //el admin supongo que sea el que crea el partido
+//simplemente el creador del partido(que sera el jugador 0), sera quien pueda echar a la gente (manejo desde el front)
 exports.leaveOrKickMatch = functions
-	.region("europe-west2")
-	.https.onRequest(async (req, res) => {
-		if (req.method !== "POST") {
-			res.status(400).send("Invalid request method. Please use POST.");
-			return;
-		}
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        if (req.method !== "POST") {
+            res.status(400).send("Invalid request method. Please use POST.");
+            return;
+        }
 
-		const { matchId, playerId, adminId } = req.body; // Recibimos el ID del partido, el ID del jugador que quiere abandonar o ser expulsado y el ID del administrador
+        const { matchId, playerId } = req.body; // Recibimos el ID del partido, el ID del jugador que quiere abandonar
 
-		try {
-			const matchRef = db.collection("matches").doc(matchId);
-			const matchDoc = await matchRef.get();
+        try {
+            const matchRef = db.collection("matches").doc(matchId);
+            const matchDoc = await matchRef.get();
 
-			if (!matchDoc.exists) {
-				res.status(404).send({ result: "error", error: "Match not found." });
-				return;
-			}
+            if (!matchDoc.exists) {
+                res.status(404).send({ result: "error", error: "Match not found." });
+                return;
+            }
 
-			let matchData = matchDoc.data();
+            let matchData = matchDoc.data();
 
-			// Comprobamos si el jugador es miembro del partido
-			const playerIndex = matchData.players.findIndex(
-				(player) => player.id === playerId
-			);
+            // Comprobamos si el jugador es miembro del partido
+            const playerIndex = matchData.players.findIndex(
+                (player) => player === playerId
+            );
 
-			if (playerIndex === -1) {
-				res
-					.status(400)
-					.send({ result: "error", error: "Player is not part of the match." });
-				return;
-			}
+            if (playerIndex === -1) {
+                res
+                    .status(400)
+                    .send({ result: "error", error: "Player is not part of the match." });
+                return;
+            }
 
-			// Si el jugador es el administrador del partido o el administrador está tratando de expulsarlo, lo eliminamos de la lista de jugadores
-			if (playerId === adminId || matchData.admin.id === adminId) {
-				matchData.players.splice(playerIndex, 1);
+            // Si el jugador es quien quiere abandonar el partido, lo eliminamos de la lista de jugadores
+            if (playerId) {
+                matchData.players.splice(playerIndex, 1);
 
-				// Actualizamos los datos del partido en la base de datos
-				await matchRef.update({ players: matchData.players });
+                // Actualizamos los datos del partido en la base de datos
+                await matchRef.update({ players: matchData.players });
 
-				res.status(200).send({ result: "success" });
-			} else {
-				res
-					.status(403)
-					.send({
-						result: "error",
-						error:
-							"Only the player themselves or the match admin can remove a player from a match.",
-					});
-			}
-		} catch (error) {
-			console.error("Error leaving or kicking match:", error);
-			res.status(500).send({ result: "error", error: error.message });
-		}
-	});
+                res.status(200).send({ result: "success" });
+            } else {
+                res
+                    .status(403)
+                    .send({
+                        result: "error",
+                        error: "Only the player themselves can remove themselves from a match.",
+                    });
+            }
+        } catch (error) {
+            console.error("Error leaving or kicking match:", error);
+            res.status(500).send({ result: "error", error: error.message });
+        }
+    });
