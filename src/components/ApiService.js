@@ -666,3 +666,29 @@ export const leaveOrKickMatch = async (matchId, playerId) => {
         throw error;
     }
 };
+
+export const getAllMatches = async () => {
+	try {
+	  const functionUrl = `${baseFunctionUrl}getAllMatches`;
+	  const response = await fetch(functionUrl);
+  
+	  if (!response.ok) {
+		throw new Error(`HTTP error ${response.status}`);
+	  }
+  
+	  const responseData = await response.json();
+  
+	  if (responseData.result === "success") {
+		console.log("Successfully got all matches data");
+		return responseData.data;
+	  } else {
+		throw new Error(
+		  `Error with getting matches data from Firestore: ${responseData.error}`
+		);
+	  }
+	} catch (error) {
+	  console.error("Error with getting matches data from Firestore:", error);
+	  throw error;
+	}
+  };
+  

@@ -1,17 +1,63 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Linking, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Linking, Modal, FlatList } from 'react-native';
 import Ionic from 'react-native-vector-icons/Ionicons';
-import BackgroundTabs from '../components/BackgroundTabs';
+import BackgroundNoScroll from '../components/BackgroundNoScroll';
 import { theme } from '../core/theme';
 import { useNavigation } from "@react-navigation/native";
+import { getAllMatches } from "../components/ApiService"; // Importamos la función getAllMatches
 
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [showModal, setShowModal] = useState(false);
+  const [matches, setMatches] = useState([]); // Almacenamos los partidos aquí
+
+  /* // Esta es la funcion real, la otra es solo para ver como queda
+  useEffect(() => {
+    const fetchMatches = async () => {
+      const matchesData = await getAllMatches();
+      setMatches(matchesData);
+    };
+
+    fetchMatches();
+
+    
+  }, []);
+
+  */
+  //hay q eliminar esta funcion y dejar la primera
+  useEffect(() => {
+    const fetchMatches = async () => {
+      const matchesData = await getAllMatches();
+  
+      // Añadimos la ubicación a cada partido
+      const updatedMatches = matchesData.map((match, index) => {
+        switch (index % 3) {
+          case 0:
+            return { ...match, location: 'Mortera' };
+          case 1:
+            return { ...match, location: 'Santander' };
+          case 2:
+            return { ...match, location: 'Torrelavega' };
+          default:
+            return match;
+        }
+      });
+  
+      setMatches(updatedMatches);
+    };
+  
+    fetchMatches();
+  }, []);
+
+  // Ir a la pantalla de detalles del partido
+  const goToMatchDetails = (match) => {
+    navigation.navigate("MatchDetailsScreen", { match });
+  };
+  
 
   // Aquí está la suposición de que tienes userUid definido
-  const userUid = "Tu valor real de userUid aquí"; 
+  //const userUid = "Tu valor real de userUid aquí"; 
 
   const mapButton = () => {
     const latitude = 43.44461979827975;
@@ -34,6 +80,12 @@ const HomeScreen = () => {
     setShowModal(false);
     console.log('Crear partido con tu equipo');
   };
+
+  function formatDate(dateTimeString) {
+    const dateTime = new Date(dateTimeString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return dateTime.toLocaleDateString(undefined, options);
+  }
 
   const Header = () => {
     return (
@@ -71,19 +123,38 @@ const HomeScreen = () => {
     );
   };
 
+
   const Body = () => {
     return (
-      <View
-        style={{ backgroundColor: theme.colors.surface, height: "100%" }}
-      ></View>
+      <View style={styles.container}>
+        <FlatList
+          data={matches}
+          keyExtractor={(item) => item.matchId}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => goToMatchDetails(item)}
+              style={styles.itemContainer}
+            >
+              <Text style={styles.location}>{` ${item.location}                                                 `}</Text>
+              <Text style={styles.mode}>{`Modo: ${item.mode}`}</Text>
+              <Text style={styles.startTime}>{`Empieza el ${formatDate(item.startTime)}`}</Text>
+              <Text style={styles.rules}>{`Reglas: ${item.gameData.rules}`}</Text>
+              {Array.isArray(item.players) && (
+                <Text style={styles.players}>{`Jugadores: ${item.players.length}`}</Text>
+              )}
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     );
   };
 
+
   return (
-    <BackgroundTabs>
+    <BackgroundNoScroll>
       <Header />
       <Body />
-    </BackgroundTabs>
+    </BackgroundNoScroll>
   );
 };
 
@@ -92,50 +163,79 @@ export default HomeScreen;
 
 
 const styles = StyleSheet.create({
-	header: {
-		flexDirection: "row",
-		alignItems: "center",
-		paddingTop: 15,
-		backgroundColor: theme.colors.surface,
-		width: "100%",
-		position: "relative",
-		top: 0,
-	},
-	headerText: {
-		fontFamily: "CODE-Bold",
-		fontSize: 24,
-		fontWeight: "500",
-		color: theme.colors.text,
-	},
-	headerButtonRight: {
-		padding: 10,
-		marginLeft: "auto",
-	},
-	headerButtonLeft: {
-		padding: 10,
-		marginRight: "auto",
-	},
-	modalBackground: {
-		flex: 1,
-		backgroundColor: 'rgba(0,0,0,0.5)', // Un fondo semi-transparente
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	modalContent: {
-		backgroundColor: 'white', // El fondo del contenido del modal
-		padding: 20, 
-		borderRadius: 10, // Hace que las esquinas sean redondeadas
-		width: '80%' // Ajusta el ancho del contenido del modal
-	},
-	modalOption: {
-		fontSize: 18, // Tamaño de texto de las opciones
-		paddingVertical: 10, // Ajusta el espaciado vertical entre las opciones
-	},
-	closeModalButton: {
-		marginTop: 10, // Añade un pequeño espacio entre el botón de cerrar y el contenido del modal
-	},
-	closeModalText: {
-		fontSize: 18, // Tamaño de texto para "Cerrar"
-		color: 'blue', // Cambia el color de "Cerrar" a azul
-	}
+  container: {
+    backgroundColor: theme.colors.surface,
+    height: '100%',
+  },
+  itemContainer: {
+    backgroundColor: 'white',
+    margin: 10,
+    padding: 10,
+  },
+  location: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  mode: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  startTime: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  rules: {
+    fontSize: 14,
+  },
+  players: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 15,
+    backgroundColor: theme.colors.surface,
+    width: '100%',
+    position: 'relative',
+    top: 0,
+  },
+  headerText: {
+    fontFamily: 'CODE-Bold',
+    fontSize: 24,
+    fontWeight: '500',
+    color: theme.colors.text,
+  },
+  headerButtonRight: {
+    padding: 10,
+    marginLeft: 'auto',
+  },
+  headerButtonLeft: {
+    padding: 10,
+    marginRight: 'auto',
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalOption: {
+    fontSize: 18,
+    paddingVertical: 10,
+  },
+  closeModalButton: {
+    marginTop: 10,
+  },
+  closeModalText: {
+    fontSize: 18,
+    color: 'blue',
+  },
 });
+

@@ -1255,3 +1255,34 @@ exports.leaveOrKickMatch = functions
             res.status(500).send({ result: "error", error: error.message });
         }
     });
+
+	exports.getAllMatches = functions
+  .region("europe-west2")
+  .https.onRequest(async (req, res) => {
+    if (req.method !== "GET") {
+      res.status(400).send("Invalid request method. Please use GET.");
+      return;
+    }
+
+    try {
+      const matchesRef = db.collection("matches");
+      const snapshot = await matchesRef.limit(50).get();
+
+      if (snapshot.empty) {
+        res.status(404).send({ result: "error", error: "No matches found." });
+        return;
+      }
+
+      let matchesData = [];
+      snapshot.forEach(doc => {
+        let data = doc.data();
+        data.matchId = doc.id;
+        matchesData.push(data);
+      });
+
+      res.status(200).send({ result: "success", data: matchesData });
+    } catch (error) {
+      console.error("Error getting matches data:", error);
+      res.status(500).send({ result: "error", error: error.message });
+    }
+  });
