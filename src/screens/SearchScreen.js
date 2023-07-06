@@ -182,7 +182,13 @@ const SearchScreen = ({ navigation }) => {
 			</View>
 
 			{/*   Body   */}
-			<View style={{ backgroundColor: theme.colors.surface, height: "100%" }}>
+			<View
+				style={{
+					backgroundColor: theme.colors.surface,
+					height: "100%",
+					width: "100%",
+				}}
+			>
 				<Searchbar
 					placeholder="Buscar..."
 					onChangeText={setSearchText}
@@ -287,6 +293,7 @@ const styles = StyleSheet.create({
 	},
 	searchInput: {
 		color: theme.colors.text,
+		fontFamily: "SF-Pro",
 	},
 	clearButton: {
 		alignItems: "center",
@@ -320,7 +327,7 @@ const styles = StyleSheet.create({
 	usernameText: {
 		color: theme.colors.text,
 		fontSize: 16,
-		fontWeight: "bold",
+		fontFamily: "SF-Pro-Semibold",
 	},
 	verifiedIcon: {
 		fontSize: 16,
@@ -333,10 +340,12 @@ const styles = StyleSheet.create({
 	nameText: {
 		color: theme.colors.secondary,
 		fontSize: 14,
+		fontFamily: "SF-Pro",
 	},
 	lastnameText: {
 		color: theme.colors.secondary,
 		marginLeft: 4,
 		fontSize: 14,
+		fontFamily: "SF-Pro",
 	},
 });

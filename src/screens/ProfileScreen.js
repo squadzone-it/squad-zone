@@ -16,7 +16,6 @@ import React, { useState, useEffect, useContext } from "react";
 
 import { UserContext } from "../contexts/UserContext";
 
-import { useNavigation } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import {
@@ -25,9 +24,7 @@ import {
 	handleSquadInvitation,
 } from "../components/ApiService";
 
-const ProfileScreen = () => {
-	const navigation = useNavigation();
-
+const ProfileScreen = ({ navigation }) => {
 	const { user } = useContext(UserContext);
 	const uid = user ? user.uid : null;
 
