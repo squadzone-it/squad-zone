@@ -920,53 +920,69 @@ exports.uploadSquadBadge = functions
 		}
 	});
 
-exports.createMatch = functions
-	.region("europe-west2")
-	.https.onRequest(async (req, res) => {
-		if (req.method !== "POST") {
-			res.status(400).send("Invalid request method. Please use POST.");
-			return;
-		}
+	exports.createMatch = functions
+    .region("europe-west2")
+    .https.onRequest(async (req, res) => {
+        if (req.method !== "POST") {
+            res.status(400).send("Invalid request method. Please use POST.");
+            return;
+        }
 
-		const {
-			status,
-			mode,
-			teamSelection,
-			startTime,
-			maxPlayers,
-			gameData,
-			players,
-			teams,
-		} = req.body; // Recibimos los datos del partido
+        const {
+            mode,
+            squad,
+            creator = {
+                id: null,
+                username: null,
+                name: null,
+                lastName: null,
+                photoUrl: null,
+            },
+            invitations = [],
+            gameData
+        } = req.body;
 
-		try {
-			// Creamos un nuevo partido
-			const matchData = {
-				status,
-				mode,
-				startTime,
-				maxPlayers,
-				gameData,
-				invitations: [], // Inicializamos las invitaciones vacías
-			};
+        try {
+            const matchData = {
+                status: "open",
+                mode,
+                invitations,
+                gameData,
+            };
 
-			if (mode === "pickup") {
-				matchData.players = players;
-			} else if (mode === "teamMatch") {
-				matchData.teams = teams;
-			} else {
-				throw new Error("Invalid mode. It should be 'pickup' or 'teams'.");
-			}
+            // Crear un objeto de jugador con la id del creador como clave
+            const creatorPlayerObj = {
+                [creator.id]: {
+                    username: creator.username,
+                    name: creator.name,
+                    lastName: creator.lastName,
+                    photoUrl: creator.photoUrl,
+                    creator: true,
+                },
+            };
 
-			const matchRef = db.collection("matches").doc();
-			await matchRef.set(matchData);
+            if (mode === "pickup") {
+                matchData.players = creatorPlayerObj;
+            } else if (mode === "teamMatch") {
+                matchData.teamA = {
+                    squadId: squad.squadId,
+                    displayName: squad.displayName,
+                    squadBadgeUrl: squad.squadBadgeUrl,
+                    players: creatorPlayerObj,
+                };
+            } else {
+                throw new Error("Invalid mode. It should be 'pickup' or 'teamMatch'.");
+            }
 
-			res.status(200).send({ result: "success" });
-		} catch (error) {
-			console.error("Error creating match:", error);
-			res.status(500).send({ result: "error", error: error.message });
-		}
-	});
+            const matchRef = db.collection("matches").doc();
+            await matchRef.set(matchData);
+
+            res.status(200).send({ result: "success" });
+        } catch (error) {
+            console.error("Error creating match:", error);
+            res.status(500).send({ result: "error", error: error.message });
+        }
+    });
 
 exports.startMatch = functions
 	.region("europe-west2")
@@ -1086,22 +1102,46 @@ exports.joinMatch = functions
 				return;
 			}
 
-			if (matchData.players.includes(playerId)) {
+			// Buscamos los datos del usuario por playerId
+			const userRef = db.collection("users").doc(playerId);
+			const userDoc = await userRef.get();
+			const userData = userDoc.data();
+
+			console.log("UserData:", userData); // Añadimos una declaración de consola aquí
+
+			if (!userDoc.exists) {
+				res.status(404).send({ result: "error", error: "User not found." });
+				return;
+			}
+
+			// Creamos el objeto player con los datos que queremos almacenar
+			let players = matchData.players || {}; // Inicializa 'players' si aún no está definido.
+
+			// Verificamos si el jugador ya está en el partido
+			if (playerId in players) {
 				res
 					.status(400)
 					.send({ result: "error", error: "Player is already in the match." });
 				return;
 			}
 
-			if (matchData.players.length >= matchData.maxPlayers) {
+			// Verificamos si el partido está lleno
+			if (Object.keys(players).length >= matchData.maxPlayers) {
 				res.status(400).send({ result: "error", error: "Match is full." });
 				return;
 			}
 
-			// Agregamos el jugador al partido
-			await matchRef.update({
-				players: admin.firestore.FieldValue.arrayUnion(playerId),
-			});
+			players[playerId] = {
+				name: userData.name,
+				lastName: userData.lastName,
+				username: userData.username,
+				photoUrl: userData.photoUrl,
+			};
+
+			console.log("Players:", players); // Añadimos otra declaración de consola aquí
+
+			// Actualizar el documento 'match' con la nueva información de 'players'.
+			await matchRef.update({ players });
 
 			res.status(200).send({ result: "success" });
 		} catch (error) {
@@ -1109,6 +1149,9 @@ exports.joinMatch = functions
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
+
+
+
 
 exports.joinMatchAsTeam = functions
 	.region("europe-west2")
