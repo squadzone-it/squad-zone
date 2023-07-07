@@ -12,5 +12,6 @@ export { default as OtherUserProfileScreen } from "./OtherUserProfileScreen";
 export { default as CreateSquadScreen } from "./CreateSquadScreen";
 export { default as SquadProfileScreen } from "./SquadProfileScreen";
 export { default as CreateSquadBadge } from "./CreateSquadBadge";
-export { default as CreateMatchScreen } from "./CreateMatchScreen";
+export { default as CreatePickupMatchScreen } from "./CreatePickupMatchScreen";
+export { default as CreateTeamsMatchScreen } from "./CreateTeamsMatchScreen";
 export { default as MatchDetailsScreen } from "./MatchDetailsScreen";

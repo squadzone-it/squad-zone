@@ -82,8 +82,8 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 						>
 							{partidoData.nombre1}
 						</Text>
-						{partidoData.jugadores1.map((jugador) => (
-							<View style={styles.userContainer}>
+						{partidoData.jugadores1.map((jugador, index) => (
+							<View style={styles.userContainer} key={index}>
 								<Image
 									source={{
 										uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultPP.png?alt=media&token=7f90b50b-6321-484a-9d14-295fbfcfc32f",
@@ -110,8 +110,8 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 						>
 							{partidoData.nombre2}
 						</Text>
-						{partidoData.jugadores2.map((jugador) => (
-							<View style={styles.userContainer}>
+						{partidoData.jugadores2.map((jugador, index) => (
+							<View style={styles.userContainer} key={index}>
 								<View style={styles.userSubContainer}>
 									<View style={styles.usernameContainerR}>
 										<Text style={styles.usernameText}>{jugador}</Text>

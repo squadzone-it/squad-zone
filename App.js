@@ -25,8 +25,9 @@ import {
 	CreateSquadScreen,
 	SquadProfileScreen,
 	CreateSquadBadge,
-	CreateMatchScreen,
-	MatchDetailsScreen
+	CreatePickupMatchScreen,
+	CreateTeamsMatchScreen,
+	MatchDetailsScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -135,15 +136,18 @@ const App = () => {
 							name="CreateSquadBadge"
 							component={CreateSquadBadge}
 						/>
-						<Stack.Screen 
-							name="CreateMatchScreen" 
-							component={CreateMatchScreen} 
+						<Stack.Screen
+							name="CreatePickupMatchScreen"
+							component={CreatePickupMatchScreen}
 						/>
-						<Stack.Screen 
-							name="MatchDetailsScreen" 
-							component={MatchDetailsScreen} 
+						<Stack.Screen
+							name="CreateTeamsMatchScreen"
+							component={CreateTeamsMatchScreen}
 						/>
-
+						<Stack.Screen
+							name="MatchDetailsScreen"
+							component={MatchDetailsScreen}
+						/>
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>

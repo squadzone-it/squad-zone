@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
 	Text,
@@ -11,16 +11,21 @@ import {
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
 import { theme } from "../core/theme";
+import { UserContext } from "../contexts/UserContext";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { getAllMatches } from "../components/ApiService"; // Importamos la función getAllMatches
+import { getAllMatches, getUserData } from "../components/ApiService"; // Importamos la función getAllMatches
 
 const Tab = createMaterialTopTabNavigator();
 
 const HomeScreen = ({ navigation }) => {
+	const { user } = useContext(UserContext);
+	const uid = user ? user.uid : null;
+
 	const [showModal, setShowModal] = useState(false);
 	const [matches, setMatches] = useState([]); // Almacenamos los partidos aquí
+	const [userData, setUserData] = useState([]); // Almacenamos los partidos aquí
 
 	/* // Esta es la funcion real, la otra es solo para ver como queda
   useEffect(() => {
@@ -56,7 +61,12 @@ const HomeScreen = ({ navigation }) => {
 
 			setMatches(updatedMatches);
 		};
+		const fetchUserData = async () => {
+			const userData = await getUserData(uid);
+			setUserData(userData);
+		};
 
+		fetchUserData();
 		fetchMatches();
 	}, []);
 
@@ -82,12 +92,12 @@ const HomeScreen = ({ navigation }) => {
 
 	const onCreateMatchPressed = () => {
 		setShowModal(false);
-		navigation.navigate("CreateMatchScreen");
+		navigation.navigate("CreatePickupMatchScreen", { userData: userData });
 	};
 
 	const onCreateTeamMatchPressed = () => {
 		setShowModal(false);
-		console.log("Crear partido con tu equipo");
+		navigation.navigate("CreateTeamsMatchScreen", { userData: userData });
 	};
 
 	function formatDate(dateTimeString) {
@@ -133,10 +143,10 @@ const HomeScreen = ({ navigation }) => {
 													<Text
 														style={styles.mode}
 													>{`Pickup ${item.gameData.rules}`}</Text>
-													{Array.isArray(item.players) && (
-														<Text
-															style={styles.players}
-														>{`Jugadores: ${item.players.length}`}</Text>
+													{item.players && (
+														<Text style={styles.players}>{`Jugadores: ${
+															Object.keys(item.players).length
+														}`}</Text>
 													)}
 												</View>
 											</View>
@@ -150,7 +160,7 @@ const HomeScreen = ({ navigation }) => {
 														name="shield-sharp"
 														size={20}
 														color={theme.colors.text}
-														style={{ marginRight: 6 }}
+														style={{ marginRight: 8 }}
 													/>
 													<Text style={styles.mode}>teamA</Text>
 												</View>
@@ -161,7 +171,7 @@ const HomeScreen = ({ navigation }) => {
 														name="shield-sharp"
 														size={20}
 														color={theme.colors.text}
-														style={{ marginRight: 6 }}
+														style={{ marginRight: 8 }}
 													/>
 													<Text style={styles.mode}>teamB</Text>
 												</View>
@@ -182,7 +192,7 @@ const HomeScreen = ({ navigation }) => {
 											/>
 										) : (
 											<Text style={styles.startTime}>{`${formatDate(
-												item.startTime
+												item.gameData.startTime
 											)}`}</Text>
 										)}
 										<Text style={styles.location}>{`${item.location}`}</Text>
@@ -230,11 +240,24 @@ const HomeScreen = ({ navigation }) => {
 						<TouchableOpacity onPress={onCreateMatchPressed}>
 							<Text style={styles.modalOption}>Crear partido</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={onCreateTeamMatchPressed}>
-							<Text style={styles.modalOption}>
-								Crear partido con tu equipo
-							</Text>
-						</TouchableOpacity>
+						{userData && userData.team ? (
+							<TouchableOpacity onPress={onCreateTeamMatchPressed}>
+								<Text style={styles.modalOption}>
+									Crear partido con tu equipo
+								</Text>
+							</TouchableOpacity>
+						) : (
+							<TouchableOpacity onPress={() => {}}>
+								<Text style={styles.modalOptionBlocked}>
+									Crear partido con tu equipo{"   "}
+									<Ionic
+										name="lock-closed-sharp"
+										size={24}
+										color={theme.colors.secondary}
+									/>
+								</Text>
+							</TouchableOpacity>
+						)}
 					</View>
 				</TouchableOpacity>
 			</Modal>
@@ -361,19 +384,36 @@ const styles = StyleSheet.create({
 	},
 	modalBackground: {
 		flex: 1,
-		backgroundColor: "rgba(0,0,0,0.5)",
-		justifyContent: "center",
+		justifyContent: "flex-end",
 		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
 	},
 	modalContent: {
-		backgroundColor: "white",
-		padding: 20,
+		backgroundColor: theme.colors.secondaryBackground,
 		borderRadius: 10,
-		width: "80%",
+		padding: 10,
+		minWidth: "80%",
+		alignItems: "center",
 	},
 	modalOption: {
+		marginBottom: 15,
+		marginVertical: 5,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
 		fontSize: 18,
-		paddingVertical: 10,
+		color: theme.colors.text,
+	},
+	modalOptionBlocked: {
+		marginBottom: 15,
+		marginVertical: 5,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
+		fontSize: 18,
+		color: theme.colors.secondary,
 	},
 	closeModalButton: {
 		marginTop: 10,

@@ -357,7 +357,8 @@ const SquadProfileScreen = ({ route }) => {
 																				<Text
 																					style={styles.requestDecriptionText}
 																				>
-																					{request.name} {request.lastName}
+																					{request.name}{" "}
+																					{/*{request.lastName}*/}
 																				</Text>
 																			</View>
 																		</View>
@@ -365,7 +366,7 @@ const SquadProfileScreen = ({ route }) => {
 																</TouchableOpacity>
 																<View style={{ flexDirection: "row" }}>
 																	<TouchableOpacity
-																		style={{ paddingHorizontal: 30 }}
+																		style={{ paddingHorizontal: 5 }}
 																		onPress={() =>
 																			handleRequestRejection(
 																				request.userId,
@@ -382,6 +383,7 @@ const SquadProfileScreen = ({ route }) => {
 																		/>
 																	</TouchableOpacity>
 																	<TouchableOpacity
+																		style={{ paddingHorizontal: 5 }}
 																		onPress={() =>
 																			handleRequestAcceptance(
 																				request.userId,
@@ -937,6 +939,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		borderBottomColor: theme.colors.secondary,
 		borderBottomWidth: 1,
+		width: "100%",
+		justifyContent: "space-between",
 	},
 	requestBadge: {
 		width: 50,
