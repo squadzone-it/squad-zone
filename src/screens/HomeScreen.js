@@ -207,7 +207,7 @@ const HomeScreen = ({ navigation }) => {
 														}}
 														style={styles.teamBadge}
 													/>
-													<Text style={styles.mode}>
+													<Text style={styles.teamDisplayName}>
 														{item.teams.teamA.teamDisplayName}
 													</Text>
 												</View>
@@ -220,7 +220,7 @@ const HomeScreen = ({ navigation }) => {
 														}}
 														style={styles.teamBadge}
 													/>
-													<Text style={styles.mode}>
+													<Text style={styles.teamDisplayName}>
 														{item.teams.teamB.teamDisplayName}
 													</Text>
 												</View>
@@ -613,6 +613,11 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: theme.colors.text,
 	},
+	teamDisplayName: {
+		fontFamily: "SF-Pro",
+		fontSize: 16,
+		color: theme.colors.text,
+	},
 	startTime: {
 		fontFamily: "SF-Pro-Semibold",
 		fontSize: 14,
@@ -674,5 +679,6 @@ const styles = StyleSheet.create({
 		borderRightWidth: 1,
 		borderLeftWidth: 1,
 		borderColor: theme.colors.secondaryBackground,
+		borderRadius: 10,
 	},
 });

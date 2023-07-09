@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginTop: 20,
 		marginBottom: 25,
-		backgroundColor: theme.colors.surface,
+		backgroundColor: "transparent",
 	},
 	userContainer: {
 		flexDirection: "row",

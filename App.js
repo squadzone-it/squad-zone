@@ -37,10 +37,16 @@ const App = () => {
 	const [fontsLoaded] = useFonts({
 		"CODE-Bold": require("./src/assets/fonts/CODE-Bold.otf"),
 		"CODE-Light": require("./src/assets/fonts/CODE-Light.otf"),
-		"SF-Pro": require("./src/assets/fonts/SF-Pro.ttf"),
-		"SF-Pro-Italic": require("./src/assets/fonts/SF-Pro-Italic.ttf"),
-		"SF-Pro-Bold": require("./src/assets/fonts/SF-Pro-Bold.ttf"),
-		"SF-Pro-Semibold": require("./src/assets/fonts/SF-Pro-Semibold.ttf"),
+		"SF-Pro": require("./src/assets/fonts/SF-Pro/SF-Pro.otf"),
+		"SF-Pro-Bold": require("./src/assets/fonts/SF-Pro/SF-Pro-Bold.otf"),
+		"SF-Pro-Semibold": require("./src/assets/fonts/SF-Pro/SF-Pro-Semibold.otf"),
+		"SF-Pro-Black": require("./src/assets/fonts/SF-Pro/SF-Pro-Black.otf"),
+		"SF-Pro-Heavy": require("./src/assets/fonts/SF-Pro/SF-Pro-Heavy.otf"),
+		"SF-Pro-Light": require("./src/assets/fonts/SF-Pro/SF-Pro-Light.otf"),
+		"SF-Pro-Medium": require("./src/assets/fonts/SF-Pro/SF-Pro-Medium.otf"),
+		"SF-Pro-Thin": require("./src/assets/fonts/SF-Pro/SF-Pro-Thin.otf"),
+		"SF-Pro-Ultralight": require("./src/assets/fonts/SF-Pro/SF-Pro-Ultralight.otf"),
+		//"SF-Pro-Italic": require("./src/assets/fonts/SF-Pro-Italic.ttf"),
 	});
 
 	const Stack = createStackNavigator();

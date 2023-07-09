@@ -834,6 +834,7 @@ const styles = StyleSheet.create({
 	squadImage: {
 		width: 100,
 		height: 100,
+		borderRadius: 20,
 	},
 	squadName: {
 		fontSize: 24,
