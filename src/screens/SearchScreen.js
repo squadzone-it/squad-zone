@@ -5,6 +5,7 @@ import {
 	StyleSheet,
 	FlatList,
 	Image,
+	RefreshControl,
 } from "react-native";
 import React, { useState } from "react";
 import Ionic from "react-native-vector-icons/Ionicons";
@@ -25,6 +26,7 @@ const SearchScreen = ({ navigation }) => {
 	const [searchText, setSearchText] = useState("");
 	const [userData, setUserData] = useState(null);
 	const [squadsData, setSquadsData] = useState(null);
+	const [refreshing, setRefreshing] = useState(false);
 
 	const onSearch = async () => {
 		let searchTextToUse = searchText !== "" ? searchText : " ";
@@ -38,6 +40,12 @@ const SearchScreen = ({ navigation }) => {
 		// Tu lógica para el botón de filtro
 	};
 
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		// Aquí debes implementar la lógica de recarga
+		setTimeout(() => setRefreshing(false), 2000); // esto es solo para simular la recarga
+	}, []);
+
 	const Usuarios = ({ userData, setUserData }) => {
 		return (
 			<View>
@@ -48,6 +56,9 @@ const SearchScreen = ({ navigation }) => {
 						bounces="false"
 						data={userData}
 						keyExtractor={(item) => item.username}
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+						}
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								onPress={() =>
@@ -110,6 +121,9 @@ const SearchScreen = ({ navigation }) => {
 						bounces="false"
 						data={squadsData}
 						keyExtractor={(item) => item.displayname}
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+						}
 						renderItem={({ item }) => (
 							<TouchableOpacity
 								onPress={() =>

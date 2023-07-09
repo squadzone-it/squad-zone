@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
 	View,
 	Text,
@@ -7,6 +7,9 @@ import {
 	Linking,
 	Modal,
 	FlatList,
+	Image,
+	ScrollView,
+	RefreshControl,
 } from "react-native";
 import Ionic from "react-native-vector-icons/Ionicons";
 import BackgroundNoScroll from "../components/BackgroundNoScroll";
@@ -24,8 +27,32 @@ const HomeScreen = ({ navigation }) => {
 	const uid = user ? user.uid : null;
 
 	const [showModal, setShowModal] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
 	const [matches, setMatches] = useState([]); // Almacenamos los partidos aquí
 	const [userData, setUserData] = useState([]); // Almacenamos los partidos aquí
+
+	const [selectedDay, setSelectedDay] = useState(
+		new Date().toISOString().slice(0, 10)
+	);
+
+	const generateDays = (start, daysBefore, daysAfter) => {
+		const arr = [];
+		for (let i = -daysBefore; i <= daysAfter; i++) {
+			const day = new Date(start.getTime());
+			day.setDate(day.getDate() + i);
+			arr.push(day.toISOString().slice(0, 10));
+		}
+		return arr;
+	};
+
+	const days = generateDays(new Date(), 10, 10);
+	const scrollViewRef = useRef();
+
+	useEffect(() => {
+		const position = (50 * 21) / 3; // button width * number of buttons /3
+		console.log(userData);
+		scrollViewRef.current.scrollTo({ x: position, animated: false });
+	}, []);
 
 	/* // Esta es la funcion real, la otra es solo para ver como queda
   useEffect(() => {
@@ -44,6 +71,7 @@ const HomeScreen = ({ navigation }) => {
 	useEffect(() => {
 		const fetchMatches = async () => {
 			const matchesData = await getAllMatches();
+			console.log(matches);
 
 			// Añadimos la ubicación a cada partido
 			const updatedMatches = matchesData.map((match, index) => {
@@ -109,12 +137,29 @@ const HomeScreen = ({ navigation }) => {
 		return dateTime.toLocaleTimeString(undefined, options);
 	}
 
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		// Aquí debes implementar la lógica de recarga
+		setTimeout(() => setRefreshing(false), 2000); // esto es solo para simular la recarga
+	}, []);
+
 	const Explorar = ({ matches }) => {
+		const filteredMatches = matches.filter(
+			(match) =>
+				new Date(match.gameData.startTime).toDateString() ===
+				new Date(selectedDay).toDateString()
+		);
+
 		return (
 			<View>
-				{matches && (
+				{filteredMatches && (
 					<FlatList
-						data={matches}
+						data={filteredMatches}
+						overScrollMode="never"
+						bounces="false"
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+						}
 						keyExtractor={(item) => item.matchId}
 						renderItem={({ item }) => (
 							<TouchableOpacity
@@ -156,24 +201,28 @@ const HomeScreen = ({ navigation }) => {
 												<View
 													style={{ flexDirection: "row", alignItems: "center" }}
 												>
-													<Ionic
-														name="shield-sharp"
-														size={20}
-														color={theme.colors.text}
-														style={{ marginRight: 8 }}
+													<Image
+														source={{
+															uri: item.teams.teamA.teamBadgeUrl,
+														}}
+														style={styles.teamBadge}
 													/>
-													<Text style={styles.mode}>teamA</Text>
+													<Text style={styles.mode}>
+														{item.teams.teamA.teamDisplayName}
+													</Text>
 												</View>
 												<View
 													style={{ flexDirection: "row", alignItems: "center" }}
 												>
-													<Ionic
-														name="shield-sharp"
-														size={20}
-														color={theme.colors.text}
-														style={{ marginRight: 8 }}
+													<Image
+														source={{
+															uri: item.teams.teamB.teamBadgeUrl,
+														}}
+														style={styles.teamBadge}
 													/>
-													<Text style={styles.mode}>teamB</Text>
+													<Text style={styles.mode}>
+														{item.teams.teamB.teamDisplayName}
+													</Text>
 												</View>
 											</View>
 										)}
@@ -187,7 +236,7 @@ const HomeScreen = ({ navigation }) => {
 										{item.status === "in-progress" ? (
 											<Ionic
 												name="hourglass-sharp"
-												size={24}
+												size={15}
 												color={theme.colors.error}
 											/>
 										) : (
@@ -206,8 +255,139 @@ const HomeScreen = ({ navigation }) => {
 		);
 	};
 
-	const MisPartidos = () => {
-		return <></>;
+	const MisPartidos = ({ matches }) => {
+		const filteredMatches = matches.filter((match) => {
+			const matchDate = new Date(match.gameData?.startTime).toDateString();
+			const selectedDate = new Date(selectedDay).toDateString();
+
+			if (matchDate !== selectedDate) {
+				return false;
+			}
+
+			if (match.mode === "pickup") {
+				if (match.players && uid) {
+					return uid in match.players;
+				} else {
+					return false;
+				}
+			} else if (match.mode === "teamMatch") {
+				if (userData && userData.team) {
+					const userTeamId = userData.team;
+					return (
+						match.teams?.teamA?.teamId === userTeamId ||
+						match.teams?.teamB?.teamId === userTeamId
+					);
+				} else {
+					return false;
+				}
+			}
+
+			return false;
+		});
+
+		return (
+			<View>
+				{filteredMatches && (
+					<FlatList
+						data={filteredMatches}
+						overScrollMode="never"
+						bounces="false"
+						refreshControl={
+							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+						}
+						keyExtractor={(item) => item.matchId}
+						renderItem={({ item }) => (
+							<TouchableOpacity
+								onPress={() => goToMatchDetails(item)}
+								style={styles.itemContainer}
+							>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										width: "100%",
+									}}
+								>
+									<View>
+										{item.mode === "pickup" && (
+											<View
+												style={{ flexDirection: "row", alignItems: "center" }}
+											>
+												<Ionic
+													name="people-sharp"
+													size={24}
+													color={theme.colors.text}
+													style={{ marginRight: 5 }}
+												/>
+												<View style={{ flexDirection: "column" }}>
+													<Text
+														style={styles.mode}
+													>{`Pickup ${item.gameData.rules}`}</Text>
+													{item.players && (
+														<Text style={styles.players}>{`Jugadores: ${
+															Object.keys(item.players).length
+														}`}</Text>
+													)}
+												</View>
+											</View>
+										)}
+										{item.mode === "teamMatch" && (
+											<View>
+												<View
+													style={{ flexDirection: "row", alignItems: "center" }}
+												>
+													<Image
+														source={{
+															uri: item.teams.teamA.teamBadgeUrl,
+														}}
+														style={styles.teamBadge}
+													/>
+													<Text style={styles.mode}>
+														{item.teams.teamA.teamDisplayName}
+													</Text>
+												</View>
+												<View
+													style={{ flexDirection: "row", alignItems: "center" }}
+												>
+													<Image
+														source={{
+															uri: item.teams.teamB.teamBadgeUrl,
+														}}
+														style={styles.teamBadge}
+													/>
+													<Text style={styles.mode}>
+														{item.teams.teamB.teamDisplayName}
+													</Text>
+												</View>
+											</View>
+										)}
+									</View>
+									<View
+										style={{
+											//justifyContent: "flex-end",
+											alignItems: "flex-end",
+										}}
+									>
+										{item.status === "in-progress" ? (
+											<Ionic
+												name="hourglass-sharp"
+												size={15}
+												color={theme.colors.error}
+											/>
+										) : (
+											<Text style={styles.startTime}>{`${formatDate(
+												item.gameData.startTime
+											)}`}</Text>
+										)}
+										<Text style={styles.location}>{`${item.location}`}</Text>
+									</View>
+								</View>
+							</TouchableOpacity>
+						)}
+					/>
+				)}
+			</View>
+		);
 	};
 
 	return (
@@ -270,54 +450,120 @@ const HomeScreen = ({ navigation }) => {
 					width: "100%",
 				}}
 			>
-				<Tab.Navigator
-					screenOptions={{
-						tabBarActiveTintColor: theme.colors.text,
-						tabBarInactiveTintColor: theme.colors.secondary,
-						tabBarPressColor: "transparent",
-						tabBarShowLabel: false,
-						tabBarIndicatorStyle: {
-							backgroundColor: theme.colors.primary,
-						},
-						tabBarStyle: {
-							backgroundColor: theme.colors.surface,
-							borderBottomWidth: 1,
-							borderBottomColor: theme.colors.primary,
-							paddingTop: 0,
-							height: 50,
-							borderColor: theme.colors.primary,
-						},
+				{/* Date Selector */}
+				<ScrollView
+					ref={scrollViewRef}
+					horizontal
+					style={{ flex: 1 }}
+					contentContainerStyle={{
+						paddingStart: 5,
+						paddingEnd: 5,
 					}}
 				>
-					<Tab.Screen
-						name="Explorar"
-						options={() => ({
-							headerShown: false,
-							tabBarLabel: "EXPLORAR",
-							tabBarShowLabel: true,
-							tabBarLabelStyle: {
-								fontFamily: "SF-Pro-Semibold",
-								fontSize: 16,
+					{days.map((day, index) => (
+						<TouchableOpacity
+							key={index}
+							onPress={() => setSelectedDay(day)}
+							style={[
+								{
+									backgroundColor:
+										selectedDay === day
+											? theme.colors.primary
+											: theme.colors.surface,
+
+									width: 50,
+									height: 50,
+									justifyContent: "center",
+									alignItems: "center",
+									alignSelf: "center",
+								},
+								styles.dayButton,
+							]}
+						>
+							<Text
+								style={{
+									color: theme.colors.text,
+									textAlign: "center",
+									fontFamily: "SF-Pro-Semibold",
+									fontSize: 20,
+								}}
+							>
+								{new Date(day).getDate()} {/* Only the number of the day */}
+							</Text>
+							<Text
+								style={{
+									color: theme.colors.text,
+									textAlign: "center",
+									fontFamily: "SF-Pro-Semibold",
+									fontSize: 10,
+								}}
+							>
+								{new Date(day)
+									.toLocaleString("es-ES", { month: "short" })
+									.toUpperCase()}
+								{/* Month in short format */}
+							</Text>
+						</TouchableOpacity>
+					))}
+				</ScrollView>
+
+				<View style={{ flex: 14 }}>
+					<Tab.Navigator
+						screenOptions={{
+							tabBarActiveTintColor: theme.colors.text,
+							tabBarInactiveTintColor: theme.colors.secondary,
+							tabBarPressColor: "transparent",
+							tabBarShowLabel: false,
+							tabBarIndicatorStyle: {
+								backgroundColor: theme.colors.primary,
 							},
-						})}
-					>
-						{() => <Explorar matches={matches} />}
-					</Tab.Screen>
-					<Tab.Screen
-						name="Mis Partidos"
-						options={() => ({
-							headerShown: false,
-							tabBarLabel: "MIS PARTIDOS",
-							tabBarShowLabel: true,
-							tabBarLabelStyle: {
-								fontFamily: "SF-Pro-Semibold",
-								fontSize: 16,
+							tabBarStyle: {
+								backgroundColor: theme.colors.surface,
+								borderBottomWidth: 1,
+								borderBottomColor: theme.colors.primary,
+								paddingTop: 0,
+								height: 50,
+								borderColor: theme.colors.primary,
 							},
-						})}
+						}}
 					>
-						{() => <MisPartidos />}
-					</Tab.Screen>
-				</Tab.Navigator>
+						<Tab.Screen
+							name="Explorar"
+							options={() => ({
+								headerShown: false,
+								tabBarLabel: "EXPLORAR",
+								tabBarShowLabel: true,
+								tabBarLabelStyle: {
+									fontFamily: "SF-Pro-Semibold",
+									fontSize: 16,
+								},
+							})}
+						>
+							{() => <Explorar matches={matches} selectedDay={selectedDay} />}
+						</Tab.Screen>
+						<Tab.Screen
+							name="Mis Partidos"
+							options={() => ({
+								headerShown: false,
+								tabBarLabel: "MIS PARTIDOS",
+								tabBarShowLabel: true,
+								tabBarLabelStyle: {
+									fontFamily: "SF-Pro-Semibold",
+									fontSize: 16,
+								},
+							})}
+						>
+							{() => (
+								<MisPartidos
+									matches={matches}
+									selectedDay={selectedDay}
+									user={user}
+									uid={uid}
+								/>
+							)}
+						</Tab.Screen>
+					</Tab.Navigator>
+				</View>
 			</View>
 		</BackgroundNoScroll>
 	);
@@ -417,5 +663,16 @@ const styles = StyleSheet.create({
 	},
 	closeModalButton: {
 		marginTop: 10,
+	},
+	teamBadge: {
+		width: 20,
+		height: 20,
+		borderRadius: 2, // Hace la imagen circular
+		marginRight: 8, // Espacio a la derecha de la imagen
+	},
+	dayButton: {
+		borderRightWidth: 1,
+		borderLeftWidth: 1,
+		borderColor: theme.colors.secondaryBackground,
 	},
 });
