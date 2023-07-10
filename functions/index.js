@@ -920,14 +920,14 @@ exports.uploadSquadBadge = functions
 		}
 	});
 
-	exports.createMatch = functions
+exports.createMatch = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		if (req.method !== "POST") {
 			res.status(400).send("Invalid request method. Please use POST.");
 			return;
 		}
-	
+
 		const {
 			status = "open",
 			mode,
@@ -936,7 +936,7 @@ exports.uploadSquadBadge = functions
 			creator,
 			squad,
 		} = req.body; // Recibimos los datos del partido
-	
+
 		try {
 			// Creamos un nuevo partido
 			const matchData = {
@@ -945,9 +945,9 @@ exports.uploadSquadBadge = functions
 				gameData: { ...gameData, invitations: [], creator: creator }, // Inicializamos las invitaciones vacías
 				teams: {}, // Agregamos el objeto "teams"
 			};
-	
+
 			let involvedPlayers;
-	
+
 			if (mode === "pickup") {
 				matchData.players = [creator];
 				involvedPlayers = [creator];
@@ -956,12 +956,12 @@ exports.uploadSquadBadge = functions
 					teamId: squad.squadId,
 					teamDisplayName: squad.displayName,
 					teamBadgeUrl: squad.squadBadgeUrl,
-					teamPlayers: [creator, ...squad.players.map(player => player.id)], // Guarda solo los ID de los jugadores
+					teamPlayers: [creator, ...squad.players.map((player) => player.id)], // Guarda solo los ID de los jugadores
 				};
 				matchData.teams.teamA = teamData; // Ahora "teamA" es parte de "teams"
-	
+
 				involvedPlayers = teamData.teamPlayers;
-	
+
 				if (gameData.suplentes) {
 					matchData.gameData.maxPlayers =
 						matchData.gameData.maxPlayers + 2 * gameData.suplentes;
@@ -969,22 +969,22 @@ exports.uploadSquadBadge = functions
 			} else {
 				throw new Error("Invalid mode. It should be 'pickup' or 'teamMatch'.");
 			}
-	
+
 			const matchRef = db.collection("matches").doc();
 			console.log("Match document reference created with ID:", matchRef.id);
 			await matchRef.set(matchData);
 			console.log("Match data successfully written to Firestore.");
-	
+
 			// Añade el ID del partido a la lista myMatches de cada jugador involucrado
 			const userCollection = db.collection("users");
 			for (let playerId of involvedPlayers) {
 				const userRef = userCollection.doc(playerId);
 				await userRef.update({
-					myMatches: admin.firestore.FieldValue.arrayUnion(matchRef.id)
+					myMatches: admin.firestore.FieldValue.arrayUnion(matchRef.id),
 				});
 				console.log("Match ID added to user's myMatches array:", playerId);
 			}
-	
+
 			res.status(200).send({ result: "success", matchId: matchRef.id });
 			console.log("Match created successfully with ID:", matchRef.id);
 		} catch (error) {
@@ -992,7 +992,6 @@ exports.uploadSquadBadge = functions
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
-	
 
 exports.startMatch = functions
 	.region("europe-west2")
@@ -1131,86 +1130,83 @@ exports.joinMatch = functions
 		}
 	});
 
-
-	exports.joinMatchAsTeam = functions
+exports.joinMatchAsTeam = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		if (req.method !== "POST") {
 			res.status(400).send("Invalid request method. Please use POST.");
 			return;
 		}
-	
+
 		const { matchId, teamId, teamPlayers, teamBadgeUrl, teamDisplayName } =
 			req.body;
-	
+
 		try {
 			const matchRef = db.collection("matches").doc(matchId);
 			const matchDoc = await matchRef.get();
-	
+
 			if (!matchDoc.exists) {
 				res.status(404).send({ result: "error", error: "Match not found." });
 				return;
 			}
-	
+
 			const matchData = matchDoc.data();
-	
+
 			// Si "squads" no existe en matchData, lo establecemos como un objeto vacío
-			if (!matchData.hasOwnProperty("squads")) {
+			if (!matchData.hasOwnProperty("teams")) {
 				matchData.squads = {};
 			}
-	
+
 			if (matchData.status !== "open") {
 				res.status(400).send({ result: "error", error: "Match is not open." });
 				return;
 			}
-	
+
 			if (matchData.mode !== "teamMatch") {
 				res
 					.status(400)
 					.send({ result: "error", error: "Match mode is not 'teamMatch'." });
 				return;
 			}
-	
+
 			// Agregamos el equipo al partido
 			const teamLetter =
-				Object.keys(matchData.squads).length === 0 ? "squadA" : "squadB";
+				Object.keys(matchData.teams).length === 0 ? "teamA" : "teamB";
 			await matchRef.update({
-				[`squads.${teamLetter}`]: {
+				[`teams.${teamLetter}`]: {
 					teamId,
-					players: teamPlayers,
+					teamPlayers: teamPlayers,
 					teamBadgeUrl,
 					teamDisplayName,
 				},
 			});
-	
+
 			const userRef = db.collection("users");
 			const squadRef = db.collection("squads").doc(teamId);
 			const batch = db.batch();
-	
+
 			teamPlayers.forEach((playerId) => {
 				const ref = userRef.doc(playerId);
 				batch.update(ref, {
 					myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
 				});
 			});
-	
+
 			// Agregamos el partido al campo myMatches del equipo
 			batch.update(squadRef, {
 				myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
 			});
-	
+
 			await batch.commit();
-	
+
 			res.status(200).send({ result: "success" });
 		} catch (error) {
 			console.error("Error joining match as team:", error);
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
-	
 
-
-	exports.getMatchData = functions
+exports.getMatchData = functions
 	.region("europe-west2")
 	.https.onRequest(async (req, res) => {
 		if (req.method !== "GET") {
@@ -1218,7 +1214,7 @@ exports.joinMatch = functions
 			return;
 		}
 
-		const { matchId } = req.query; // Recibimos el ID del partido
+		const { matchId } = req.query;
 
 		try {
 			const matchRef = db.collection("matches").doc(matchId);
@@ -1232,15 +1228,44 @@ exports.joinMatch = functions
 			let matchData = matchDoc.data();
 			matchData.matchId = matchId;
 
-			// Añadimos los detalles de los jugadores
+			// Get player details
 			const userCollection = db.collection("users");
-			const promises = matchData.players.map(async playerId => {
-				const userRef = userCollection.doc(playerId);
-				const userDoc = await userRef.get();
-				return userDoc.data();  // Este devuelve un objeto con los datos del usuario
-			});
-			
-			matchData.players = await Promise.all(promises);
+
+			if (matchData.mode === "pickup") {
+				const promises = matchData.players.map(async (playerId) => {
+					const userRef = userCollection.doc(playerId);
+					const userDoc = await userRef.get();
+					let userData = userDoc.data();
+					userData.id = playerId; // add id to the user data
+					return userData;
+				});
+
+				matchData.players = await Promise.all(promises);
+			} else if (matchData.mode === "teamMatch") {
+				const promisesA = matchData.teams.teamA.teamPlayers.map(
+					async (playerId) => {
+						const userRef = userCollection.doc(playerId);
+						const userDoc = await userRef.get();
+						let userData = userDoc.data();
+						userData.id = playerId; // add id to the user data
+						return userData;
+					}
+				);
+				matchData.teams.teamA.teamPlayers = await Promise.all(promisesA);
+
+				const promisesB = matchData.teams.teamB.teamPlayers.map(
+					async (playerId) => {
+						const userRef = userCollection.doc(playerId);
+						const userDoc = await userRef.get();
+						let userData = userDoc.data();
+						userData.id = playerId; // add id to the user data
+						return userData;
+					}
+				);
+				matchData.teams.teamB.teamPlayers = await Promise.all(promisesB);
+			} else {
+				throw new Error("Invalid match mode");
+			}
 
 			res.status(200).send({ result: "success", data: matchData });
 		} catch (error) {
@@ -1248,7 +1273,6 @@ exports.joinMatch = functions
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
-
 
 //el admin supongo que sea el que crea el partido
 //simplemente el creador del partido(que sera el jugador 0), sera quien pueda echar a la gente (manejo desde el front)
@@ -1275,24 +1299,26 @@ exports.leaveOrKickMatch = functions
 			console.log("Match data:", matchData);
 			console.log("Player ID:", playerId);
 
-
-
 			// Comprobamos si el jugador es miembro del partido
 			if (!matchData.players.includes(playerId)) {
-				res.status(400).send({ result: "error", error: "Player is not part of the match." });
+				res
+					.status(400)
+					.send({ result: "error", error: "Player is not part of the match." });
 				return;
 			}
 
 			// Si el jugador es quien quiere abandonar el partido, lo eliminamos de la lista de jugadores
 			if (playerId) {
 				// Crear una nueva lista de jugadores sin el jugador que quiere abandonar
-				let updatedPlayers = matchData.players.filter(player => player !== playerId);
-				
+				let updatedPlayers = matchData.players.filter(
+					(player) => player !== playerId
+				);
+
 				// Actualizamos los datos del partido en la base de datos
 				await matchRef.update({ players: updatedPlayers });
 
 				// Referencia al jugador en la colección de usuarios
-				const userRef = db.collection('users').doc(playerId);
+				const userRef = db.collection("users").doc(playerId);
 
 				// Eliminamos el partido de la lista de partidos del jugador
 				await userRef.update({
@@ -1303,16 +1329,15 @@ exports.leaveOrKickMatch = functions
 			} else {
 				res.status(403).send({
 					result: "error",
-					error: "Only the player themselves can remove themselves from a match.",
+					error:
+						"Only the player themselves can remove themselves from a match.",
 				});
 			}
-
 		} catch (error) {
 			console.error("Error leaving or kicking match:", error);
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
-
 
 exports.getAllMatches = functions
 	.region("europe-west2")
@@ -1345,288 +1370,323 @@ exports.getAllMatches = functions
 		}
 	});
 
-	exports.getUserMatches = functions
-.region("europe-west2")
-.https.onRequest(async (req, res) => {
-	if (req.method !== "GET") {
-		res.status(400).send("Invalid request method. Please use GET.");
-		return;
-	}
-
-	const { userId } = req.query; // Recibimos el ID del usuario
-
-	try {
-		const userRef = db.collection("users").doc(userId);
-		const userDoc = await userRef.get();
-
-		if (!userDoc.exists) {
-			res.status(404).send({ result: "error", error: "User not found." });
+exports.getUserMatches = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "GET") {
+			res.status(400).send("Invalid request method. Please use GET.");
 			return;
 		}
 
-		const userData = userDoc.data();
-		const matchesRef = db.collection("matches");
+		const { userId } = req.query; // Recibimos el ID del usuario
 
-		// Iteramos sobre myMatches del usuario y obtenemos los datos de cada partido
-		const matchPromises = userData.myMatches.map(async matchId => {
-			const matchDoc = await matchesRef.doc(matchId).get();
-			
-			if (matchDoc.exists) {
-				let matchData = matchDoc.data();
-				matchData.matchId = matchId;
-				
-				// Añadimos los detalles de los jugadores
-				const userCollection = db.collection("users");
-				const playerPromises = matchData.players.map(async playerId => {
-					const userDoc = await userCollection.doc(playerId).get();
-					return userDoc.data();  // Este devuelve un objeto con los datos del usuario
-				});
-				
-				matchData.players = await Promise.all(playerPromises);
+		try {
+			const userRef = db.collection("users").doc(userId);
+			const userDoc = await userRef.get();
 
-				return matchData;
+			if (!userDoc.exists) {
+				res.status(404).send({ result: "error", error: "User not found." });
+				return;
 			}
 
-			return null; // Si no se encuentra el partido, se devuelve null
-		});
+			const userData = userDoc.data();
+			const matchesRef = db.collection("matches");
 
-		const userMatches = await Promise.all(matchPromises);
-		res.status(200).send({ result: "success", data: userMatches.filter(match => match) }); // Filtramos las posibles respuestas nulas
-	} catch (error) {
-		console.error("Error getting user matches:", error);
-		res.status(500).send({ result: "error", error: error.message });
-	}
-});
+			// Iteramos sobre myMatches del usuario y obtenemos los datos de cada partido
+			const matchPromises = userData.myMatches.map(async (matchId) => {
+				const matchDoc = await matchesRef.doc(matchId).get();
+
+				if (matchDoc.exists) {
+					let matchData = matchDoc.data();
+					matchData.matchId = matchId;
+
+					// Añadimos los detalles de los jugadores
+					const userCollection = db.collection("users");
+					const playerPromises = matchData.players.map(async (playerId) => {
+						const userDoc = await userCollection.doc(playerId).get();
+						return userDoc.data(); // Este devuelve un objeto con los datos del usuario
+					});
+
+					matchData.players = await Promise.all(playerPromises);
+
+					return matchData;
+				}
+
+				return null; // Si no se encuentra el partido, se devuelve null
+			});
+
+			const userMatches = await Promise.all(matchPromises);
+			res.status(200).send({
+				result: "success",
+				data: userMatches.filter((match) => match),
+			}); // Filtramos las posibles respuestas nulas
+		} catch (error) {
+			console.error("Error getting user matches:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
 exports.editSquadMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { matchId, newTeamPlayers } = req.body;
+		const { matchId, newTeamPlayers, playerId } = req.body;
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            const matchData = matchDoc.data();
+			const matchData = matchDoc.data();
 
-            const currentTeamPlayers = matchData.teams.teamA.teamPlayers;
-            const addedPlayers = newTeamPlayers.filter(player => !currentTeamPlayers.includes(player));
-            const removedPlayers = currentTeamPlayers.filter(player => !newTeamPlayers.includes(player));
+			let team;
+			if (matchData.teams.teamA.teamPlayers.includes(playerId)) {
+				team = "teamA";
+			} else if (matchData.teams.teamB.teamPlayers.includes(playerId)) {
+				team = "teamB";
+			} else {
+				throw new Error("Player is not part of this match");
+			}
 
-            // Actualiza los jugadores del equipo en la convocatoria
-            await matchRef.update({
-                "teams.teamA.teamPlayers": newTeamPlayers,
-            });
+			const currentTeamPlayers = matchData.teams[team].teamPlayers;
+			const addedPlayers = newTeamPlayers.filter(
+				(player) => !currentTeamPlayers.includes(player)
+			);
+			const removedPlayers = currentTeamPlayers.filter(
+				(player) => !newTeamPlayers.includes(player)
+			);
 
-            const userRef = db.collection("users");
-            const batch = db.batch();
+			// Update team players
+			await matchRef.update({
+				[`teams.${team}.teamPlayers`]: newTeamPlayers,
+			});
 
-            addedPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
-                });
-            });
+			const userRef = db.collection("users");
+			const batch = db.batch();
 
-            removedPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-                });
-            });
+			addedPlayers.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
+				});
+			});
 
-            await batch.commit();
+			removedPlayers.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+				});
+			});
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error editing match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			await batch.commit();
 
-	exports.leaveAsTeam = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error editing match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-        const { matchId, teamId } = req.body; // Recibimos el ID del partido y el ID del equipo
+exports.leaveAsTeam = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		const { matchId, teamId } = req.body; // Recibimos el ID del partido y el ID del equipo
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            const matchData = matchDoc.data();
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            let teamKey;
-            if (matchData.squads?.squadA?.teamId === teamId) {
-                teamKey = 'squadA';
-            } else if (matchData.squads?.squadB?.teamId === teamId) {
-                teamKey = 'squadB';
-            }
+			const matchData = matchDoc.data();
 
-            if (!teamKey) {
-                res.status(400).send({ result: "error", error: "Team is not part of the match." });
-                return;
-            }
+			let teamKey;
+			if (matchData.squads?.squadA?.teamId === teamId) {
+				teamKey = "squadA";
+			} else if (matchData.squads?.squadB?.teamId === teamId) {
+				teamKey = "squadB";
+			}
 
-            const teamPlayers = matchData.squads[teamKey].players;
+			if (!teamKey) {
+				res
+					.status(400)
+					.send({ result: "error", error: "Team is not part of the match." });
+				return;
+			}
 
-            // Remove the team from the match
-            await matchRef.update({
-                [`squads.${teamKey}`]: admin.firestore.FieldValue.delete()
-            });
+			const teamPlayers = matchData.squads[teamKey].players;
 
-            const userRef = db.collection("users");
-            const squadRef = db.collection("squads").doc(teamId);
-            const batch = db.batch();
+			// Remove the team from the match
+			await matchRef.update({
+				[`squads.${teamKey}`]: admin.firestore.FieldValue.delete(),
+			});
 
-            // Remove match from each player's myMatches array
-            teamPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-                });
-            });
+			const userRef = db.collection("users");
+			const squadRef = db.collection("squads").doc(teamId);
+			const batch = db.batch();
 
-            // Remove the match from the squad's myMatches
-            batch.update(squadRef, {
-                myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-            });
+			// Remove match from each player's myMatches array
+			teamPlayers.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+				});
+			});
 
-            await batch.commit();
+			// Remove the match from the squad's myMatches
+			batch.update(squadRef, {
+				myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+			});
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error when team leaving the match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			await batch.commit();
 
-	exports.endMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error when team leaving the match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-        const { matchId, playerId, result } = req.body;
+exports.endMatch = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const match = await matchRef.get();
+		const { matchId, playerId, result } = req.body;
 
-            if (!match.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const match = await matchRef.get();
 
-            const matchData = match.data();
-            if (matchData.status !== "in-progress") {
-                res.status(400).send({ result: "error", error: "Match is not in-progress." });
-                return;
-            }
+			if (!match.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            // Check if player is part of the match
-            let isPlayerInMatch = false;
-            Object.keys(matchData.squads).forEach(squadKey => {
-                if (matchData.squads[squadKey].players.includes(playerId)) {
-                    isPlayerInMatch = true;
-                }
-            });
-            if (!isPlayerInMatch) {
-                res.status(400).send({ result: "error", error: "Player is not part of the match." });
-                return;
-            }
+			const matchData = match.data();
+			if (matchData.status !== "in-progress") {
+				res
+					.status(400)
+					.send({ result: "error", error: "Match is not in-progress." });
+				return;
+			}
 
-            await matchRef.update({
-                status: "awaiting-confirmation",
-                resultSuggestion: {
-                    result,
-                    suggestedBy: playerId
-                }
-            });
+			// Check if player is part of the match
+			let isPlayerInMatch = false;
+			Object.keys(matchData.squads).forEach((squadKey) => {
+				if (matchData.squads[squadKey].players.includes(playerId)) {
+					isPlayerInMatch = true;
+				}
+			});
+			if (!isPlayerInMatch) {
+				res
+					.status(400)
+					.send({ result: "error", error: "Player is not part of the match." });
+				return;
+			}
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error ending match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			await matchRef.update({
+				status: "awaiting-confirmation",
+				resultSuggestion: {
+					result,
+					suggestedBy: playerId,
+				},
+			});
 
-	exports.acceptMatchResult = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error ending match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
-        const { matchId, playerId } = req.body;
+exports.acceptMatchResult = functions
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const match = await matchRef.get();
+		const { matchId, playerId } = req.body;
 
-            if (!match.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const match = await matchRef.get();
 
-            const matchData = match.data();
+			if (!match.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            if (matchData.status !== "awaiting-confirmation") {
-                res.status(400).send({ result: "error", error: "Match is not awaiting confirmation." });
-                return;
-            }
+			const matchData = match.data();
 
-            if (matchData.resultSuggestion.suggestedBy === playerId) {
-                res.status(400).send({ result: "error", error: "Player cannot accept their own result." });
-                return;
-            }
+			if (matchData.status !== "awaiting-confirmation") {
+				res.status(400).send({
+					result: "error",
+					error: "Match is not awaiting confirmation.",
+				});
+				return;
+			}
 
-            let playerTeam = null;
-            let suggesterTeam = null;
-            Object.keys(matchData.squads).forEach(squadKey => {
-                if (matchData.squads[squadKey].players.includes(playerId)) {
-                    playerTeam = squadKey;
-                }
-                if (matchData.squads[squadKey].players.includes(matchData.resultSuggestion.suggestedBy)) {
-                    suggesterTeam = squadKey;
-                }
-            });
+			if (matchData.resultSuggestion.suggestedBy === playerId) {
+				res.status(400).send({
+					result: "error",
+					error: "Player cannot accept their own result.",
+				});
+				return;
+			}
 
-            if (playerTeam === suggesterTeam) {
-                res.status(400).send({ result: "error", error: "Player cannot accept result from the same team." });
-                return;
-            }
+			let playerTeam = null;
+			let suggesterTeam = null;
+			Object.keys(matchData.squads).forEach((squadKey) => {
+				if (matchData.squads[squadKey].players.includes(playerId)) {
+					playerTeam = squadKey;
+				}
+				if (
+					matchData.squads[squadKey].players.includes(
+						matchData.resultSuggestion.suggestedBy
+					)
+				) {
+					suggesterTeam = squadKey;
+				}
+			});
 
-            await matchRef.update({
-                status: "completed",
-                result: matchData.resultSuggestion.result
-            });
+			if (playerTeam === suggesterTeam) {
+				res.status(400).send({
+					result: "error",
+					error: "Player cannot accept result from the same team.",
+				});
+				return;
+			}
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error accepting match result:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			await matchRef.update({
+				status: "completed",
+				result: matchData.resultSuggestion.result,
+			});
+
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error accepting match result:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
