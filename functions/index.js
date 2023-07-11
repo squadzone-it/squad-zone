@@ -1139,74 +1139,75 @@ exports.joinMatch = functions
 			res.status(400).send("Invalid request method. Please use POST.");
 			return;
 		}
-	
+
 		const { matchId, teamId, teamPlayers, teamBadgeUrl, teamDisplayName } =
 			req.body;
-	
+
 		try {
 			const matchRef = db.collection("matches").doc(matchId);
 			const matchDoc = await matchRef.get();
-	
+
 			if (!matchDoc.exists) {
 				res.status(404).send({ result: "error", error: "Match not found." });
 				return;
 			}
-	
+
 			const matchData = matchDoc.data();
-	
+
 			// Si "squads" no existe en matchData, lo establecemos como un objeto vacío
-			if (!matchData.hasOwnProperty("squads")) {
+			if (!matchData.hasOwnProperty("teams")) {
 				matchData.squads = {};
 			}
-	
+
 			if (matchData.status !== "open") {
 				res.status(400).send({ result: "error", error: "Match is not open." });
 				return;
 			}
-	
+
 			if (matchData.mode !== "teamMatch") {
 				res
 					.status(400)
 					.send({ result: "error", error: "Match mode is not 'teamMatch'." });
 				return;
 			}
-	
+
 			// Agregamos el equipo al partido
 			const teamLetter =
-				Object.keys(matchData.squads).length === 0 ? "squadA" : "squadB";
+				Object.keys(matchData.teams).length === 0 ? "teamA" : "teamB";
 			await matchRef.update({
-				[`squads.${teamLetter}`]: {
+				[`teams.${teamLetter}`]: {
 					teamId,
-					players: teamPlayers,
+					teamPlayers: teamPlayers,
 					teamBadgeUrl,
 					teamDisplayName,
 				},
 			});
-	
+
 			const userRef = db.collection("users");
 			const squadRef = db.collection("squads").doc(teamId);
 			const batch = db.batch();
-	
+
 			teamPlayers.forEach((playerId) => {
 				const ref = userRef.doc(playerId);
 				batch.update(ref, {
 					myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
 				});
 			});
-	
+
 			// Agregamos el partido al campo myMatches del equipo
 			batch.update(squadRef, {
 				myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
 			});
-	
+
 			await batch.commit();
-	
+
 			res.status(200).send({ result: "success" });
 		} catch (error) {
 			console.error("Error joining match as team:", error);
 			res.status(500).send({ result: "error", error: error.message });
 		}
 	});
+
 	
 
 
@@ -1218,7 +1219,7 @@ exports.joinMatch = functions
 			return;
 		}
 
-		const { matchId } = req.query; // Recibimos el ID del partido
+		const { matchId } = req.query;
 
 		try {
 			const matchRef = db.collection("matches").doc(matchId);
@@ -1232,15 +1233,44 @@ exports.joinMatch = functions
 			let matchData = matchDoc.data();
 			matchData.matchId = matchId;
 
-			// Añadimos los detalles de los jugadores
+			// Get player details
 			const userCollection = db.collection("users");
-			const promises = matchData.players.map(async playerId => {
-				const userRef = userCollection.doc(playerId);
-				const userDoc = await userRef.get();
-				return userDoc.data();  // Este devuelve un objeto con los datos del usuario
-			});
-			
-			matchData.players = await Promise.all(promises);
+
+			if (matchData.mode === "pickup") {
+				const promises = matchData.players.map(async (playerId) => {
+					const userRef = userCollection.doc(playerId);
+					const userDoc = await userRef.get();
+					let userData = userDoc.data();
+					userData.id = playerId; // add id to the user data
+					return userData;
+				});
+
+				matchData.players = await Promise.all(promises);
+			} else if (matchData.mode === "teamMatch") {
+				const promisesA = matchData.teams.teamA.teamPlayers.map(
+					async (playerId) => {
+						const userRef = userCollection.doc(playerId);
+						const userDoc = await userRef.get();
+						let userData = userDoc.data();
+						userData.id = playerId; // add id to the user data
+						return userData;
+					}
+				);
+				matchData.teams.teamA.teamPlayers = await Promise.all(promisesA);
+
+				const promisesB = matchData.teams.teamB.teamPlayers.map(
+					async (playerId) => {
+						const userRef = userCollection.doc(playerId);
+						const userDoc = await userRef.get();
+						let userData = userDoc.data();
+						userData.id = playerId; // add id to the user data
+						return userData;
+					}
+				);
+				matchData.teams.teamB.teamPlayers = await Promise.all(promisesB);
+			} else {
+				throw new Error("Invalid match mode");
+			}
 
 			res.status(200).send({ result: "success", data: matchData });
 		} catch (error) {
@@ -1399,126 +1429,155 @@ exports.getAllMatches = functions
 });
 
 exports.editSquadMatch = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
 
-        const { matchId, newTeamPlayers } = req.body;
+		const { matchId, newTeamPlayers, playerId } = req.body;
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
 
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
 
-            const matchData = matchDoc.data();
+			const matchData = matchDoc.data();
 
-            const currentTeamPlayers = matchData.teams.teamA.teamPlayers;
-            const addedPlayers = newTeamPlayers.filter(player => !currentTeamPlayers.includes(player));
-            const removedPlayers = currentTeamPlayers.filter(player => !newTeamPlayers.includes(player));
+			let team;
+			if (matchData.teams.teamA.teamPlayers.includes(playerId)) {
+				team = "teamA";
+			} else if (matchData.teams.teamB.teamPlayers.includes(playerId)) {
+				team = "teamB";
+			} else {
+				throw new Error("Player is not part of this match");
+			}
 
-            // Actualiza los jugadores del equipo en la convocatoria
-            await matchRef.update({
-                "teams.teamA.teamPlayers": newTeamPlayers,
-            });
+			const currentTeamPlayers = matchData.teams[team].teamPlayers;
+			const addedPlayers = newTeamPlayers.filter(
+				(player) => !currentTeamPlayers.includes(player)
+			);
+			const removedPlayers = currentTeamPlayers.filter(
+				(player) => !newTeamPlayers.includes(player)
+			);
 
-            const userRef = db.collection("users");
-            const batch = db.batch();
+			// Update team players
+			await matchRef.update({
+				[`teams.${team}.teamPlayers`]: newTeamPlayers,
+			});
 
-            addedPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
-                });
-            });
+			const userRef = db.collection("users");
+			const batch = db.batch();
 
-            removedPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-                });
-            });
+			addedPlayers.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayUnion(matchId),
+				});
+			});
 
-            await batch.commit();
+			removedPlayers.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+				});
+			});
 
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error editing match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
+			await batch.commit();
+
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error editing match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
 
 	exports.leaveAsTeam = functions
-    .region("europe-west2")
-    .https.onRequest(async (req, res) => {
-        if (req.method !== "POST") {
-            res.status(400).send("Invalid request method. Please use POST.");
-            return;
-        }
+	.region("europe-west2")
+	.https.onRequest(async (req, res) => {
+		if (req.method !== "POST") {
+			res.status(400).send("Invalid request method. Please use POST.");
+			return;
+		}
+	
+		const { matchId, teamId } = req.body;
+	
+		try {
+			const matchRef = db.collection("matches").doc(matchId);
+			const matchDoc = await matchRef.get();
+	
+			if (!matchDoc.exists) {
+				res.status(404).send({ result: "error", error: "Match not found." });
+				return;
+			}
+	
+			const matchData = matchDoc.data();
+	
+			let teamKey;
+			if (matchData.teams?.teamA?.teamId === teamId) {
+				teamKey = 'teamA';
+			} else if (matchData.teams?.teamB?.teamId === teamId) {
+				teamKey = 'teamB';
+			}
+	
+			if (!teamKey) {
+				res.status(400).send({ result: "error", error: "Team is not part of the match." });
+				return;
+			}
+	
+			// Remove the team from the match
+			await matchRef.update({
+				[`teams.${teamKey}`]: admin.firestore.FieldValue.delete()
+			});
+			console.log(`Team ${teamKey} removed from match ${matchId}`);
+	
+			// We need to get the squadId that matches the teamId in order to remove the team's players
+			const squadRef = db.collection("squads").doc(teamId);
+			const squadDoc = await squadRef.get();
+	
+			if (!squadDoc.exists) {
+				console.log('No matching squads.');
+				return;
+			}  
+	
+			console.log(`Found squad for team ${teamId}`);
+			const userRef = db.collection("users");
+			const batch = db.batch();
+	
+			// Remove match from each player's myMatches array
+			squadDoc.data().members.forEach((playerId) => {
+				const ref = userRef.doc(playerId);
+				batch.update(ref, {
+					myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+				});
+				console.log(`Removed match ${matchId} from player ${playerId}`);
+			});
+	
+			// Remove the match from the squad's myMatches
+			batch.update(squadRef, {
+				myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
+			});
+			console.log(`Removed match ${matchId} from squad`);
+	
+			await batch.commit();
+	
+			console.log(`Batch commit successful`);
+			res.status(200).send({ result: "success" });
+		} catch (error) {
+			console.error("Error when team leaving the match:", error);
+			res.status(500).send({ result: "error", error: error.message });
+		}
+	});
+	
+	
+	
 
-        const { matchId, teamId } = req.body; // Recibimos el ID del partido y el ID del equipo
 
-        try {
-            const matchRef = db.collection("matches").doc(matchId);
-            const matchDoc = await matchRef.get();
-
-            if (!matchDoc.exists) {
-                res.status(404).send({ result: "error", error: "Match not found." });
-                return;
-            }
-
-            const matchData = matchDoc.data();
-
-            let teamKey;
-            if (matchData.squads?.squadA?.teamId === teamId) {
-                teamKey = 'squadA';
-            } else if (matchData.squads?.squadB?.teamId === teamId) {
-                teamKey = 'squadB';
-            }
-
-            if (!teamKey) {
-                res.status(400).send({ result: "error", error: "Team is not part of the match." });
-                return;
-            }
-
-            const teamPlayers = matchData.squads[teamKey].players;
-
-            // Remove the team from the match
-            await matchRef.update({
-                [`squads.${teamKey}`]: admin.firestore.FieldValue.delete()
-            });
-
-            const userRef = db.collection("users");
-            const squadRef = db.collection("squads").doc(teamId);
-            const batch = db.batch();
-
-            // Remove match from each player's myMatches array
-            teamPlayers.forEach((playerId) => {
-                const ref = userRef.doc(playerId);
-                batch.update(ref, {
-                    myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-                });
-            });
-
-            // Remove the match from the squad's myMatches
-            batch.update(squadRef, {
-                myMatches: admin.firestore.FieldValue.arrayRemove(matchId),
-            });
-
-            await batch.commit();
-
-            res.status(200).send({ result: "success" });
-        } catch (error) {
-            console.error("Error when team leaving the match:", error);
-            res.status(500).send({ result: "error", error: error.message });
-        }
-    });
 
 	exports.endMatch = functions
     .region("europe-west2")
