@@ -1242,27 +1242,31 @@ exports.getMatchData = functions
 
 				matchData.players = await Promise.all(promises);
 			} else if (matchData.mode === "teamMatch") {
-				const promisesA = matchData.teams.teamA.teamPlayers.map(
-					async (playerId) => {
-						const userRef = userCollection.doc(playerId);
-						const userDoc = await userRef.get();
-						let userData = userDoc.data();
-						userData.id = playerId; // add id to the user data
-						return userData;
-					}
-				);
-				matchData.teams.teamA.teamPlayers = await Promise.all(promisesA);
+				if (matchData.teams.teamA) {
+					const promisesA = matchData.teams.teamA.teamPlayers.map(
+						async (playerId) => {
+							const userRef = userCollection.doc(playerId);
+							const userDoc = await userRef.get();
+							let userData = userDoc.data();
+							userData.id = playerId; // add id to the user data
+							return userData;
+						}
+					);
+					matchData.teams.teamA.teamPlayers = await Promise.all(promisesA);
+				}
 
-				const promisesB = matchData.teams.teamB.teamPlayers.map(
-					async (playerId) => {
-						const userRef = userCollection.doc(playerId);
-						const userDoc = await userRef.get();
-						let userData = userDoc.data();
-						userData.id = playerId; // add id to the user data
-						return userData;
-					}
-				);
-				matchData.teams.teamB.teamPlayers = await Promise.all(promisesB);
+				if (matchData.teams.teamB) {
+					const promisesB = matchData.teams.teamB.teamPlayers.map(
+						async (playerId) => {
+							const userRef = userCollection.doc(playerId);
+							const userDoc = await userRef.get();
+							let userData = userDoc.data();
+							userData.id = playerId; // add id to the user data
+							return userData;
+						}
+					);
+					matchData.teams.teamB.teamPlayers = await Promise.all(promisesB);
+				}
 			} else {
 				throw new Error("Invalid match mode");
 			}
