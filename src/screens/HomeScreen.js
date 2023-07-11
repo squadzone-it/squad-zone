@@ -198,32 +198,73 @@ const HomeScreen = ({ navigation }) => {
 										)}
 										{item.mode === "teamMatch" && (
 											<View>
-												<View
-													style={{ flexDirection: "row", alignItems: "center" }}
-												>
-													<Image
-														source={{
-															uri: item.teams.teamA.teamBadgeUrl,
+												{item.teams.teamA ? (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
 														}}
-														style={styles.teamBadge}
-													/>
-													<Text style={styles.teamDisplayName}>
-														{item.teams.teamA.teamDisplayName}
-													</Text>
-												</View>
-												<View
-													style={{ flexDirection: "row", alignItems: "center" }}
-												>
-													<Image
-														source={{
-															uri: item.teams.teamB.teamBadgeUrl,
+													>
+														<Image
+															source={{
+																uri: item.teams.teamA.teamBadgeUrl,
+															}}
+															style={styles.teamBadge}
+														/>
+														<Text style={styles.mode}>
+															{item.teams.teamA.teamDisplayName}
+														</Text>
+													</View>
+												) : (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
 														}}
-														style={styles.teamBadge}
-													/>
-													<Text style={styles.teamDisplayName}>
-														{item.teams.teamB.teamDisplayName}
-													</Text>
-												</View>
+													>
+														<Ionic
+															name="add-circle-sharp"
+															size={20}
+															color={theme.colors.text}
+															style={{ marginRight: 8 }}
+														/>
+														<Text style={styles.mode}>Espacio disponible</Text>
+													</View>
+												)}
+
+												{item.teams.teamB ? (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
+														}}
+													>
+														<Image
+															source={{
+																uri: item.teams.teamB.teamBadgeUrl,
+															}}
+															style={styles.teamBadge}
+														/>
+														<Text style={styles.mode}>
+															{item.teams.teamB.teamDisplayName}
+														</Text>
+													</View>
+												) : (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
+														}}
+													>
+														<Ionic
+															name="add-circle-sharp"
+															size={20}
+															color={theme.colors.text}
+															style={{ marginRight: 8 }}
+														/>
+														<Text style={styles.mode}>Espacio disponible</Text>
+													</View>
+												)}
 											</View>
 										)}
 									</View>
@@ -333,32 +374,73 @@ const HomeScreen = ({ navigation }) => {
 										)}
 										{item.mode === "teamMatch" && (
 											<View>
-												<View
-													style={{ flexDirection: "row", alignItems: "center" }}
-												>
-													<Image
-														source={{
-															uri: item.teams.teamA.teamBadgeUrl,
+												{item.teams.teamA ? (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
 														}}
-														style={styles.teamBadge}
-													/>
-													<Text style={styles.mode}>
-														{item.teams.teamA.teamDisplayName}
-													</Text>
-												</View>
-												<View
-													style={{ flexDirection: "row", alignItems: "center" }}
-												>
-													<Image
-														source={{
-															uri: item.teams.teamB.teamBadgeUrl,
+													>
+														<Image
+															source={{
+																uri: item.teams.teamA.teamBadgeUrl,
+															}}
+															style={styles.teamBadge}
+														/>
+														<Text style={styles.mode}>
+															{item.teams.teamA.teamDisplayName}
+														</Text>
+													</View>
+												) : (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
 														}}
-														style={styles.teamBadge}
-													/>
-													<Text style={styles.mode}>
-														{item.teams.teamB.teamDisplayName}
-													</Text>
-												</View>
+													>
+														<Ionic
+															name="add-circle-sharp"
+															size={20}
+															color={theme.colors.text}
+															style={{ marginRight: 8 }}
+														/>
+														<Text style={styles.mode}>Espacio disponible</Text>
+													</View>
+												)}
+
+												{item.teams.teamB ? (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
+														}}
+													>
+														<Image
+															source={{
+																uri: item.teams.teamB.teamBadgeUrl,
+															}}
+															style={styles.teamBadge}
+														/>
+														<Text style={styles.mode}>
+															{item.teams.teamB.teamDisplayName}
+														</Text>
+													</View>
+												) : (
+													<View
+														style={{
+															flexDirection: "row",
+															alignItems: "center",
+														}}
+													>
+														<Ionic
+															name="add-circle-sharp"
+															size={20}
+															color={theme.colors.text}
+															style={{ marginRight: 8 }}
+														/>
+														<Text style={styles.mode}>Espacio disponible</Text>
+													</View>
+												)}
 											</View>
 										)}
 									</View>
