@@ -14,4 +14,5 @@ export { default as SquadProfileScreen } from "./SquadProfileScreen";
 export { default as CreateSquadBadge } from "./CreateSquadBadge";
 export { default as CreatePickupMatchScreen } from "./CreatePickupMatchScreen";
 export { default as CreateTeamsMatchScreen } from "./CreateTeamsMatchScreen";
-export { default as MatchDetailsScreen } from "./MatchDetailsScreen";
+export { default as TeamMatchDetailsScreen } from "./TeamMatchDetailsScreen";
+export { default as PickupMatchDetailsScreen } from "./PickupMatchDetailsScreen";

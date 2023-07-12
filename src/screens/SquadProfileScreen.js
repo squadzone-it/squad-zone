@@ -822,7 +822,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	modalOptionR: {
-		marginBottom: 5,
+		marginBottom: 10,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",

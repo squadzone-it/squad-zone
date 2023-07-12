@@ -1,32 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Image,
+	TouchableOpacity,
+	Linking,
+	Modal,
+} from "react-native";
+import { UserContext } from "../contexts/UserContext";
 import Ionic from "react-native-vector-icons/Ionicons";
 import { theme } from "../core/theme";
 import BackgroundTabs from "../components/BackgroundTabs";
 import { getMatchData } from "../components/ApiService";
 
-const MatchDetailsScreen = ({ navigation, route }) => {
-	// Extract the 'match' object from the route parameters
+const TeamMatchDetailsScreen = ({ navigation, route }) => {
+	const { user } = useContext(UserContext);
+	const uid = user ? user.uid : null;
 	const { match } = route.params;
 	const [partidoData, setPartidoData] = useState(null);
+	const [showModal, setShowModal] = useState(false);
 
-	/*
-	const partidoData = {
-		escudo1:
-			"https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/squad_prS6rA4BO9CpjvC4jfx9_20230704T190025669Z.png?alt=media&token=2bcf69f5-9373-44d1-8973-0f97d9e07cb7",
-		escudo2:
-			"https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/squad_prS6rA4BO9CpjvC4jfx9_20230704T190025669Z.png?alt=media&token=2bcf69f5-9373-44d1-8973-0f97d9e07cb7",
-		nombre1: "Team A",
-		nombre2: "Team B",
-		status: "In-Progress",
-		marcador: "0 - 0",
-		fechaHora: "7 de Julio 2023 17:00",
-		ubicacion: "Mortera",
-		jugadores1: ["Jugador 1", "Jugador 2", "Jugador 3"],
-		jugadores2: ["Jugador 1", "Jugador 2", "Jugador 3"],
-	};*/
 	useEffect(() => {
-		// Supongamos que 'matchId' es una prop pasada a este componente
 		const fetchMatchData = async () => {
 			try {
 				console.log(match);
@@ -39,6 +34,26 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 		};
 		fetchMatchData();
 	}, []);
+
+	function formatDate(dateTimeString) {
+		const dateTime = new Date(dateTimeString);
+		const options = {
+			year: "numeric",
+			month: "numeric",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		};
+		return dateTime.toLocaleString("es-ES", options);
+	}
+
+	const locationButton = (latitude, longitude) => {
+		const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+
+		Linking.openURL(url).catch((err) =>
+			console.error("An error occurred", err)
+		);
+	};
 
 	const tempButton = () => {};
 
@@ -56,7 +71,7 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 					/>
 				</TouchableOpacity>
 				<Text style={styles.headerText}>
-					{partidoData.mode} {partidoData.gameData.rules}
+					Equipos {partidoData.gameData.rules}
 				</Text>
 				<TouchableOpacity onPress={tempButton} style={styles.headerButtonRight}>
 					<Ionic
@@ -70,10 +85,18 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 				<View style={styles.matchHeader}>
 					{partidoData.teams.teamA && (
 						<View style={styles.team}>
-							<Image
-								source={{ uri: partidoData.teams.teamA.teamBadgeUrl }}
-								style={styles.shield}
-							/>
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("SquadProfileScreen", {
+										squadId: partidoData.teams.teamA.teamId,
+									})
+								}
+							>
+								<Image
+									source={{ uri: partidoData.teams.teamA.teamBadgeUrl }}
+									style={styles.shield}
+								/>
+							</TouchableOpacity>
 							<Text style={styles.teamName}>
 								{partidoData.teams.teamA.teamDisplayName}
 							</Text>
@@ -85,30 +108,49 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 					</View>
 					{partidoData.teams.teamB ? (
 						<View style={styles.team}>
-							<Image
-								source={{ uri: partidoData.teams.teamB.teamBadgeUrl }}
-								style={styles.shield}
-							/>
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate("SquadProfileScreen", {
+										squadId: partidoData.teams.teamB.teamId,
+									})
+								}
+							>
+								<Image
+									source={{ uri: partidoData.teams.teamB.teamBadgeUrl }}
+									style={styles.shield}
+								/>
+							</TouchableOpacity>
 							<Text style={styles.teamName}>
 								{partidoData.teams.teamB.teamDisplayName}
 							</Text>
 						</View>
 					) : (
 						<View style={styles.team}>
-							<Image
-								source={{
-									uri: "https://firebasestorage.googleapis.com/v0/b/squadzoneapp.appspot.com/o/defaultSquadP_transparent.png?alt=media&token=a1272439-9a60-4047-872f-fbd040f6907a",
-								}}
-								style={styles.shield}
-							/>
-							<Text style={styles.teamName}>Espacio disponible</Text>
+							<TouchableOpacity>
+								<Ionic
+									name="add-circle-sharp"
+									style={{ fontSize: 50, color: theme.colors.text }}
+								/>
+							</TouchableOpacity>
+							<Text style={styles.availableTeamName}>Espacio disponible</Text>
 						</View>
 					)}
 				</View>
-				<Text style={styles.location}>
-					Location{/*{partidoData.gameData.location}*/}
+				<TouchableOpacity
+					onPress={() =>
+						locationButton(
+							partidoData.gameData.location.latitude,
+							partidoData.gameData.location.longitude
+						)
+					}
+				>
+					<Text style={styles.location}>
+						Location{/*{partidoData.gameData.location}*/}
+					</Text>
+				</TouchableOpacity>
+				<Text style={styles.dateTime}>
+					{formatDate(partidoData.gameData.startTime)}
 				</Text>
-				<Text style={styles.dateTime}>{partidoData.gameData.startTime}</Text>
 				<View style={styles.playerListContainer}>
 					{partidoData.teams.teamA && (
 						<View style={styles.playerList && { alignItems: "flex-start" }}>
@@ -118,24 +160,49 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 									fontSize: 14,
 									paddingBottom: 10,
 									alignSelf: "center",
+									color: theme.colors.text,
 								}}
 							>
 								{partidoData.teams.teamA.teamDisplayName}
 							</Text>
 							{partidoData.teams.teamA.teamPlayers.map((player, index) => (
-								<View style={styles.userContainer} key={index}>
-									<Image
-										source={{
-											uri: player.photoUrl,
-										}}
-										style={styles.userImageL}
-									/>
-									<View style={styles.userSubContainer}>
-										<View style={styles.usernameContainerL}>
-											<Text style={styles.usernameText}>{player.username}</Text>
+								<TouchableOpacity
+									key={index}
+									onPress={() =>
+										navigation.navigate("OtherUserProfileScreen", {
+											user: player,
+										})
+									}
+								>
+									<View style={styles.userContainer}>
+										<Image
+											source={{
+												uri: player.photoUrl,
+											}}
+											style={styles.userImageL}
+										/>
+										<View style={styles.userSubContainer}>
+											<View style={styles.usernameContainer}>
+												<Text style={styles.usernameText}>
+													{player.username}
+												</Text>
+												{player.verified && (
+													<Image
+														source={require("../assets/verified.png")}
+														style={{
+															width: 16,
+															height: 16,
+															marginLeft: 5,
+														}}
+													/>
+												)}
+											</View>
+											<View style={styles.nameContainer}>
+												<Text style={styles.nameText}>{player.name}</Text>
+											</View>
 										</View>
 									</View>
-								</View>
+								</TouchableOpacity>
 							))}
 						</View>
 					)}
@@ -154,8 +221,21 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 							{partidoData.teams.teamB.teamPlayers.map((player, index) => (
 								<View style={styles.userContainer} key={index}>
 									<View style={styles.userSubContainer}>
-										<View style={styles.usernameContainerR}>
+										<View style={styles.usernameContainer}>
 											<Text style={styles.usernameText}>{player.username}</Text>
+											{player.verified && (
+												<Image
+													source={require("../assets/verified.png")}
+													style={{
+														width: 16,
+														height: 16,
+														marginLeft: 5,
+													}}
+												/>
+											)}
+										</View>
+										<View style={styles.nameContainer}>
+											<Text style={styles.nameText}>{player.name}</Text>
 										</View>
 									</View>
 									<Image
@@ -172,14 +252,34 @@ const MatchDetailsScreen = ({ navigation, route }) => {
 			</View>
 
 			<View style={styles.buttonContainer}>
-				<TouchableOpacity style={styles.startGameButton} onPress={tempButton}>
-					<Text style={styles.startGameText}>Empezar Partido</Text>
-				</TouchableOpacity>
+				{uid === partidoData.gameData.creator && (
+					<TouchableOpacity style={styles.startGameButton} onPress={tempButton}>
+						<Text style={styles.startGameText}>Empezar Partido</Text>
+					</TouchableOpacity>
+				)}
 
-				<TouchableOpacity style={styles.menuButton} onPress={tempButton}>
+				<TouchableOpacity
+					style={styles.menuButton}
+					onPress={() => setShowModal(true)}
+				>
 					<Ionic name="ellipsis-vertical" style={styles.menuIcon} />
 				</TouchableOpacity>
 			</View>
+			<Modal visible={showModal} animationType="slide" transparent={true}>
+				<TouchableOpacity
+					style={styles.modalBackground}
+					onPress={() => setShowModal(false)}
+				>
+					<View style={styles.modalContent}>
+						<TouchableOpacity>
+							<Text style={styles.modalOption}>Opcion 1</Text>
+						</TouchableOpacity>
+						<TouchableOpacity>
+							<Text style={styles.modalOptionR}>Salir del partido</Text>
+						</TouchableOpacity>
+					</View>
+				</TouchableOpacity>
+			</Modal>
 		</BackgroundTabs>
 	) : (
 		<></>
@@ -237,6 +337,11 @@ const styles = StyleSheet.create({
 		fontFamily: "SF-Pro-Semibold",
 		textAlign: "center",
 	},
+	availableTeamName: {
+		color: theme.colors.secondary,
+		fontFamily: "SF-Pro-Medium",
+		textAlign: "center",
+	},
 	score: {
 		flex: 1,
 	},
@@ -292,23 +397,30 @@ const styles = StyleSheet.create({
 		borderColor: theme.colors.primary, // Color del borde
 		marginLeft: 10, // Espacio a la derecha de la imagen
 	},
-	usernameContainerL: {
+	userSubContainer: {
 		flexDirection: "column",
-		alignItems: "flex-start",
 	},
-	usernameContainerR: {
-		flexDirection: "column",
-		alignItems: "flex-end",
+	usernameContainer: {
+		flexDirection: "row",
+		alignItems: "center",
 	},
 	usernameText: {
-		fontFamily: "SF-Pro",
-		fontSize: 16,
 		color: theme.colors.text,
+		fontSize: 16,
+		fontFamily: "SF-Pro-Semibold",
+	},
+	verifiedIcon: {
+		fontSize: 16,
+		color: "#42caff",
+		marginLeft: 5,
+	},
+	nameContainer: {
+		flexDirection: "row",
 	},
 	nameText: {
-		fontFamily: "SF-Pro",
-		fontSize: 14,
 		color: theme.colors.secondary,
+		fontSize: 14,
+		fontFamily: "SF-Pro",
 	},
 	buttonContainer: {
 		flexDirection: "row",
@@ -341,6 +453,38 @@ const styles = StyleSheet.create({
 		fontSize: 22,
 		color: theme.colors.text,
 	},
+	modalBackground: {
+		flex: 1,
+		justifyContent: "flex-end",
+		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
+	},
+	modalContent: {
+		backgroundColor: theme.colors.secondaryBackground,
+		borderRadius: 10,
+		padding: 10,
+		minWidth: "80%",
+		alignItems: "center",
+	},
+	modalOption: {
+		marginBottom: 15,
+		marginVertical: 5,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
+		fontSize: 18,
+		color: theme.colors.text,
+	},
+	modalOptionR: {
+		marginBottom: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: theme.colors.secondary,
+		width: "100%",
+		fontFamily: "SF-Pro",
+		fontSize: 18,
+		color: theme.colors.error,
+	},
 });
 
-export default MatchDetailsScreen;
+export default TeamMatchDetailsScreen;

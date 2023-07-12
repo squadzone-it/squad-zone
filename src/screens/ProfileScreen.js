@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
 		color: theme.colors.text,
 	},
 	modalOptionR: {
-		marginBottom: 5,
+		marginBottom: 10,
 		borderBottomWidth: 1,
 		borderBottomColor: theme.colors.secondary,
 		width: "100%",

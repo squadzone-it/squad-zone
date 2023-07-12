@@ -162,10 +162,7 @@ const HomeScreen = ({ navigation }) => {
 						}
 						keyExtractor={(item) => item.matchId}
 						renderItem={({ item }) => (
-							<TouchableOpacity
-								onPress={() => goToMatchDetails(item)}
-								style={styles.itemContainer}
-							>
+							<View style={styles.itemContainer}>
 								<View
 									style={{
 										flexDirection: "row",
@@ -175,97 +172,117 @@ const HomeScreen = ({ navigation }) => {
 								>
 									<View>
 										{item.mode === "pickup" && (
-											<View
-												style={{ flexDirection: "row", alignItems: "center" }}
+											<TouchableOpacity
+												onPress={() =>
+													navigation.navigate("PickupMatchDetailsScreen", {
+														match: item,
+													})
+												}
 											>
-												<Ionic
-													name="people-sharp"
-													size={24}
-													color={theme.colors.text}
-													style={{ marginRight: 5 }}
-												/>
-												<View style={{ flexDirection: "column" }}>
-													<Text
-														style={styles.mode}
-													>{`Pickup ${item.gameData.rules}`}</Text>
-													{item.players && (
-														<Text style={styles.players}>{`Jugadores: ${
-															Object.keys(item.players).length
-														}`}</Text>
-													)}
+												<View
+													style={{ flexDirection: "row", alignItems: "center" }}
+												>
+													<Ionic
+														name="people-sharp"
+														size={24}
+														color={theme.colors.text}
+														style={{ marginRight: 5 }}
+													/>
+													<View style={{ flexDirection: "column" }}>
+														<Text
+															style={styles.mode}
+														>{`Pickup ${item.gameData.rules}`}</Text>
+														{item.players && (
+															<Text style={styles.players}>{`Jugadores: ${
+																Object.keys(item.players).length
+															}`}</Text>
+														)}
+													</View>
 												</View>
-											</View>
+											</TouchableOpacity>
 										)}
 										{item.mode === "teamMatch" && (
-											<View>
-												{item.teams.teamA ? (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Image
-															source={{
-																uri: item.teams.teamA.teamBadgeUrl,
+											<TouchableOpacity
+												onPress={() =>
+													navigation.navigate("TeamMatchDetailsScreen", {
+														match: item,
+													})
+												}
+											>
+												<View>
+													{item.teams.teamA ? (
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
 															}}
-															style={styles.teamBadge}
-														/>
-														<Text style={styles.mode}>
-															{item.teams.teamA.teamDisplayName}
-														</Text>
-													</View>
-												) : (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Ionic
-															name="add-circle-sharp"
-															size={20}
-															color={theme.colors.text}
-															style={{ marginRight: 8 }}
-														/>
-														<Text style={styles.mode}>Espacio disponible</Text>
-													</View>
-												)}
+														>
+															<Image
+																source={{
+																	uri: item.teams.teamA.teamBadgeUrl,
+																}}
+																style={styles.teamBadge}
+															/>
+															<Text style={styles.mode}>
+																{item.teams.teamA.teamDisplayName}
+															</Text>
+														</View>
+													) : (
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
+															}}
+														>
+															<Ionic
+																name="add-circle-sharp"
+																size={20}
+																color={theme.colors.text}
+																style={{ marginRight: 8 }}
+															/>
+															<Text style={styles.mode}>
+																Espacio disponible
+															</Text>
+														</View>
+													)}
 
-												{item.teams.teamB ? (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Image
-															source={{
-																uri: item.teams.teamB.teamBadgeUrl,
+													{item.teams.teamB ? (
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
 															}}
-															style={styles.teamBadge}
-														/>
-														<Text style={styles.mode}>
-															{item.teams.teamB.teamDisplayName}
-														</Text>
-													</View>
-												) : (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Ionic
-															name="add-circle-sharp"
-															size={20}
-															color={theme.colors.text}
-															style={{ marginRight: 8 }}
-														/>
-														<Text style={styles.mode}>Espacio disponible</Text>
-													</View>
-												)}
-											</View>
+														>
+															<Image
+																source={{
+																	uri: item.teams.teamB.teamBadgeUrl,
+																}}
+																style={styles.teamBadge}
+															/>
+															<Text style={styles.mode}>
+																{item.teams.teamB.teamDisplayName}
+															</Text>
+														</View>
+													) : (
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
+															}}
+														>
+															<Ionic
+																name="add-circle-sharp"
+																size={20}
+																color={theme.colors.text}
+																style={{ marginRight: 8 }}
+															/>
+															<Text style={styles.mode}>
+																Espacio disponible
+															</Text>
+														</View>
+													)}
+												</View>
+											</TouchableOpacity>
 										)}
 									</View>
 									<View
@@ -288,7 +305,7 @@ const HomeScreen = ({ navigation }) => {
 										<Text style={styles.location}>{`${item.location}`}</Text>
 									</View>
 								</View>
-							</TouchableOpacity>
+							</View>
 						)}
 					/>
 				)}
