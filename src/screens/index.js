@@ -16,3 +16,4 @@ export { default as CreatePickupMatchScreen } from "./CreatePickupMatchScreen";
 export { default as CreateTeamsMatchScreen } from "./CreateTeamsMatchScreen";
 export { default as TeamMatchDetailsScreen } from "./TeamMatchDetailsScreen";
 export { default as PickupMatchDetailsScreen } from "./PickupMatchDetailsScreen";
+export { default as MapScreen } from "./MapScreen";

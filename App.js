@@ -29,6 +29,7 @@ import {
 	CreateTeamsMatchScreen,
 	TeamMatchDetailsScreen,
 	PickupMatchDetailsScreen,
+	MapScreen,
 } from "./src/screens";
 import Background from "./src/components/Background";
 import Logo from "./src/components/Logo";
@@ -159,6 +160,7 @@ const App = () => {
 							name="PickupMatchDetailsScreen"
 							component={PickupMatchDetailsScreen}
 						/>
+						<Stack.Screen name="MapScreen" component={MapScreen} />
 					</Stack.Navigator>
 				</NavigationContainer>
 			</Provider>

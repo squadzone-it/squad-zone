@@ -1,0 +1,5547 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-ide",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2023-07-12T22:11:45Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/21021577",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6686288,
+          43.4004858
+        ]
+      },
+      "id": "way/21021577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/23080784",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8513377,
+          43.4254709
+        ]
+      },
+      "id": "way/23080784"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/23952593",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7280127,
+          43.3858905
+        ]
+      },
+      "id": "way/23952593"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/25031057",
+        "access": "yes",
+        "covered": "no",
+        "fee": "no",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7937709,
+          43.4705593
+        ]
+      },
+      "id": "way/25031057"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/30956631",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7656608,
+          43.397357
+        ]
+      },
+      "id": "way/30956631"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/32082216",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8567164,
+          43.3920522
+        ]
+      },
+      "id": "way/32082216"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/32665533",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8566854,
+          43.3715961
+        ]
+      },
+      "id": "way/32665533"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/34561104",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0644939,
+          43.3442716
+        ]
+      },
+      "id": "way/34561104"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/35574322",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.408722,
+          43.2562877
+        ]
+      },
+      "id": "way/35574322"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/44716182",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8234224,
+          43.4045459
+        ]
+      },
+      "id": "way/44716182"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/44889508",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.681056,
+          43.3763468
+        ]
+      },
+      "id": "way/44889508"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/46263046",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6897285,
+          43.3889662
+        ]
+      },
+      "id": "way/46263046"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/51835371",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8208838,
+          43.1132979
+        ]
+      },
+      "id": "way/51835371"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/53500781",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2373503,
+          43.3477629
+        ]
+      },
+      "id": "way/53500781"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/55610307",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "tartan",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8011986,
+          43.468962
+        ]
+      },
+      "id": "way/55610307"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/55682456",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8505236,
+          43.4278938
+        ]
+      },
+      "id": "way/55682456"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/55682740",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8113301,
+          43.4220006
+        ]
+      },
+      "id": "way/55682740"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/60691110",
+        "contact:phone": "+34-942-709851",
+        "leisure": "pitch",
+        "name": "Campo de Fútbol de Valdáliga",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3050279,
+          43.3167349
+        ]
+      },
+      "id": "way/60691110"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/60691113",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3044152,
+          43.3162294
+        ]
+      },
+      "id": "way/60691113"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/61320705",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9055349,
+          43.4029309
+        ]
+      },
+      "id": "way/61320705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/61673232",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2366959,
+          43.2989059
+        ]
+      },
+      "id": "way/61673232"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/65444749",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.826213,
+          43.4680652
+        ]
+      },
+      "id": "way/65444749"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/78429468",
+        "leisure": "pitch",
+        "name": "Campo de Fútbol de El Carmen",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.456131,
+          43.3972856
+        ]
+      },
+      "id": "way/78429468"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/83532225",
+        "leisure": "pitch",
+        "sport": "soccer;basketball",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1063409,
+          43.2731681
+        ]
+      },
+      "id": "way/83532225"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/87056848",
+        "access": "yes",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "basketball;soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8188134,
+          43.3404597
+        ]
+      },
+      "id": "way/87056848"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/92286405",
+        "leisure": "pitch",
+        "source": "PNOA",
+        "source:date": "2007",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7678569,
+          43.4155083
+        ]
+      },
+      "id": "way/92286405"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/94728382",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.23011,
+          43.3099705
+        ]
+      },
+      "id": "way/94728382"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/100535330",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8076976,
+          43.4088674
+        ]
+      },
+      "id": "way/100535330"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/100535404",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8028405,
+          43.4910368
+        ]
+      },
+      "id": "way/100535404"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/104006612",
+        "leisure": "pitch",
+        "name": "Campo de fútbol La Junquera",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0419653,
+          43.3925246
+        ]
+      },
+      "id": "way/104006612"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/106081196",
+        "leisure": "pitch",
+        "name": "Campo de fútbol municipal de Bezana",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9034784,
+          43.4402378
+        ]
+      },
+      "id": "way/106081196"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/116709944",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.666284,
+          43.2577199
+        ]
+      },
+      "id": "way/116709944"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/118391331",
+        "leisure": "pitch",
+        "name": "Campo Fútbol Mioño",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.206269,
+          43.3586629
+        ]
+      },
+      "id": "way/118391331"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145169148",
+        "leisure": "pitch",
+        "name": "Campos Futbol",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6812738,
+          43.4624912
+        ]
+      },
+      "id": "way/145169148"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145169160",
+        "leisure": "pitch",
+        "name": "Campos Futbol Galizano",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6805687,
+          43.4618133
+        ]
+      },
+      "id": "way/145169160"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145169166",
+        "leisure": "pitch",
+        "name": "Pista Deportiva",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7080355,
+          43.4703828
+        ]
+      },
+      "id": "way/145169166"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145169167",
+        "leisure": "pitch",
+        "name": "Pista deportiva",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6723771,
+          43.4700035
+        ]
+      },
+      "id": "way/145169167"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145745824",
+        "leisure": "pitch",
+        "name": "Campo El Paloma",
+        "source": "PNOA",
+        "source:date": "2007",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4582845,
+          43.4500123
+        ]
+      },
+      "id": "way/145745824"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/145745834",
+        "leisure": "pitch",
+        "source": "PNOA",
+        "source:date": "2007",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4581722,
+          43.4492499
+        ]
+      },
+      "id": "way/145745834"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/154236876",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.035508,
+          43.3768964
+        ]
+      },
+      "id": "way/154236876"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/174617710",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9360015,
+          43.263559
+        ]
+      },
+      "id": "way/174617710"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/178288882",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.6019763,
+          43.1811984
+        ]
+      },
+      "id": "way/178288882"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180041003",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0185383,
+          43.1472054
+        ]
+      },
+      "id": "way/180041003"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/180100245",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8211955,
+          43.4664801
+        ]
+      },
+      "id": "way/180100245"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/192159536",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8088523,
+          43.468689
+        ]
+      },
+      "id": "way/192159536"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/192252815",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8056352,
+          43.4692026
+        ]
+      },
+      "id": "way/192252815"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/192889709",
+        "alt_name": "Campo municipal de El Regimiento",
+        "leisure": "pitch",
+        "name": "Campo de fútbol de El Regimiento \"Uco Alciturri\"",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8052726,
+          43.4670571
+        ]
+      },
+      "id": "way/192889709"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/195131942",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1873706,
+          43.3827914
+        ]
+      },
+      "id": "way/195131942"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/199170502",
+        "leisure": "pitch",
+        "name": "Campo de fútbol",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2096501,
+          43.370673
+        ]
+      },
+      "id": "way/199170502"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/217289607",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.851604,
+          43.3093039
+        ]
+      },
+      "id": "way/217289607"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/220264215",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8252131,
+          43.4671019
+        ]
+      },
+      "id": "way/220264215"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/220264216",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8263101,
+          43.4670021
+        ]
+      },
+      "id": "way/220264216"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/222957560",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9645627,
+          43.326924
+        ]
+      },
+      "id": "way/222957560"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/224864546",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8184435,
+          43.4193784
+        ]
+      },
+      "id": "way/224864546"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/226446597",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4372713,
+          43.2806574
+        ]
+      },
+      "id": "way/226446597"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/226889615",
+        "leisure": "pitch",
+        "name": "Campo de fútbol de Molledo",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0430379,
+          43.1479687
+        ]
+      },
+      "id": "way/226889615"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/229914050",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4596317,
+          43.2644498
+        ]
+      },
+      "id": "way/229914050"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/230832462",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4582947,
+          43.4394325
+        ]
+      },
+      "id": "way/230832462"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/230832463",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4589566,
+          43.4393779
+        ]
+      },
+      "id": "way/230832463"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/235953398",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.6744952,
+          43.3436477
+        ]
+      },
+      "id": "way/235953398"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/240847583",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8516596,
+          43.4697825
+        ]
+      },
+      "id": "way/240847583"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/242809550",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4543568,
+          43.4572498
+        ]
+      },
+      "id": "way/242809550"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/247056351",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8575118,
+          43.4436517
+        ]
+      },
+      "id": "way/247056351"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/257930710",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2167663,
+          43.3090739
+        ]
+      },
+      "id": "way/257930710"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/257969703",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8472355,
+          43.2561864
+        ]
+      },
+      "id": "way/257969703"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/260038924",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9308838,
+          42.8053043
+        ]
+      },
+      "id": "way/260038924"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/264281724",
+        "leisure": "pitch",
+        "name": "Campo de Santa Ana",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0473528,
+          43.3302914
+        ]
+      },
+      "id": "way/264281724"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/272603138",
+        "leisure": "pitch",
+        "name": "Campo de fútbol Meruelo",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5796461,
+          43.4549954
+        ]
+      },
+      "id": "way/272603138"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/272746198",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0818493,
+          43.3346717
+        ]
+      },
+      "id": "way/272746198"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/272746200",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0811216,
+          43.3344558
+        ]
+      },
+      "id": "way/272746200"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/275039752",
+        "leisure": "pitch",
+        "name": "Campo de fútbol de Muñorrodero",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.491618,
+          43.3629901
+        ]
+      },
+      "id": "way/275039752"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/276953590",
+        "alt_name": "Campos de Solvay",
+        "leisure": "pitch",
+        "name": "Campos de Barreda",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0393982,
+          43.3742164
+        ]
+      },
+      "id": "way/276953590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/276956227",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0515228,
+          43.3602391
+        ]
+      },
+      "id": "way/276956227"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/278193247",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5699027,
+          43.1901867
+        ]
+      },
+      "id": "way/278193247"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/280562866",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer;basketball",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8730021,
+          43.3080297
+        ]
+      },
+      "id": "way/280562866"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/281224982",
+        "leisure": "pitch",
+        "source": "PNOA",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.145614,
+          43.0009503
+        ]
+      },
+      "id": "way/281224982"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/285075811",
+        "access": "yes",
+        "leisure": "pitch",
+        "name": "Pista polideportiva Ángel Renero Iglesias \"Tito\"",
+        "sport": "football;basketball",
+        "surface": "paved",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0739496,
+          43.2724888
+        ]
+      },
+      "id": "way/285075811"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/287893839",
+        "leisure": "pitch",
+        "source": "PNOA",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3538921,
+          43.0328333
+        ]
+      },
+      "id": "way/287893839"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/291883064",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "ground",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0981603,
+          43.3490842
+        ]
+      },
+      "id": "way/291883064"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/298550338",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0468677,
+          43.3867126
+        ]
+      },
+      "id": "way/298550338"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/298601063",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0421363,
+          43.4246008
+        ]
+      },
+      "id": "way/298601063"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/298609787",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0495853,
+          43.3458096
+        ]
+      },
+      "id": "way/298609787"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/298625634",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.101607,
+          43.3731083
+        ]
+      },
+      "id": "way/298625634"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/298784463",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1249853,
+          43.3721405
+        ]
+      },
+      "id": "way/298784463"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/299281081",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0090657,
+          43.3995568
+        ]
+      },
+      "id": "way/299281081"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/299281082",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9100206,
+          43.4281676
+        ]
+      },
+      "id": "way/299281082"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/299284055",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0363923,
+          43.3800196
+        ]
+      },
+      "id": "way/299284055"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/299284056",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0374312,
+          43.3819795
+        ]
+      },
+      "id": "way/299284056"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/299931138",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9325531,
+          43.4446107
+        ]
+      },
+      "id": "way/299931138"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300027552",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1621843,
+          43.3369083
+        ]
+      },
+      "id": "way/300027552"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300046056",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8920538,
+          43.4670345
+        ]
+      },
+      "id": "way/300046056"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300132577",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8126485,
+          43.2448328
+        ]
+      },
+      "id": "way/300132577"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300132578",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8271527,
+          43.2419254
+        ]
+      },
+      "id": "way/300132578"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300132579",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8070407,
+          43.2313436
+        ]
+      },
+      "id": "way/300132579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300144947",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8099051,
+          43.2179432
+        ]
+      },
+      "id": "way/300144947"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300165358",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9391011,
+          43.2083056
+        ]
+      },
+      "id": "way/300165358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/300656860",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8554151,
+          43.458163
+        ]
+      },
+      "id": "way/300656860"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/301038209",
+        "leisure": "pitch",
+        "name": "Campo de fútbol de Beranga",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5804358,
+          43.4147064
+        ]
+      },
+      "id": "way/301038209"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/301460831",
+        "leisure": "pitch",
+        "sport": "soccer;basketball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5496837,
+          43.49351
+        ]
+      },
+      "id": "way/301460831"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/303287736",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8534474,
+          43.4482597
+        ]
+      },
+      "id": "way/303287736"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/308809903",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7930812,
+          43.4813223
+        ]
+      },
+      "id": "way/308809903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/313263264",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.3724416,
+          43.3944515
+        ]
+      },
+      "id": "way/313263264"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/314477073",
+        "leisure": "pitch",
+        "lit": "no",
+        "sport": "soccer;basketball",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0696291,
+          43.311774
+        ]
+      },
+      "id": "way/314477073"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/318979145",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9632568,
+          43.2987272
+        ]
+      },
+      "id": "way/318979145"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/320255748",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0800992,
+          42.908819
+        ]
+      },
+      "id": "way/320255748"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/320283689",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9084362,
+          42.8189543
+        ]
+      },
+      "id": "way/320283689"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/332643738",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8500776,
+          43.4596077
+        ]
+      },
+      "id": "way/332643738"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/332663904",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8501351,
+          43.4619826
+        ]
+      },
+      "id": "way/332663904"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/332663910",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8500824,
+          43.4612085
+        ]
+      },
+      "id": "way/332663910"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/332663956",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8488482,
+          43.4623796
+        ]
+      },
+      "id": "way/332663956"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/332663957",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8507909,
+          43.4619929
+        ]
+      },
+      "id": "way/332663957"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/333302451",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8242873,
+          43.4624639
+        ]
+      },
+      "id": "way/333302451"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/333302454",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8239401,
+          43.4629718
+        ]
+      },
+      "id": "way/333302454"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/339176509",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8488784,
+          43.4433127
+        ]
+      },
+      "id": "way/339176509"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/339312289",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8485035,
+          43.450164
+        ]
+      },
+      "id": "way/339312289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/340598032",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8478097,
+          43.4537831
+        ]
+      },
+      "id": "way/340598032"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/342323722",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.735184,
+          43.3638026
+        ]
+      },
+      "id": "way/342323722"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/345959843",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer",
+        "surface": "paved",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2676609,
+          43.2591922
+        ]
+      },
+      "id": "way/345959843"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/355252406",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8465224,
+          43.4381857
+        ]
+      },
+      "id": "way/355252406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/361343532",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8196857,
+          43.4519181
+        ]
+      },
+      "id": "way/361343532"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/361343533",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8191599,
+          43.4520621
+        ]
+      },
+      "id": "way/361343533"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/362278200",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8511089,
+          43.4482642
+        ]
+      },
+      "id": "way/362278200"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/362278266",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.84858,
+          43.4463687
+        ]
+      },
+      "id": "way/362278266"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/362517522",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5277278,
+          43.4752328
+        ]
+      },
+      "id": "way/362517522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/363645950",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0479424,
+          43.331032
+        ]
+      },
+      "id": "way/363645950"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/363787026",
+        "leisure": "pitch",
+        "name": "Campo de fútbol de Tagle",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0757282,
+          43.4229489
+        ]
+      },
+      "id": "way/363787026"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/363792506",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9575711,
+          43.3889138
+        ]
+      },
+      "id": "way/363792506"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/363792508",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9705419,
+          43.3232433
+        ]
+      },
+      "id": "way/363792508"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/368276699",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8437963,
+          43.4395102
+        ]
+      },
+      "id": "way/368276699"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/368276700",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8442234,
+          43.4394566
+        ]
+      },
+      "id": "way/368276700"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/368316712",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8456777,
+          43.4609121
+        ]
+      },
+      "id": "way/368316712"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/369225862",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8438173,
+          43.4626425
+        ]
+      },
+      "id": "way/369225862"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/369225863",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8446931,
+          43.4624824
+        ]
+      },
+      "id": "way/369225863"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/369225864",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8466046,
+          43.4626185
+        ]
+      },
+      "id": "way/369225864"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/369225865",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8455421,
+          43.462342
+        ]
+      },
+      "id": "way/369225865"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/372177726",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.145681,
+          43.013322
+        ]
+      },
+      "id": "way/372177726"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/372866289",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0557846,
+          43.3807106
+        ]
+      },
+      "id": "way/372866289"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/373627238",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5052058,
+          43.4721442
+        ]
+      },
+      "id": "way/373627238"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/373837184",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9363772,
+          43.2136725
+        ]
+      },
+      "id": "way/373837184"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/389856226",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8331045,
+          43.461869
+        ]
+      },
+      "id": "way/389856226"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/393155204",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8170785,
+          43.4671534
+        ]
+      },
+      "id": "way/393155204"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/397604645",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8609357,
+          43.4469915
+        ]
+      },
+      "id": "way/397604645"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/401754121",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8308511,
+          43.4714352
+        ]
+      },
+      "id": "way/401754121"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/405646544",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8182532,
+          43.4189315
+        ]
+      },
+      "id": "way/405646544"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/414442060",
+        "leisure": "pitch",
+        "name": "Campo de Fútbol de El Campo",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.201213,
+          43.3556527
+        ]
+      },
+      "id": "way/414442060"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/419893132",
+        "access": "no",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8351121,
+          43.4597762
+        ]
+      },
+      "id": "way/419893132"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/421691100",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0623458,
+          43.3496376
+        ]
+      },
+      "id": "way/421691100"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/425991407",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8258814,
+          43.4552271
+        ]
+      },
+      "id": "way/425991407"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/427225037",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9809339,
+          43.2751902
+        ]
+      },
+      "id": "way/427225037"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/428874447",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2701739,
+          43.3376456
+        ]
+      },
+      "id": "way/428874447"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/429865078",
+        "leisure": "pitch",
+        "name": "Pista multiusos",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5247741,
+          43.2760557
+        ]
+      },
+      "id": "way/429865078"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/432442481",
+        "leisure": "pitch",
+        "name": "Campo de fútbol Vimenor C.F.",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9677029,
+          43.3567562
+        ]
+      },
+      "id": "way/432442481"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/438128360",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9544759,
+          43.2839752
+        ]
+      },
+      "id": "way/438128360"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/438251937",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3262376,
+          43.3373597
+        ]
+      },
+      "id": "way/438251937"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/438255097",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.25643,
+          43.381395
+        ]
+      },
+      "id": "way/438255097"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/438867023",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5430746,
+          43.4902153
+        ]
+      },
+      "id": "way/438867023"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/438867040",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5423478,
+          43.4903077
+        ]
+      },
+      "id": "way/438867040"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/439023105",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3521858,
+          43.3189044
+        ]
+      },
+      "id": "way/439023105"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/447970715",
+        "leisure": "pitch",
+        "source": "catastro",
+        "source:date": "2013-01",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8245987,
+          43.4636085
+        ]
+      },
+      "id": "way/447970715"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/449127110",
+        "leisure": "pitch",
+        "lit": "yes",
+        "source": "PNOA",
+        "source:date": "2014",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8246048,
+          43.3590392
+        ]
+      },
+      "id": "way/449127110"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/452266458",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0629335,
+          43.1249019
+        ]
+      },
+      "id": "way/452266458"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/456955217",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2096776,
+          43.3718729
+        ]
+      },
+      "id": "way/456955217"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/459042406",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8209111,
+          43.1113563
+        ]
+      },
+      "id": "way/459042406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/467451555",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2221249,
+          43.3781365
+        ]
+      },
+      "id": "way/467451555"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/467451556",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2221398,
+          43.3777616
+        ]
+      },
+      "id": "way/467451556"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/467451557",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2190807,
+          43.3839566
+        ]
+      },
+      "id": "way/467451557"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/467451558",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2231995,
+          43.3832287
+        ]
+      },
+      "id": "way/467451558"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/471874360",
+        "leisure": "pitch",
+        "name": "Estadio Municipal El Alpedre",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0540997,
+          43.1257393
+        ]
+      },
+      "id": "way/471874360"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/476723618",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2521038,
+          43.3513821
+        ]
+      },
+      "id": "way/476723618"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/477245566",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2036035,
+          43.3519064
+        ]
+      },
+      "id": "way/477245566"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/483401428",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.900392,
+          43.4390059
+        ]
+      },
+      "id": "way/483401428"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/501362997",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.4706152,
+          43.3067533
+        ]
+      },
+      "id": "way/501362997"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/507904243",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5299867,
+          43.3546842
+        ]
+      },
+      "id": "way/507904243"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/508428539",
+        "leisure": "pitch",
+        "source": "PNOA-Spain-TMS",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.399389,
+          43.3885975
+        ]
+      },
+      "id": "way/508428539"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/512632688",
+        "leisure": "pitch",
+        "name": "Pista de Somahoz",
+        "sport": "soccer;basketball",
+        "surface": "paved",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0608729,
+          43.2450245
+        ]
+      },
+      "id": "way/512632688"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/532068014",
+        "leisure": "pitch",
+        "sport": "balonmano;futbito",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9330783,
+          43.4632815
+        ]
+      },
+      "id": "way/532068014"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/550934351",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "paved",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0415008,
+          43.4090709
+        ]
+      },
+      "id": "way/550934351"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/580247579",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8088133,
+          43.470301
+        ]
+      },
+      "id": "way/580247579"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/580247580",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8087897,
+          43.4705463
+        ]
+      },
+      "id": "way/580247580"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/587542276",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0479678,
+          43.3460309
+        ]
+      },
+      "id": "way/587542276"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/587542278",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0484734,
+          43.3453742
+        ]
+      },
+      "id": "way/587542278"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/587598450",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0451015,
+          43.3452321
+        ]
+      },
+      "id": "way/587598450"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/595797831",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0468062,
+          43.3431159
+        ]
+      },
+      "id": "way/595797831"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/597325706",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "soccer",
+        "surface": "asphalt",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4572801,
+          43.3975873
+        ]
+      },
+      "id": "way/597325706"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/598484432",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "asphalt",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0535507,
+          43.3519053
+        ]
+      },
+      "id": "way/598484432"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/605803250",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9491717,
+          43.3523174
+        ]
+      },
+      "id": "way/605803250"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/608956211",
+        "leisure": "pitch",
+        "sport": "basketball;soccer;handball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5073919,
+          43.3276426
+        ]
+      },
+      "id": "way/608956211"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/608984049",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0375337,
+          43.3431575
+        ]
+      },
+      "id": "way/608984049"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/611340038",
+        "access": "yes",
+        "covered": "yes",
+        "leisure": "pitch",
+        "name": "Pista multiusos",
+        "sport": "basketball;handball;soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0609591,
+          43.264628
+        ]
+      },
+      "id": "way/611340038"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/618002129",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1214993,
+          43.000128
+        ]
+      },
+      "id": "way/618002129"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/624109295",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0524466,
+          43.3397317
+        ]
+      },
+      "id": "way/624109295"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/627230076",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "asphalt",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.842932,
+          43.4015109
+        ]
+      },
+      "id": "way/627230076"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/639991069",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0626614,
+          43.2697108
+        ]
+      },
+      "id": "way/639991069"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/642657663",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0344461,
+          43.3424539
+        ]
+      },
+      "id": "way/642657663"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/652984259",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8858645,
+          43.3183073
+        ]
+      },
+      "id": "way/652984259"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/668425210",
+        "leisure": "pitch",
+        "lit": "yes",
+        "sport": "basketball;soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9564653,
+          43.3552633
+        ]
+      },
+      "id": "way/668425210"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/680788666",
+        "leisure": "pitch",
+        "sport": "soccer;basketball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9879638,
+          43.2858213
+        ]
+      },
+      "id": "way/680788666"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/684351828",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5231394,
+          43.4838129
+        ]
+      },
+      "id": "way/684351828"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/684825748",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5217394,
+          43.4898869
+        ]
+      },
+      "id": "way/684825748"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/685052272",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0425674,
+          43.3667668
+        ]
+      },
+      "id": "way/685052272"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/685090049",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5298909,
+          43.4890024
+        ]
+      },
+      "id": "way/685090049"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/695035195",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0643379,
+          43.3542224
+        ]
+      },
+      "id": "way/695035195"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/704279986",
+        "building:levels": "2",
+        "building:part": "yes",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7732044,
+          43.4692669
+        ]
+      },
+      "id": "way/704279986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/720267225",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8513152,
+          43.3089339
+        ]
+      },
+      "id": "way/720267225"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/722274705",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8483098,
+          43.4462607
+        ]
+      },
+      "id": "way/722274705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/723004447",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8577391,
+          43.3078594
+        ]
+      },
+      "id": "way/723004447"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/724538752",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7939013,
+          43.4642008
+        ]
+      },
+      "id": "way/724538752"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/727608311",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.3384919,
+          43.3848235
+        ]
+      },
+      "id": "way/727608311"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/744492812",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8133163,
+          43.454901
+        ]
+      },
+      "id": "way/744492812"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/744492813",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8131138,
+          43.4550122
+        ]
+      },
+      "id": "way/744492813"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/759419319",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.863616,
+          42.8310441
+        ]
+      },
+      "id": "way/759419319"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/780262146",
+        "leisure": "pitch",
+        "lit": "no",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.816434,
+          43.4655288
+        ]
+      },
+      "id": "way/780262146"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/781299717",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.810398,
+          43.4668765
+        ]
+      },
+      "id": "way/781299717"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/788962285",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7795294,
+          43.4689064
+        ]
+      },
+      "id": "way/788962285"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/788962286",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7799246,
+          43.4688055
+        ]
+      },
+      "id": "way/788962286"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/788962288",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.779789,
+          43.4684703
+        ]
+      },
+      "id": "way/788962288"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/790500155",
+        "access": "permissive",
+        "leisure": "pitch",
+        "name": "Pista de nuevo Parque",
+        "sport": "soccer;handball;basketball;tennis",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8459164,
+          43.4465451
+        ]
+      },
+      "id": "way/790500155"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/791070194",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8408362,
+          43.2989683
+        ]
+      },
+      "id": "way/791070194"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/791274343",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8490318,
+          43.4456251
+        ]
+      },
+      "id": "way/791274343"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/812778406",
+        "leisure": "pitch",
+        "name": "Campo de futbol de Gama",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5155654,
+          43.4213605
+        ]
+      },
+      "id": "way/812778406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/812778407",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5140519,
+          43.4203556
+        ]
+      },
+      "id": "way/812778407"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/812890396",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.488961,
+          43.4083429
+        ]
+      },
+      "id": "way/812890396"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/816958435",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4400921,
+          43.412225
+        ]
+      },
+      "id": "way/816958435"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/816958441",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4403044,
+          43.4111049
+        ]
+      },
+      "id": "way/816958441"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/817254241",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8224629,
+          43.2948976
+        ]
+      },
+      "id": "way/817254241"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/819350143",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9012033,
+          42.833044
+        ]
+      },
+      "id": "way/819350143"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/820911518",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0409198,
+          43.4163339
+        ]
+      },
+      "id": "way/820911518"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/839055923",
+        "leisure": "pitch",
+        "sport": "soccer;handball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5500128,
+          43.4945683
+        ]
+      },
+      "id": "way/839055923"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/841832612",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8447428,
+          43.2595029
+        ]
+      },
+      "id": "way/841832612"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/843040341",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9670081,
+          43.3561554
+        ]
+      },
+      "id": "way/843040341"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/880156766",
+        "leisure": "pitch",
+        "sport": "football;basketball;tennis;handball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.805121,
+          43.2811652
+        ]
+      },
+      "id": "way/880156766"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/889491046",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7673774,
+          43.4019153
+        ]
+      },
+      "id": "way/889491046"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/901274906",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7992318,
+          43.4855878
+        ]
+      },
+      "id": "way/901274906"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/901274917",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7989216,
+          43.4857042
+        ]
+      },
+      "id": "way/901274917"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/901274918",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "clay",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7986758,
+          43.4857901
+        ]
+      },
+      "id": "way/901274918"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/901721432",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8418471,
+          43.3796153
+        ]
+      },
+      "id": "way/901721432"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/909258360",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "asphalt",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7974835,
+          43.4852164
+        ]
+      },
+      "id": "way/909258360"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/911384619",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8507697,
+          43.3093448
+        ]
+      },
+      "id": "way/911384619"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/920149460",
+        "leisure": "pitch",
+        "sport": "soccer;tennis",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8453349,
+          43.3394915
+        ]
+      },
+      "id": "way/920149460"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/922497591",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4279529,
+          43.3675386
+        ]
+      },
+      "id": "way/922497591"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/927938429",
+        "leisure": "pitch",
+        "sport": "soccer;basketball;tennis",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8412835,
+          43.3398491
+        ]
+      },
+      "id": "way/927938429"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/934640526",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.143493,
+          43.0019338
+        ]
+      },
+      "id": "way/934640526"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/958510459",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.4459379,
+          43.2829449
+        ]
+      },
+      "id": "way/958510459"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/961712427",
+        "leisure": "pitch",
+        "sport": "soccer;basketball",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.90026,
+          43.3168673
+        ]
+      },
+      "id": "way/961712427"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/964234422",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8208209,
+          43.4147499
+        ]
+      },
+      "id": "way/964234422"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/973167115",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2151523,
+          43.0209158
+        ]
+      },
+      "id": "way/973167115"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1011220971",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.4773633,
+          43.2520787
+        ]
+      },
+      "id": "way/1011220971"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1015843673",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8055347,
+          43.4155489
+        ]
+      },
+      "id": "way/1015843673"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1046459791",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7380673,
+          43.3790752
+        ]
+      },
+      "id": "way/1046459791"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1057606710",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.82161,
+          43.4567806
+        ]
+      },
+      "id": "way/1057606710"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071776",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8396788,
+          43.4583894
+        ]
+      },
+      "id": "way/1065071776"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071785",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.3350915,
+          43.3544985
+        ]
+      },
+      "id": "way/1065071785"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071822",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8490269,
+          43.4142266
+        ]
+      },
+      "id": "way/1065071822"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071825",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8486246,
+          43.4142384
+        ]
+      },
+      "id": "way/1065071825"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071826",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0472453,
+          43.3460566
+        ]
+      },
+      "id": "way/1065071826"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071828",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0473186,
+          43.3457553
+        ]
+      },
+      "id": "way/1065071828"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071856",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1410897,
+          42.9993396
+        ]
+      },
+      "id": "way/1065071856"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071857",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1416718,
+          42.9992458
+        ]
+      },
+      "id": "way/1065071857"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071859",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1415508,
+          42.9995695
+        ]
+      },
+      "id": "way/1065071859"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071861",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8313938,
+          43.4712381
+        ]
+      },
+      "id": "way/1065071861"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071870",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.6219573,
+          43.1559409
+        ]
+      },
+      "id": "way/1065071870"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071871",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.6221036,
+          43.1557914
+        ]
+      },
+      "id": "way/1065071871"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071872",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.6223289,
+          43.1560338
+        ]
+      },
+      "id": "way/1065071872"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071880",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9047404,
+          43.4413223
+        ]
+      },
+      "id": "way/1065071880"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071887",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7186395,
+          43.3757548
+        ]
+      },
+      "id": "way/1065071887"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071919",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.817914,
+          43.401238
+        ]
+      },
+      "id": "way/1065071919"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071934",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8363948,
+          43.4020801
+        ]
+      },
+      "id": "way/1065071934"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071941",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0164073,
+          43.4355652
+        ]
+      },
+      "id": "way/1065071941"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071942",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0160574,
+          43.4350355
+        ]
+      },
+      "id": "way/1065071942"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065071986",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1481738,
+          42.9847785
+        ]
+      },
+      "id": "way/1065071986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072034",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.1433123,
+          43.0006999
+        ]
+      },
+      "id": "way/1065072034"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072038",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4560403,
+          43.4476511
+        ]
+      },
+      "id": "way/1065072038"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072039",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4567305,
+          43.4478182
+        ]
+      },
+      "id": "way/1065072039"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072042",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2183798,
+          43.378804
+        ]
+      },
+      "id": "way/1065072042"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072044",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2178341,
+          43.3788102
+        ]
+      },
+      "id": "way/1065072044"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072050",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0486449,
+          43.344393
+        ]
+      },
+      "id": "way/1065072050"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072052",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7920739,
+          43.4644677
+        ]
+      },
+      "id": "way/1065072052"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072066",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8515957,
+          43.3091816
+        ]
+      },
+      "id": "way/1065072066"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072101",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.2015703,
+          43.3697621
+        ]
+      },
+      "id": "way/1065072101"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072128",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8455109,
+          43.439672
+        ]
+      },
+      "id": "way/1065072128"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072141",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4240682,
+          43.3606654
+        ]
+      },
+      "id": "way/1065072141"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072143",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4242795,
+          43.3603071
+        ]
+      },
+      "id": "way/1065072143"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072148",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4559876,
+          43.3978202
+        ]
+      },
+      "id": "way/1065072148"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072149",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4562416,
+          43.3978904
+        ]
+      },
+      "id": "way/1065072149"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072153",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2399718,
+          43.3059485
+        ]
+      },
+      "id": "way/1065072153"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072160",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.297906,
+          43.3164079
+        ]
+      },
+      "id": "way/1065072160"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072161",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2977023,
+          43.3166185
+        ]
+      },
+      "id": "way/1065072161"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072164",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4544632,
+          43.4444147
+        ]
+      },
+      "id": "way/1065072164"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072168",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9431443,
+          43.4149798
+        ]
+      },
+      "id": "way/1065072168"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072169",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9429954,
+          43.4151474
+        ]
+      },
+      "id": "way/1065072169"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072184",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8379637,
+          43.4158712
+        ]
+      },
+      "id": "way/1065072184"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072202",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4145072,
+          43.3432003
+        ]
+      },
+      "id": "way/1065072202"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072220",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8250794,
+          43.4534673
+        ]
+      },
+      "id": "way/1065072220"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072300",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7656636,
+          43.3973631
+        ]
+      },
+      "id": "way/1065072300"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072319",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8997361,
+          43.4697843
+        ]
+      },
+      "id": "way/1065072319"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072326",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4180411,
+          43.3357963
+        ]
+      },
+      "id": "way/1065072326"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072334",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0372375,
+          43.3417506
+        ]
+      },
+      "id": "way/1065072334"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072365",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4895811,
+          43.4119316
+        ]
+      },
+      "id": "way/1065072365"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072367",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4887476,
+          43.4122256
+        ]
+      },
+      "id": "way/1065072367"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072398",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.408627,
+          43.2548167
+        ]
+      },
+      "id": "way/1065072398"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072404",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.5535903,
+          43.4581823
+        ]
+      },
+      "id": "way/1065072404"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072435",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.855994,
+          43.4130609
+        ]
+      },
+      "id": "way/1065072435"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072439",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.2413781,
+          43.3334203
+        ]
+      },
+      "id": "way/1065072439"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072498",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4510549,
+          43.4408406
+        ]
+      },
+      "id": "way/1065072498"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072503",
+        "leisure": "pitch",
+        "lit": "no",
+        "sport": "soccer",
+        "surface": "concrete",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0632087,
+          43.3466928
+        ]
+      },
+      "id": "way/1065072503"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072551",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0736504,
+          43.2675605
+        ]
+      },
+      "id": "way/1065072551"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072552",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.0738465,
+          43.267246
+        ]
+      },
+      "id": "way/1065072552"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072560",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8466777,
+          43.4156729
+        ]
+      },
+      "id": "way/1065072560"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072626",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.8232177,
+          43.3966193
+        ]
+      },
+      "id": "way/1065072626"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072633",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9679944,
+          43.4316293
+        ]
+      },
+      "id": "way/1065072633"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072634",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9684582,
+          43.4310323
+        ]
+      },
+      "id": "way/1065072634"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1065072637",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7550477,
+          43.4230948
+        ]
+      },
+      "id": "way/1065072637"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1069535884",
+        "leisure": "pitch",
+        "natural": "water",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.1692229,
+          43.3540522
+        ]
+      },
+      "id": "way/1069535884"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1087565590",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.9701753,
+          43.2164449
+        ]
+      },
+      "id": "way/1087565590"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1089647151",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -4.612782,
+          43.2049325
+        ]
+      },
+      "id": "way/1089647151"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1177352969",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4190638,
+          43.3489174
+        ]
+      },
+      "id": "way/1177352969"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1184188633",
+        "leisure": "pitch",
+        "sport": "soccer",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.4218687,
+          43.3501113
+        ]
+      },
+      "id": "way/1184188633"
+    }
+  ]
+}

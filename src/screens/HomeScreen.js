@@ -106,6 +106,9 @@ const HomeScreen = ({ navigation }) => {
 			console.error("An error occurred", err)
 		);
 	};
+	const mapButton2 = () => {
+		navigation.navigate("MapScreen");
+	};
 
 	const mas = () => setShowModal(true);
 
@@ -385,7 +388,7 @@ const HomeScreen = ({ navigation }) => {
 					SQUAD Z<Ionic name="football-outline" style={{ fontSize: 23 }} />
 					NE
 				</Text>
-				<TouchableOpacity onPress={mapButton} style={styles.headerButtonRight}>
+				<TouchableOpacity onPress={mapButton2} style={styles.headerButtonRight}>
 					<Ionic
 						name="map-sharp"
 						style={{ fontSize: 25, color: theme.colors.text }}
