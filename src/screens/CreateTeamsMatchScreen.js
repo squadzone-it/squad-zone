@@ -17,7 +17,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionic from "react-native-vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
 
-import { createMatch, getSquadData } from "../components/ApiService";
+import { createTeamMatch, getSquadData } from "../components/ApiService";
 
 const CreateTeamsMatchScreen = ({ navigation, route }) => {
 	const userData = route.params.userData;
@@ -66,40 +66,40 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 
 	const onCreatePressed = async () => {
 		const gameData = {
-			location: {
-				latitude: parseFloat(latitude.value),
-				longitude: parseFloat(longitude.value),
-			},
+			creator: userData.id, // Agregado el campo creator
 			rules: rules,
+			startTime: date.toISOString(), // Agregado el campo startTime
+			location: {
+				latitude: 56565, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
+				longitude: 86767646,
+			},
+			invitations: [], // añade el campo de invitaciones
 		};
-
+	
+		const squad = {
+			squadId: userData.team, // Suponiendo que userData.team es el id del equipo
+			displayName: squadData.displayname, // Utilizando displayName de squadData
+			squadBadgeUrl: squadData.squadBadgeUrl, // Utilizando squadBadgeUrl de squadData
+			players: selectedMembers.map(member => ({ id: member.userId })),
+			// Suponiendo que selectedMembers es una lista de ids de los miembros
+		};
+	
 		try {
-			await createMatch(
-				"open",
-				"pickup",
-				"auto",
-				date.toISOString(),
-				10,
-				gameData,
-				["kuzdGikCl7WHGIpXa05mKqXPsuj2"],
-				[]
-			);
-			setLatitude({ value: "", error: "" });
-			setLongitude({ value: "", error: "" });
-			setRules("4v4");
-			setDate(new Date());
-
-			Alert.alert(
-				"Partido creado",
-				`Se creó un partido en la pista x para esta fecha: ${date.toLocaleString()}`,
-				[
-					{ text: "OK", onPress: () => navigation.goBack() }, // al presionar OK, se vuelve a la pantalla anterior
-				]
-			);
+			console.log('el id:', userData.Id);
+			console.log('GameData: ', gameData); // Imprimir gameData a la consola
+			console.log('Squad: ', squad); // Imprimir squad a la consola
+	
+			// Asegúrate de que la función `createTeamMatch` espera estos datos en este formato
+			await createTeamMatch("open", "teamMatch", "eDTS1UH24ReumIOdyrY8d0NK7YS2", gameData, squad);
+			
+			// Resto del código...
 		} catch (error) {
-			console.error(error);
+			console.error('Error creating match: ', error);
 		}
 	};
+	
+	
+	
 
 	return (
 		<BackgroundMore>

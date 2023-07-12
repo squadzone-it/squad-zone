@@ -956,7 +956,8 @@ exports.createMatch = functions
 					teamId: squad.squadId,
 					teamDisplayName: squad.displayName,
 					teamBadgeUrl: squad.squadBadgeUrl,
-					teamPlayers: [creator, ...squad.players.map((player) => player.id)], // Guarda solo los ID de los jugadores
+					teamPlayers: squad.players.map((player) => player.id),
+ // Guarda solo los ID de los jugadores
 				};
 				matchData.teams.teamA = teamData; // Ahora "teamA" es parte de "teams"
 

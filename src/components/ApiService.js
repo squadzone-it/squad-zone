@@ -511,6 +511,101 @@ export const createMatch = async (
 	}
 };
 
+// ApiService.js
+
+// function for creating pickup match
+export const createPickupMatch = async (
+	status,
+	mode,
+	creator,
+	startTime,
+	maxPlayers,
+	gameData
+) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}createMatch`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				status,
+				mode,
+				creator,
+				gameData: {
+					...gameData,
+					startTime,
+					maxPlayers,
+				},
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Match created successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with creating match in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with creating match in Firestore:", error);
+		throw error;
+	}
+};
+
+// function for creating team match
+export const createTeamMatch = async (
+	status,
+	mode,
+	creator,
+	gameData,
+	squad
+) => {
+	try {
+		const functionUrl = `${baseFunctionUrl}createMatch`;
+		const response = await fetch(functionUrl, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				status,
+				mode,
+				creator,
+				gameData,
+				squad,
+			}),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error ${response.status}`);
+		}
+
+		const responseData = await response.json();
+
+		if (responseData.result === "success") {
+			console.log("Match created successfully");
+			return;
+		} else {
+			throw new Error(
+				`Error with creating match in Firestore: ${responseData.error}`
+			);
+		}
+	} catch (error) {
+		console.error("Error with creating match in Firestore:", error);
+		throw error;
+	}
+};
+
+
 export const startMatch = async (matchId, startType, teams) => {
 	try {
 		const functionUrl = `${baseFunctionUrl}startMatch`;
