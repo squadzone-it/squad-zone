@@ -3,6 +3,7 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	StyleSheet,
 	Linking,
 	Modal,
@@ -50,7 +51,6 @@ const HomeScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		const position = (50 * 21) / 3; // button width * number of buttons /3
-		console.log(userData);
 		scrollViewRef.current.scrollTo({ x: position, animated: false });
 	}, []);
 
@@ -71,7 +71,6 @@ const HomeScreen = ({ navigation }) => {
 	useEffect(() => {
 		const fetchMatches = async () => {
 			const matchesData = await getAllMatches();
-			console.log(matches);
 
 			// Añadimos la ubicación a cada partido
 			const updatedMatches = matchesData.map((match, index) => {
@@ -98,14 +97,6 @@ const HomeScreen = ({ navigation }) => {
 		fetchMatches();
 	}, []);
 
-	// Ir a la pantalla de detalles del partido
-	const goToMatchDetails = (match) => {
-		navigation.navigate("MatchDetailsScreen", { match });
-	};
-
-	// Aquí está la suposición de que tienes userUid definido
-	//const userUid = "Tu valor real de userUid aquí";
-
 	const mapButton = () => {
 		const latitude = 43.44461979827975;
 		const longitude = -3.9325432027336413;
@@ -120,12 +111,16 @@ const HomeScreen = ({ navigation }) => {
 
 	const onCreateMatchPressed = () => {
 		setShowModal(false);
-		navigation.navigate("CreatePickupMatchScreen", { userData: userData });
+		navigation.navigate("CreatePickupMatchScreen", {
+			userData: { uid, ...userData },
+		});
 	};
 
 	const onCreateTeamMatchPressed = () => {
 		setShowModal(false);
-		navigation.navigate("CreateTeamsMatchScreen", { userData: userData });
+		navigation.navigate("CreateTeamsMatchScreen", {
+			userData: { uid, ...userData },
+		});
 	};
 
 	function formatDate(dateTimeString) {
@@ -139,18 +134,12 @@ const HomeScreen = ({ navigation }) => {
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
-		navigation.reset({
-			index: 0,
-		});
+		//logica de recarga
 		setTimeout(() => setRefreshing(false), 2000); // esto es solo para simular la recarga
 	}, []);
 
-	const Explorar = ({ matches }) => {
-		const filteredMatches = matches.filter(
-			(match) =>
-				new Date(match.gameData.startTime).toDateString() ===
-				new Date(selectedDay).toDateString()
-		);
+	const MatchList = ({ matches, filterFunction }) => {
+		const filteredMatches = matches.filter(filterFunction);
 
 		return (
 			<View>
@@ -195,9 +184,35 @@ const HomeScreen = ({ navigation }) => {
 															style={styles.mode}
 														>{`Pickup ${item.gameData.rules}`}</Text>
 														{item.players && (
-															<Text style={styles.players}>{`Jugadores: ${
-																Object.keys(item.players).length
-															}`}</Text>
+															<View
+																style={{
+																	flexDirection: "row",
+																	alignItems: "center",
+																	alignContent: "center",
+																}}
+															>
+																<Text style={styles.players}>
+																	{`${Object.keys(item.players).length}/${
+																		item.gameData.maxPlayers
+																	}`}
+																</Text>
+																<Ionic
+																	name={
+																		item.gameData.maxPlayers ===
+																		Object.keys(item.players).length
+																			? "person"
+																			: "person-outline"
+																	}
+																	size={16}
+																	color={
+																		item.gameData.maxPlayers ===
+																		Object.keys(item.players).length
+																			? theme.colors.primary
+																			: theme.colors.secondary
+																	}
+																	style={{ marginLeft: 2, marginTop: 2 }}
+																/>
+															</View>
 														)}
 													</View>
 												</View>
@@ -239,10 +254,10 @@ const HomeScreen = ({ navigation }) => {
 															<Ionic
 																name="add-circle-sharp"
 																size={20}
-																color={theme.colors.text}
+																color={theme.colors.secondary}
 																style={{ marginRight: 8 }}
 															/>
-															<Text style={styles.mode}>
+															<Text style={styles.mode2}>
 																Espacio disponible
 															</Text>
 														</View>
@@ -275,10 +290,10 @@ const HomeScreen = ({ navigation }) => {
 															<Ionic
 																name="add-circle-sharp"
 																size={20}
-																color={theme.colors.text}
+																color={theme.colors.secondary}
 																style={{ marginRight: 8 }}
 															/>
-															<Text style={styles.mode}>
+															<Text style={styles.mode2}>
 																Espacio disponible
 															</Text>
 														</View>
@@ -315,8 +330,16 @@ const HomeScreen = ({ navigation }) => {
 		);
 	};
 
+	const Explorar = ({ matches }) => {
+		const filterFunction = (match) =>
+			new Date(match.gameData.startTime).toDateString() ===
+			new Date(selectedDay).toDateString();
+
+		return <MatchList matches={matches} filterFunction={filterFunction} />;
+	};
+
 	const MisPartidos = ({ matches }) => {
-		const filteredMatches = matches.filter((match) => {
+		const filterFunction = (match) => {
 			const matchDate = new Date(match.gameData?.startTime).toDateString();
 			const selectedDate = new Date(selectedDay).toDateString();
 
@@ -326,7 +349,7 @@ const HomeScreen = ({ navigation }) => {
 
 			if (match.mode === "pickup") {
 				if (match.players && uid) {
-					return uid in match.players;
+					return match.players.includes(uid);
 				} else {
 					return false;
 				}
@@ -343,152 +366,9 @@ const HomeScreen = ({ navigation }) => {
 			}
 
 			return false;
-		});
+		};
 
-		return (
-			<View>
-				{filteredMatches && (
-					<FlatList
-						data={filteredMatches}
-						overScrollMode="never"
-						bounces="false"
-						refreshControl={
-							<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-						}
-						keyExtractor={(item) => item.matchId}
-						renderItem={({ item }) => (
-							<TouchableOpacity
-								onPress={() => goToMatchDetails(item)}
-								style={styles.itemContainer}
-							>
-								<View
-									style={{
-										flexDirection: "row",
-										justifyContent: "space-between",
-										width: "100%",
-									}}
-								>
-									<View>
-										{item.mode === "pickup" && (
-											<View
-												style={{ flexDirection: "row", alignItems: "center" }}
-											>
-												<Ionic
-													name="people-sharp"
-													size={24}
-													color={theme.colors.text}
-													style={{ marginRight: 5 }}
-												/>
-												<View style={{ flexDirection: "column" }}>
-													<Text
-														style={styles.mode}
-													>{`Pickup ${item.gameData.rules}`}</Text>
-													{item.players && (
-														<Text style={styles.players}>{`Jugadores: ${
-															Object.keys(item.players).length
-														}`}</Text>
-													)}
-												</View>
-											</View>
-										)}
-										{item.mode === "teamMatch" && (
-											<View>
-												{item.teams.teamA ? (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Image
-															source={{
-																uri: item.teams.teamA.teamBadgeUrl,
-															}}
-															style={styles.teamBadge}
-														/>
-														<Text style={styles.mode}>
-															{item.teams.teamA.teamDisplayName}
-														</Text>
-													</View>
-												) : (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Ionic
-															name="add-circle-sharp"
-															size={20}
-															color={theme.colors.text}
-															style={{ marginRight: 8 }}
-														/>
-														<Text style={styles.mode}>Espacio disponible</Text>
-													</View>
-												)}
-
-												{item.teams.teamB ? (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Image
-															source={{
-																uri: item.teams.teamB.teamBadgeUrl,
-															}}
-															style={styles.teamBadge}
-														/>
-														<Text style={styles.mode}>
-															{item.teams.teamB.teamDisplayName}
-														</Text>
-													</View>
-												) : (
-													<View
-														style={{
-															flexDirection: "row",
-															alignItems: "center",
-														}}
-													>
-														<Ionic
-															name="add-circle-sharp"
-															size={20}
-															color={theme.colors.text}
-															style={{ marginRight: 8 }}
-														/>
-														<Text style={styles.mode}>Espacio disponible</Text>
-													</View>
-												)}
-											</View>
-										)}
-									</View>
-									<View
-										style={{
-											//justifyContent: "flex-end",
-											alignItems: "flex-end",
-										}}
-									>
-										{item.status === "in-progress" ? (
-											<Ionic
-												name="hourglass-sharp"
-												size={15}
-												color={theme.colors.error}
-											/>
-										) : (
-											<Text style={styles.startTime}>{`${formatDate(
-												item.gameData.startTime
-											)}`}</Text>
-										)}
-										<Text style={styles.location}>{`${item.location}`}</Text>
-									</View>
-								</View>
-							</TouchableOpacity>
-						)}
-					/>
-				)}
-			</View>
-		);
+		return <MatchList matches={matches} filterFunction={filterFunction} />;
 	};
 
 	return (
@@ -516,30 +396,33 @@ const HomeScreen = ({ navigation }) => {
 				<TouchableOpacity
 					style={styles.modalBackground}
 					onPress={() => setShowModal(false)}
+					activeOpacity={1}
 				>
-					<View style={styles.modalContent}>
-						<TouchableOpacity onPress={onCreateMatchPressed}>
-							<Text style={styles.modalOption}>Crear partido</Text>
-						</TouchableOpacity>
-						{userData && userData.team ? (
-							<TouchableOpacity onPress={onCreateTeamMatchPressed}>
-								<Text style={styles.modalOption}>
-									Crear partido con tu equipo
-								</Text>
+					<TouchableWithoutFeedback>
+						<View style={styles.modalContent}>
+							<TouchableOpacity onPress={onCreateMatchPressed}>
+								<Text style={styles.modalOption}>Crear partido</Text>
 							</TouchableOpacity>
-						) : (
-							<TouchableOpacity onPress={() => {}}>
-								<Text style={styles.modalOptionBlocked}>
-									Crear partido con tu equipo{"   "}
-									<Ionic
-										name="lock-closed-sharp"
-										size={24}
-										color={theme.colors.secondary}
-									/>
-								</Text>
-							</TouchableOpacity>
-						)}
-					</View>
+							{userData && userData.team ? (
+								<TouchableOpacity onPress={onCreateTeamMatchPressed}>
+									<Text style={styles.modalOption}>
+										Crear partido con tu equipo
+									</Text>
+								</TouchableOpacity>
+							) : (
+								<TouchableOpacity onPress={() => {}}>
+									<Text style={styles.modalOptionBlocked}>
+										Crear partido con tu equipo{"   "}
+										<Ionic
+											name="lock-closed-sharp"
+											size={24}
+											color={theme.colors.secondary}
+										/>
+									</Text>
+								</TouchableOpacity>
+							)}
+						</View>
+					</TouchableWithoutFeedback>
 				</TouchableOpacity>
 			</Modal>
 
@@ -713,6 +596,11 @@ const styles = StyleSheet.create({
 		fontFamily: "SF-Pro-Semibold",
 		fontSize: 16,
 		color: theme.colors.text,
+	},
+	mode2: {
+		fontFamily: "SF-Pro-Medium",
+		fontSize: 16,
+		color: theme.colors.secondary,
 	},
 	teamDisplayName: {
 		fontFamily: "SF-Pro",

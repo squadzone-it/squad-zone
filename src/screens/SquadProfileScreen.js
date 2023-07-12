@@ -6,6 +6,7 @@ import {
 	Image,
 	StatusBar,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	Modal,
 	ScrollView,
 	RefreshControl,
@@ -307,102 +308,110 @@ const SquadProfileScreen = ({ route }) => {
 												<TouchableOpacity
 													style={styles.modalBackground}
 													onPress={() => setShowRequestsModal(false)}
+													activeOpacity={1}
 												>
-													<View style={styles.modalContent}>
-														<Text
-															style={{
-																fontFamily: "SF-Pro-Bold",
-																fontSize: 20,
-																color: theme.colors.text,
-																borderBottomWidth: 1,
-																borderBottomColor: theme.colors.secondary,
-															}}
-														>
-															Solicitudes
-														</Text>
-														{squadData.requests.map((request, index) => (
-															<View style={styles.requestContainer} key={index}>
-																<TouchableOpacity
-																	onPress={() =>
-																		navigation.navigate(
-																			"OtherUserProfileScreen",
-																			{ user: request }
-																		)
-																	}
+													<TouchableWithoutFeedback>
+														<View style={styles.modalContent}>
+															<Text
+																style={{
+																	fontFamily: "SF-Pro-Bold",
+																	fontSize: 20,
+																	color: theme.colors.text,
+																	borderBottomWidth: 1,
+																	borderBottomColor: theme.colors.secondary,
+																}}
+															>
+																Solicitudes
+															</Text>
+															{squadData.requests.map((request, index) => (
+																<View
+																	style={styles.requestContainer}
+																	key={index}
 																>
-																	<View
-																		style={{
-																			flexDirection: "row",
-																			alignItems: "center",
-																		}}
+																	<TouchableOpacity
+																		onPress={() =>
+																			navigation.navigate(
+																				"OtherUserProfileScreen",
+																				{ user: request }
+																			)
+																		}
 																	>
-																		<Image
-																			source={{
-																				uri: request.photoUrl,
+																		<View
+																			style={{
+																				flexDirection: "row",
+																				alignItems: "center",
 																			}}
-																			style={styles.requestBadge}
-																		/>
+																		>
+																			<Image
+																				source={{
+																					uri: request.photoUrl,
+																				}}
+																				style={styles.requestBadge}
+																			/>
 
-																		<View style={styles.requestSubContainer}>
-																			<View style={styles.requestNameContainer}>
-																				<Text style={styles.requestNameText}>
-																					{request.username}
-																				</Text>
-																			</View>
-																			<View
-																				style={
-																					styles.requestDescriptionContainer
-																				}
-																			>
-																				<Text
-																					style={styles.requestDecriptionText}
+																			<View style={styles.requestSubContainer}>
+																				<View
+																					style={styles.requestNameContainer}
 																				>
-																					{request.name}{" "}
-																					{/*{request.lastName}*/}
-																				</Text>
+																					<Text style={styles.requestNameText}>
+																						{request.username}
+																					</Text>
+																				</View>
+																				<View
+																					style={
+																						styles.requestDescriptionContainer
+																					}
+																				>
+																					<Text
+																						style={styles.requestDecriptionText}
+																					>
+																						{request.name}{" "}
+																						{/*{request.lastName}*/}
+																					</Text>
+																				</View>
 																			</View>
 																		</View>
+																	</TouchableOpacity>
+																	<View style={{ flexDirection: "row" }}>
+																		<TouchableOpacity
+																			style={{ paddingHorizontal: 5 }}
+																			onPress={() =>
+																				handleRequestRejection(
+																					request.userId,
+																					squadId
+																				)
+																			}
+																		>
+																			<Ionic
+																				name="close-sharp"
+																				style={{
+																					fontSize: 25,
+																					color: theme.colors.text,
+																				}}
+																			/>
+																		</TouchableOpacity>
+																		<TouchableOpacity
+																			style={{ paddingHorizontal: 5 }}
+																			onPress={() =>
+																				handleRequestAcceptance(
+																					request.userId,
+																					squadId
+																				)
+																			}
+																		>
+																			<Ionic
+																				name="checkmark-sharp"
+																				style={{
+																					fontSize: 25,
+																					color: theme.colors.text,
+																				}}
+																			/>
+																		</TouchableOpacity>
 																	</View>
-																</TouchableOpacity>
-																<View style={{ flexDirection: "row" }}>
-																	<TouchableOpacity
-																		style={{ paddingHorizontal: 5 }}
-																		onPress={() =>
-																			handleRequestRejection(
-																				request.userId,
-																				squadId
-																			)
-																		}
-																	>
-																		<Ionic
-																			name="close-sharp"
-																			style={{
-																				fontSize: 25,
-																				color: theme.colors.text,
-																			}}
-																		/>
-																	</TouchableOpacity>
-																	<TouchableOpacity
-																		style={{ paddingHorizontal: 5 }}
-																		onPress={() =>
-																			handleRequestAcceptance(
-																				request.userId,
-																				squadId
-																			)
-																		}
-																	>
-																		<Ionic
-																			name="checkmark-sharp"
-																			style={{
-																				fontSize: 25,
-																				color: theme.colors.text,
-																			}}
-																		/>
-																	</TouchableOpacity>
 																</View>
-															</View>
-														))}
-													</View>
+															))}
+														</View>
+													</TouchableWithoutFeedback>
 												</TouchableOpacity>
 											</Modal>
 										)}
@@ -603,20 +612,23 @@ const SquadProfileScreen = ({ route }) => {
 					<TouchableOpacity
 						style={styles.modalBackground}
 						onPress={onClosePressed}
+						activeOpacity={1}
 					>
-						<View style={styles.modalContent}>
-							<TouchableOpacity onPress={tempButton}>
-								<Text style={styles.modalOption}>Opcion 1</Text>
-							</TouchableOpacity>
-							{squadData.captain && user.uid === squadData.captain && (
-								<TouchableOpacity onPress={createSquadBadgeHandler}>
-									<Text style={styles.modalOption}>Editar Escudo</Text>
+						<TouchableWithoutFeedback>
+							<View style={styles.modalContent}>
+								<TouchableOpacity onPress={tempButton}>
+									<Text style={styles.modalOption}>Opcion 1</Text>
 								</TouchableOpacity>
-							)}
-							<TouchableOpacity onPress={leaveSquad}>
-								<Text style={styles.modalOptionR}>Abandonar Squad</Text>
-							</TouchableOpacity>
-						</View>
+								{squadData.captain && user.uid === squadData.captain && (
+									<TouchableOpacity onPress={createSquadBadgeHandler}>
+										<Text style={styles.modalOption}>Editar Escudo</Text>
+									</TouchableOpacity>
+								)}
+								<TouchableOpacity onPress={leaveSquad}>
+									<Text style={styles.modalOptionR}>Abandonar Squad</Text>
+								</TouchableOpacity>
+							</View>
+						</TouchableWithoutFeedback>
 					</TouchableOpacity>
 				</Modal>
 			</View>
@@ -723,33 +735,36 @@ const SquadProfileScreen = ({ route }) => {
 				<TouchableOpacity
 					style={styles.modalBackground}
 					onPress={() => setOptionModalVisible(false)}
+					activeOpacity={1}
 				>
-					<View style={styles.modalContent}>
-						{selectedUser &&
-						squadData.veterans.includes(selectedUser.userId) ? (
-							<>
-								<TouchableOpacity onPress={() => changeRole("down")}>
-									<Text style={styles.modalOption}>Descender a miembro</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => changeRole("captain")}>
-									<Text style={[styles.modalOption, { marginBottom: 5 }]}>
-										Pasar capitan a {selectedUser && selectedUser.name}
-									</Text>
-								</TouchableOpacity>
-							</>
-						) : (
-							<>
-								<TouchableOpacity onPress={() => changeRole("veteran")}>
-									<Text style={styles.modalOption}>Ascender a veterano</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={kickUser}>
-									<Text style={styles.modalOptionR}>
-										Expulsar a {selectedUser && selectedUser.name}
-									</Text>
-								</TouchableOpacity>
-							</>
-						)}
-					</View>
+					<TouchableWithoutFeedback>
+						<View style={styles.modalContent}>
+							{selectedUser &&
+							squadData.veterans.includes(selectedUser.userId) ? (
+								<>
+									<TouchableOpacity onPress={() => changeRole("down")}>
+										<Text style={styles.modalOption}>Descender a miembro</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => changeRole("captain")}>
+										<Text style={[styles.modalOption, { marginBottom: 5 }]}>
+											Pasar capitan a {selectedUser && selectedUser.name}
+										</Text>
+									</TouchableOpacity>
+								</>
+							) : (
+								<>
+									<TouchableOpacity onPress={() => changeRole("veteran")}>
+										<Text style={styles.modalOption}>Ascender a veterano</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={kickUser}>
+										<Text style={styles.modalOptionR}>
+											Expulsar a {selectedUser && selectedUser.name}
+										</Text>
+									</TouchableOpacity>
+								</>
+							)}
+						</View>
+					</TouchableWithoutFeedback>
 				</TouchableOpacity>
 			</Modal>
 			<ConfirmModal

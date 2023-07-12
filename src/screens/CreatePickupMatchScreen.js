@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from "react-native";
 import BackgroundMore from "../components/BackgroundMore";
 import Button from "../components/Button";
-import TextInput from "../components/TextInput";
 import { theme } from "../core/theme";
-import { Picker } from "@react-native-picker/picker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionic from "react-native-vector-icons/Ionicons";
 import Slider from "@react-native-community/slider";
@@ -16,6 +14,7 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 	const [latitude, setLatitude] = useState({ value: "", error: "" });
 	const [longitude, setLongitude] = useState({ value: "", error: "" });
 	const [rules, setRules] = useState("5v5");
+	const [maxPlayers, setMaxPlayers] = useState(10);
 	const [date, setDate] = useState(new Date());
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -27,53 +26,59 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 		setDatePickerVisibility(false);
 	};
 
-	const handleConfirm = (date) => {
-		setButtonText(date.toLocaleString());
-		setDate(date);
+	const handleDateConfirm = (selectedDate) => {
+		setDate(selectedDate);
 		hideDatePicker();
 	};
+
+	function formatDate(dateTimeString) {
+		const dateTime = new Date(dateTimeString);
+		const options = {
+			year: "numeric",
+			month: "2-digit",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		};
+		return dateTime.toLocaleString("es-ES", options);
+	}
 
 	const tempButton = () => {};
 
 	const onCreatePressed = async () => {
 		const gameData = {
 			location: {
-				latitude: 56565, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
-				longitude: 86767646,
+				latitude: 43.44461979827975, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
+				longitude: -3.9325432027336413,
 			},
 			rules: rules,
 			invitations: [],
 		};
-	
+
 		try {
 			await createMatch(
 				"open", // status
 				"pickup", // mode
-				"eDTS1UH24ReumIOdyrY8d0NK7YS2", // creator
+				userData.uid, // creator
 				date.toISOString(), // startTime
-				10, // maxPlayers
+				maxPlayers, // maxPlayers
 				gameData // gameData
 			);
-	
+
 			setLatitude({ value: "", error: "" });
 			setLongitude({ value: "", error: "" });
-			setRules("4v4");
-			setDate(new Date());
-	
+			//setRules("4v4");
+			//setDate(new Date());
+
 			Alert.alert(
 				"Partido creado",
 				`Se creó un partido en la pista x para esta fecha: ${date.toLocaleString()}`,
-				[
-					{ text: "OK", onPress: () => navigation.goBack() },
-				]
+				[{ text: "OK", onPress: () => navigation.goBack() }]
 			);
 		} catch (error) {
 			console.error(error);
 		}
 	};
-	
-	
-	  
 
 	return (
 		<BackgroundMore>
@@ -96,17 +101,42 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 					/>
 				</TouchableOpacity>
 			</View>
+
 			{/*      Body        */}
 			<View
 				style={{
 					backgroundColor: theme.colors.surface,
 					height: "100%",
 					width: "100%",
-					justifyContent: "space-around",
+					justifyContent: "flex-start",
 					padding: 10,
 				}}
 			>
-				<View>
+				<View style={{ alignItems: "center", flex: 1 }}>
+					<View
+						style={{
+							alignContent: "center",
+							flexDirection: "row",
+							alignItems: "center",
+						}}
+					>
+						<Ionic
+							name="calendar-outline"
+							style={{ fontSize: 14, color: theme.colors.text }}
+						/>
+						<Text
+							style={{
+								color: theme.colors.text,
+								fontFamily: "SF-Pro-Thin",
+								fontSize: 14,
+							}}
+						>
+							{"  "}
+							{formatDate(date.toISOString())}
+						</Text>
+					</View>
+				</View>
+				<View style={{ flex: 2 }}>
 					<View style={{ width: "100%", marginBottom: 50 }}>
 						<Slider
 							style={{ height: 40 }}
@@ -114,7 +144,10 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 							maximumValue={7}
 							step={1}
 							value={5} // o el valor inicial para tu estado de `rules`
-							onValueChange={(value) => setRules(value + "v" + value)}
+							onValueChange={(value) => {
+								setRules(value + "v" + value);
+								setMaxPlayers(value * 2);
+							}}
 							maximumTrackTintColor={theme.colors.text}
 							minimumTrackTintColor={theme.colors.text}
 							thumbTintColor={theme.colors.primary}
@@ -155,14 +188,14 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 				<DateTimePickerModal
 					isVisible={isDatePickerVisible}
 					mode="datetime"
-					onConfirm={handleConfirm}
+					onConfirm={handleDateConfirm}
 					onCancel={hideDatePicker}
 				/>
 
 				<Button
 					mode="contained"
 					onPress={onCreatePressed}
-					style={{ marginTop: 20 }}
+					style={{ marginBottom: 100 }}
 				>
 					Crear Partido
 				</Button>

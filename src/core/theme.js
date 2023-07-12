@@ -7,6 +7,7 @@ export const theme = {
 		background: "#000000", // set background color to black
 		text: "#ffffff", // set text color to white
 		primary: "#5EA780",
+		midwayPrimSecon: "#6A9480",
 		secondary: "#797D81",
 		secondaryBackground: "#1a1a1a",
 		error: "#f13a59",
@@ -21,6 +22,7 @@ export const lightTheme = {
 		background: "#ffffff", // establece el color de fondo a blanco
 		text: "#000000", // establece el color del texto a negro
 		primary: "#5EA780",
+		midwayPrimSecon: "#6A9480",
 		secondary: "#797D81",
 		secondaryBackground: "#E5E5E5",
 		error: "#f13a59",

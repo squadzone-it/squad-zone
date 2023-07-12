@@ -5,6 +5,7 @@ import {
 	StyleSheet,
 	Image,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	Linking,
 	Modal,
 } from "react-native";
@@ -298,15 +299,18 @@ const TeamMatchDetailsScreen = ({ navigation, route }) => {
 				<TouchableOpacity
 					style={styles.modalBackground}
 					onPress={() => setShowModal(false)}
+					activeOpacity={1}
 				>
-					<View style={styles.modalContent}>
-						<TouchableOpacity>
-							<Text style={styles.modalOption}>Opcion 1</Text>
-						</TouchableOpacity>
-						<TouchableOpacity>
-							<Text style={styles.modalOptionR}>Salir del partido</Text>
-						</TouchableOpacity>
-					</View>
+					<TouchableWithoutFeedback>
+						<View style={styles.modalContent}>
+							<TouchableOpacity>
+								<Text style={styles.modalOption}>Opcion 1</Text>
+							</TouchableOpacity>
+							<TouchableOpacity>
+								<Text style={styles.modalOptionR}>Salir del partido</Text>
+							</TouchableOpacity>
+						</View>
+					</TouchableWithoutFeedback>
 				</TouchableOpacity>
 			</Modal>
 		</BackgroundTabs>

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import {
 	View,
-	Alert,
 	StyleSheet,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	Text,
 	Modal,
 	Image,
 	Switch,
+	Alert,
 } from "react-native";
 import BackgroundMore from "../components/BackgroundMore";
 import Button from "../components/Button";
-import TextInput from "../components/TextInput";
 import { theme } from "../core/theme";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionic from "react-native-vector-icons/Ionicons";
@@ -25,6 +25,7 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 	const [latitude, setLatitude] = useState({ value: "", error: "" });
 	const [longitude, setLongitude] = useState({ value: "", error: "" });
 	const [rules, setRules] = useState("5v5");
+	const [maxPlayers, setMaxPlayers] = useState(10);
 	const [subs, setSubs] = useState(0);
 	const [date, setDate] = useState(new Date());
 	const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -48,11 +49,22 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 		setDatePickerVisibility(false);
 	};
 
-	const handleConfirm = (date) => {
-		setButtonText(date.toLocaleString());
-		setDate(date);
+	const handleDateConfirm = (selectedDate) => {
+		setDate(selectedDate);
 		hideDatePicker();
 	};
+
+	function formatDate(dateTimeString) {
+		const dateTime = new Date(dateTimeString);
+		const options = {
+			year: "numeric",
+			month: "2-digit",
+			day: "numeric",
+			hour: "2-digit",
+			minute: "2-digit",
+		};
+		return dateTime.toLocaleString("es-ES", options);
+	}
 
 	const handleToggleSwitch = (member) => {
 		if (selectedMembers.includes(member)) {
@@ -65,41 +77,49 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 	const tempButton = () => {};
 
 	const onCreatePressed = async () => {
+		if (selectedMembers.length !== (maxPlayers + subs) / 2) {
+			Alert.alert(
+				"Error",
+				"De acuerdo con estas reglas, el número de jugadores debe ser exactamente " +
+					(maxPlayers + subs) / 2 +
+					" por cada equipo."
+			);
+			return;
+		}
+
 		const gameData = {
-			creator: userData.id, // Agregado el campo creator
+			creator: userData.uid, // Agregado el campo creator
 			rules: rules,
+			maxPlayers: maxPlayers + subs,
 			startTime: date.toISOString(), // Agregado el campo startTime
 			location: {
-				latitude: 56565, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
-				longitude: 86767646,
+				latitude: 43.44461979827975, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
+				longitude: -3.9325432027336413,
 			},
 			invitations: [], // añade el campo de invitaciones
 		};
-	
+
 		const squad = {
 			squadId: userData.team, // Suponiendo que userData.team es el id del equipo
 			displayName: squadData.displayname, // Utilizando displayName de squadData
 			squadBadgeUrl: squadData.squadBadgeUrl, // Utilizando squadBadgeUrl de squadData
-			players: selectedMembers.map(member => ({ id: member.userId })),
+			players: selectedMembers.map((member) => ({ id: member.userId })),
 			// Suponiendo que selectedMembers es una lista de ids de los miembros
 		};
-	
+
 		try {
-			console.log('el id:', userData.Id);
-			console.log('GameData: ', gameData); // Imprimir gameData a la consola
-			console.log('Squad: ', squad); // Imprimir squad a la consola
-	
+			console.log("el id:", userData.Id);
+			console.log("GameData: ", gameData); // Imprimir gameData a la consola
+			console.log("Squad: ", squad); // Imprimir squad a la consola
+
 			// Asegúrate de que la función `createTeamMatch` espera estos datos en este formato
-			await createTeamMatch("open", "teamMatch", "eDTS1UH24ReumIOdyrY8d0NK7YS2", gameData, squad);
-			
+			await createTeamMatch("open", "teamMatch", userData.uid, gameData, squad);
+
 			// Resto del código...
 		} catch (error) {
-			console.error('Error creating match: ', error);
+			console.error("Error creating match: ", error);
 		}
 	};
-	
-	
-	
 
 	return (
 		<BackgroundMore>
@@ -136,11 +156,35 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 						backgroundColor: theme.colors.surface,
 						height: "100%",
 						width: "100%",
-						justifyContent: "space-around",
+						justifyContent: "flex-start",
 						padding: 10,
 					}}
 				>
-					<View>
+					<View style={{ alignItems: "center", flex: 1 }}>
+						<View
+							style={{
+								alignContent: "center",
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<Ionic
+								name="calendar-outline"
+								style={{ fontSize: 14, color: theme.colors.text }}
+							/>
+							<Text
+								style={{
+									color: theme.colors.text,
+									fontFamily: "SF-Pro-Thin",
+									fontSize: 14,
+								}}
+							>
+								{"  "}
+								{formatDate(date.toISOString())}
+							</Text>
+						</View>
+					</View>
+					<View style={{ flex: 2 }}>
 						<View style={{ width: "100%", marginTop: 10 }}>
 							<Slider
 								style={{ height: 40 }}
@@ -148,7 +192,10 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 								maximumValue={7}
 								step={1}
 								value={5} // o el valor inicial para tu estado de `rules`
-								onValueChange={(value) => setRules(value + "v" + value)}
+								onValueChange={(value) => {
+									setRules(value + "v" + value);
+									setMaxPlayers(value * 2);
+								}}
 								maximumTrackTintColor={theme.colors.text}
 								minimumTrackTintColor={theme.colors.text}
 								thumbTintColor={theme.colors.primary}
@@ -172,7 +219,7 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 								maximumValue={3}
 								step={1}
 								value={0} // o el valor inicial para tu estado de `rules`
-								onValueChange={(value) => setSubs(value)}
+								onValueChange={(value) => setSubs(value * 2)}
 								maximumTrackTintColor={theme.colors.text}
 								minimumTrackTintColor={theme.colors.text}
 								thumbTintColor={theme.colors.primary}
@@ -225,12 +272,18 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 								</Text>
 							</TouchableOpacity>
 						</View>
+						<Image
+							source={{
+								uri: squadData.squadBadgeUrl,
+							}}
+							style={styles.teamBadge}
+						/>
 					</View>
 
 					<DateTimePickerModal
 						isVisible={isDatePickerVisible}
 						mode="datetime"
-						onConfirm={handleConfirm}
+						onConfirm={handleDateConfirm}
 						onCancel={hideDatePicker}
 					/>
 
@@ -244,28 +297,23 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 							<TouchableOpacity
 								style={styles.modalBackground}
 								onPress={() => setShowConvocatoriaModal(false)}
+								activeOpacity={1}
 							>
-								<View style={styles.modalContent}>
-									<Text
-										style={{
-											fontFamily: "SF-Pro-Bold",
-											fontSize: 20,
-											color: theme.colors.text,
-											borderBottomWidth: 1,
-											borderBottomColor: theme.colors.secondary,
-										}}
-									>
-										Convocatoria
-									</Text>
-									{squadData.members.map((member, index) => (
-										<View style={styles.convocatoriaContainer} key={index}>
-											<TouchableOpacity
-												onPress={() =>
-													navigation.navigate("OtherUserProfileScreen", {
-														user: member,
-													})
-												}
-											>
+								<TouchableWithoutFeedback>
+									<View style={styles.modalContent}>
+										<Text
+											style={{
+												fontFamily: "SF-Pro-Bold",
+												fontSize: 20,
+												color: theme.colors.text,
+												borderBottomWidth: 1,
+												borderBottomColor: theme.colors.secondary,
+											}}
+										>
+											Convocatoria
+										</Text>
+										{squadData.members.map((member, index) => (
+											<View style={styles.convocatoriaContainer} key={index}>
 												<View
 													style={{
 														flexDirection: "row",
@@ -294,25 +342,37 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 														</View>
 													</View>
 												</View>
-											</TouchableOpacity>
-											<View
-												style={{
-													flexDirection: "row",
-												}}
-											>
-												<Switch
-													trackColor={{
-														false: theme.colors.secondary,
-														true: theme.colors.primary,
+
+												<View
+													style={{
+														flexDirection: "row",
 													}}
-													thumbColor={theme.colors.text}
-													onValueChange={() => handleToggleSwitch(member)}
-													value={selectedMembers.includes(member)}
-												/>
+												>
+													<Switch
+														trackColor={{
+															false: theme.colors.secondary,
+															true:
+																member.userId === userData.uid
+																	? theme.colors.midwayPrimSecon
+																	: theme.colors.primary,
+														}}
+														thumbColor={theme.colors.text}
+														onValueChange={() => {
+															if (member.userId !== userData.uid) {
+																handleToggleSwitch(member);
+															}
+														}}
+														value={
+															member.userId === userData.uid ||
+															selectedMembers.includes(member)
+														}
+														disabled={member.userId === userData.uid}
+													/>
+												</View>
 											</View>
-										</View>
-									))}
-								</View>
+										))}
+									</View>
+								</TouchableWithoutFeedback>
 							</TouchableOpacity>
 						</Modal>
 					)}
@@ -320,7 +380,7 @@ const CreateTeamsMatchScreen = ({ navigation, route }) => {
 					<Button
 						mode="contained"
 						onPress={onCreatePressed}
-						style={{ marginTop: 20 }}
+						style={{ marginBottom: 100 }}
 					>
 						Crear Partido
 					</Button>
@@ -422,6 +482,12 @@ const styles = StyleSheet.create({
 	convocatoriaDecriptionText: {
 		color: theme.colors.secondary,
 		fontSize: 14,
+	},
+	teamBadge: {
+		width: 70,
+		height: 70,
+		borderRadius: 5, // Hace la imagen circular
+		alignSelf: "center",
 	},
 });
 

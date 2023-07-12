@@ -4,6 +4,7 @@ import {
 	StatusBar,
 	Image,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	StyleSheet,
 	Modal,
 	Alert,
@@ -193,89 +194,96 @@ const ProfileScreen = ({ navigation }) => {
 									<TouchableOpacity
 										style={styles.modalBackground}
 										onPress={() => setShowInvitationsModal(false)}
+										activeOpacity={1}
 									>
-										<View style={styles.modalContent}>
-											<Text
-												style={{
-													fontFamily: "SF-Pro-Bold",
-													fontSize: 20,
-													color: theme.colors.text,
-													borderBottomWidth: 1,
-													borderBottomColor: theme.colors.secondary,
-												}}
-											>
-												Invitaciones
-											</Text>
-											{data.squadInvitations.map((invitation, index) => (
-												<View style={styles.invitationContainer}>
-													<TouchableOpacity
-														onPress={() =>
-															navigation.navigate("SquadProfileScreen", {
-																squadId: invitation.id,
-															})
-														}
-													>
-														<View
-															style={{
-																flexDirection: "row",
-																alignItems: "center",
-															}}
+										<TouchableWithoutFeedback>
+											<View style={styles.modalContent}>
+												<Text
+													style={{
+														fontFamily: "SF-Pro-Bold",
+														fontSize: 20,
+														color: theme.colors.text,
+														borderBottomWidth: 1,
+														borderBottomColor: theme.colors.secondary,
+													}}
+												>
+													Invitaciones
+												</Text>
+												{data.squadInvitations.map((invitation, index) => (
+													<View style={styles.invitationContainer}>
+														<TouchableOpacity
+															onPress={() =>
+																navigation.navigate("SquadProfileScreen", {
+																	squadId: invitation.id,
+																})
+															}
 														>
-															<Image
-																source={{
-																	uri: invitation.squadBadgeUrl,
+															<View
+																style={{
+																	flexDirection: "row",
+																	alignItems: "center",
 																}}
-																style={styles.invitationBadge}
-															/>
+															>
+																<Image
+																	source={{
+																		uri: invitation.squadBadgeUrl,
+																	}}
+																	style={styles.invitationBadge}
+																/>
 
-															<View style={styles.invitationSubContainer}>
-																<View style={styles.invitationNameContainer}>
-																	<Text style={styles.invitationNameText}>
-																		{invitation.displayname}
-																	</Text>
-																</View>
-																<View
-																	style={styles.invitationDescriptionContainer}
-																>
-																	<Text style={styles.invitationDecriptionText}>
-																		Descripcion de equipo
-																	</Text>
+																<View style={styles.invitationSubContainer}>
+																	<View style={styles.invitationNameContainer}>
+																		<Text style={styles.invitationNameText}>
+																			{invitation.displayname}
+																		</Text>
+																	</View>
+																	<View
+																		style={
+																			styles.invitationDescriptionContainer
+																		}
+																	>
+																		<Text
+																			style={styles.invitationDecriptionText}
+																		>
+																			Descripcion de equipo
+																		</Text>
+																	</View>
 																</View>
 															</View>
+														</TouchableOpacity>
+														<View style={{ flexDirection: "row" }}>
+															<TouchableOpacity
+																style={{ paddingHorizontal: 30 }}
+																onPress={() =>
+																	handleInvitationRejection(invitation.id)
+																}
+															>
+																<Ionic
+																	name="close-sharp"
+																	style={{
+																		fontSize: 25,
+																		color: theme.colors.text,
+																	}}
+																/>
+															</TouchableOpacity>
+															<TouchableOpacity
+																onPress={() =>
+																	handleInvitationAcceptance(invitation.id)
+																}
+															>
+																<Ionic
+																	name="checkmark-sharp"
+																	style={{
+																		fontSize: 25,
+																		color: theme.colors.text,
+																	}}
+																/>
+															</TouchableOpacity>
 														</View>
-													</TouchableOpacity>
-													<View style={{ flexDirection: "row" }}>
-														<TouchableOpacity
-															style={{ paddingHorizontal: 30 }}
-															onPress={() =>
-																handleInvitationRejection(invitation.id)
-															}
-														>
-															<Ionic
-																name="close-sharp"
-																style={{
-																	fontSize: 25,
-																	color: theme.colors.text,
-																}}
-															/>
-														</TouchableOpacity>
-														<TouchableOpacity
-															onPress={() =>
-																handleInvitationAcceptance(invitation.id)
-															}
-														>
-															<Ionic
-																name="checkmark-sharp"
-																style={{
-																	fontSize: 25,
-																	color: theme.colors.text,
-																}}
-															/>
-														</TouchableOpacity>
 													</View>
-												</View>
-											))}
-										</View>
+												))}
+											</View>
+										</TouchableWithoutFeedback>
 									</TouchableOpacity>
 								</Modal>
 							</TouchableOpacity>
@@ -386,15 +394,18 @@ const ProfileScreen = ({ navigation }) => {
 					<TouchableOpacity
 						style={styles.modalBackground}
 						onPress={onClosePressed}
+						activeOpacity={1}
 					>
-						<View style={styles.modalContent}>
-							<TouchableOpacity onPress={onEditProfilePressed}>
-								<Text style={styles.modalOption}>Editar perfil</Text>
-							</TouchableOpacity>
-							<TouchableOpacity onPress={onLogoutPressed}>
-								<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
-							</TouchableOpacity>
-						</View>
+						<TouchableWithoutFeedback>
+							<View style={styles.modalContent}>
+								<TouchableOpacity onPress={onEditProfilePressed}>
+									<Text style={styles.modalOption}>Editar perfil</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={onLogoutPressed}>
+									<Text style={styles.modalOptionR}>Cerrar Sesion</Text>
+								</TouchableOpacity>
+							</View>
+						</TouchableWithoutFeedback>
 					</TouchableOpacity>
 				</Modal>
 			</View>
