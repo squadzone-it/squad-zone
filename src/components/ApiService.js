@@ -467,12 +467,10 @@ export const uploadSquadBadge = async (squadId, squadBadge) => {
 export const createMatch = async (
 	status,
 	mode,
-	teamSelection,
+	creator,
 	startTime,
 	maxPlayers,
-	gameData,
-	players,
-	teams
+	gameData
 ) => {
 	try {
 		const functionUrl = `${baseFunctionUrl}createMatch`;
@@ -484,12 +482,12 @@ export const createMatch = async (
 			body: JSON.stringify({
 				status,
 				mode,
-				teamSelection,
-				startTime,
-				maxPlayers,
-				gameData,
-				players,
-				teams,
+				creator,
+				gameData: {
+					...gameData,
+					startTime,
+					maxPlayers,
+				},
 			}),
 		});
 

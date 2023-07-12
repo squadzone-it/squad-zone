@@ -38,39 +38,42 @@ const CreatePickupMatchScreen = ({ navigation, route }) => {
 	const onCreatePressed = async () => {
 		const gameData = {
 			location: {
-				latitude: parseFloat(latitude.value),
-				longitude: parseFloat(longitude.value),
+				latitude: 56565, // Estos son los valores de muestra, asegúrate de reemplazarlos con los valores reales.
+				longitude: 86767646,
 			},
 			rules: rules,
+			invitations: [],
 		};
-
+	
 		try {
 			await createMatch(
-				"open",
-				"pickup",
-				"auto",
-				date.toISOString(),
-				10,
-				gameData,
-				["kuzdGikCl7WHGIpXa05mKqXPsuj2"],
-				[]
+				"open", // status
+				"pickup", // mode
+				"eDTS1UH24ReumIOdyrY8d0NK7YS2", // creator
+				date.toISOString(), // startTime
+				10, // maxPlayers
+				gameData // gameData
 			);
+	
 			setLatitude({ value: "", error: "" });
 			setLongitude({ value: "", error: "" });
 			setRules("4v4");
 			setDate(new Date());
-
+	
 			Alert.alert(
 				"Partido creado",
 				`Se creó un partido en la pista x para esta fecha: ${date.toLocaleString()}`,
 				[
-					{ text: "OK", onPress: () => navigation.goBack() }, // al presionar OK, se vuelve a la pantalla anterior
+					{ text: "OK", onPress: () => navigation.goBack() },
 				]
 			);
 		} catch (error) {
 			console.error(error);
 		}
 	};
+	
+	
+	  
 
 	return (
 		<BackgroundMore>
