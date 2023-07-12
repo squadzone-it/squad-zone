@@ -153,7 +153,7 @@ const TeamMatchDetailsScreen = ({ navigation, route }) => {
 				</Text>
 				<View style={styles.playerListContainer}>
 					{partidoData.teams.teamA && (
-						<View style={styles.playerList && { alignItems: "flex-start" }}>
+						<View style={[styles.playerList, { alignItems: "flex-start" }]}>
 							<Text
 								style={{
 									fontFamily: "SF-Pro-Semibold",
@@ -179,12 +179,72 @@ const TeamMatchDetailsScreen = ({ navigation, route }) => {
 											source={{
 												uri: player.photoUrl,
 											}}
-											style={styles.userImageL}
+											style={[styles.userImage, { marginRight: 10 }]}
 										/>
 										<View style={styles.userSubContainer}>
 											<View style={styles.usernameContainer}>
 												<Text style={styles.usernameText}>
-													{player.username}
+													{player.username.length > 10 &&
+													partidoData.teams.teamB
+														? `${player.username.substring(0, 10)}...`
+														: player.username}
+												</Text>
+
+												{player.verified && (
+													<Image
+														source={require("../assets/verified.png")}
+														style={{
+															width: 16,
+															height: 16,
+															marginLeft: 5,
+														}}
+													/>
+												)}
+											</View>
+											<View
+												style={[
+													styles.nameContainer,
+													{ alignSelf: "flex-start" },
+												]}
+											>
+												<Text style={styles.nameText}>{player.name}</Text>
+											</View>
+										</View>
+									</View>
+								</TouchableOpacity>
+							))}
+						</View>
+					)}
+					{partidoData.teams.teamB && (
+						<View style={[styles.playerList, { alignItems: "flex-end" }]}>
+							<Text
+								style={{
+									fontFamily: "SF-Pro-Semibold",
+									fontSize: 14,
+									paddingBottom: 10,
+									alignSelf: "center",
+									color: theme.colors.text,
+								}}
+							>
+								{partidoData.teams.teamB.teamDisplayName}
+							</Text>
+							{partidoData.teams.teamB.teamPlayers.map((player, index) => (
+								<TouchableOpacity
+									key={index}
+									onPress={() =>
+										navigation.navigate("OtherUserProfileScreen", {
+											user: player,
+										})
+									}
+								>
+									<View style={styles.userContainer}>
+										<View style={styles.userSubContainer}>
+											<View style={styles.usernameContainer}>
+												<Text style={styles.usernameText}>
+													{player.username.length > 10 &&
+													partidoData.teams.teamA
+														? `${player.username.substring(0, 10)}...`
+														: player.username}
 												</Text>
 												{player.verified && (
 													<Image
@@ -197,54 +257,23 @@ const TeamMatchDetailsScreen = ({ navigation, route }) => {
 													/>
 												)}
 											</View>
-											<View style={styles.nameContainer}>
+											<View
+												style={[
+													styles.nameContainer,
+													{ alignSelf: "flex-end" },
+												]}
+											>
 												<Text style={styles.nameText}>{player.name}</Text>
 											</View>
 										</View>
+										<Image
+											source={{
+												uri: player.photoUrl,
+											}}
+											style={[styles.userImage, { marginLeft: 10 }]}
+										/>
 									</View>
 								</TouchableOpacity>
-							))}
-						</View>
-					)}
-					{partidoData.teams.teamB && (
-						<View style={styles.playerList && { alignItems: "flex-end" }}>
-							<Text
-								style={{
-									fontFamily: "SF-Pro-Semibold",
-									fontSize: 14,
-									paddingBottom: 10,
-									alignSelf: "center",
-								}}
-							>
-								{partidoData.teams.teamB.teamDisplayName}
-							</Text>
-							{partidoData.teams.teamB.teamPlayers.map((player, index) => (
-								<View style={styles.userContainer} key={index}>
-									<View style={styles.userSubContainer}>
-										<View style={styles.usernameContainer}>
-											<Text style={styles.usernameText}>{player.username}</Text>
-											{player.verified && (
-												<Image
-													source={require("../assets/verified.png")}
-													style={{
-														width: 16,
-														height: 16,
-														marginLeft: 5,
-													}}
-												/>
-											)}
-										</View>
-										<View style={styles.nameContainer}>
-											<Text style={styles.nameText}>{player.name}</Text>
-										</View>
-									</View>
-									<Image
-										source={{
-											uri: player.photoUrl,
-										}}
-										style={styles.userImageR}
-									/>
-								</View>
 							))}
 						</View>
 					)}
@@ -379,23 +408,16 @@ const styles = StyleSheet.create({
 	userContainer: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginBottom: 10,
+		borderBottomColor: theme.colors.secondaryBackground,
+		borderBottomWidth: 1,
+		paddingVertical: 10,
 	},
-	userImageL: {
+	userImage: {
 		width: 50,
 		height: 50,
 		borderRadius: 25, // Hace la imagen circular
 		borderWidth: 2, // Tamaño del borde
 		borderColor: theme.colors.primary, // Color del borde
-		marginRight: 10, // Espacio a la derecha de la imagen
-	},
-	userImageR: {
-		width: 50,
-		height: 50,
-		borderRadius: 25, // Hace la imagen circular
-		borderWidth: 2, // Tamaño del borde
-		borderColor: theme.colors.primary, // Color del borde
-		marginLeft: 10, // Espacio a la derecha de la imagen
 	},
 	userSubContainer: {
 		flexDirection: "column",

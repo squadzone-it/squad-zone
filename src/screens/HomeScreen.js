@@ -139,7 +139,9 @@ const HomeScreen = ({ navigation }) => {
 
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
-		// Aquí debes implementar la lógica de recarga
+		navigation.reset({
+			index: 0,
+		});
 		setTimeout(() => setRefreshing(false), 2000); // esto es solo para simular la recarga
 	}, []);
 
